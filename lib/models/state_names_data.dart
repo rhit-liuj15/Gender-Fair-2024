@@ -12,8 +12,7 @@ class StateNamesData {
   // Method to load data asynchronously and populate stateNames
   Future<void> loadData() async {
 		if (!stateNamesReady) {
-			var url = Uri.http('ethan02.us:4800', 'states');
-			// var url = Uri.http('10.0.0.48:4800', 'states');
+			var url = Uri.http('genderfair2024.csse.rose-hulman.edu:80', 'states');
 			try {
 				final response = await http.get(url);
 				if (response.statusCode == 200) {

@@ -13,9 +13,8 @@ class AllSchoolData {
 
   // Method to load data asynchronously and populate allSchools
   Future<void> loadData() async {
-		if (!schoolDataReady) {
-			var url = Uri.http('ethan02.us:4800', 'schools');
-			// var url = Uri.http('10.0.0.48:4800', 'schools');
+		if (!schoolDataReady) {;
+			var url = Uri.http('genderfair2024.csse.rose-hulman.edu:80', 'schools');
 			try {
 				final response = await http.get(url);
 				if (response.statusCode == 200) {
