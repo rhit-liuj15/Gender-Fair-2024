@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:p01_final_project/components/filter_page_state_name_tile.dart';
-import 'package:p01_final_project/components/school_data_row.dart';
-import 'package:p01_final_project/models/all_school_data.dart';
-import 'package:p01_final_project/models/school_data.dart';
-import 'package:p01_final_project/models/state_names_data.dart';
+import 'package:gender_fair_2024/components/filter_page_state_name_tile.dart';
+import 'package:gender_fair_2024/components/school_data_row.dart';
+import 'package:gender_fair_2024/models/all_school_data.dart';
+import 'package:gender_fair_2024/models/school_data.dart';
+import 'package:gender_fair_2024/models/state_names_data.dart';
 
 class SortableSchoolTable extends StatefulWidget {
   const SortableSchoolTable({super.key});

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:p01_final_project/models/school_data.dart';
 
 class FilterPageStateNameTile extends StatelessWidget {
   final String state;

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:p01_final_project/models/school_data.dart';
+import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:http/http.dart' as http;
 
 class AllSchoolData {

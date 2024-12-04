@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:p01_final_project/pages/all_schools_page.dart';
+import 'package:gender_fair_2024/pages/all_schools_page.dart';
 
 
 void main() {
