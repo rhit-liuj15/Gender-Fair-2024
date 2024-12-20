@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/sortable_school_table.dart';
-import 'package:gender_fair_2024/models/all_school_data.dart';
-import 'package:gender_fair_2024/models/school_data.dart';
+import 'package:gender_fair_2024/components/sortable_table.dart';
 
 class AllSchoolsPage extends StatefulWidget {
   const AllSchoolsPage({super.key});
@@ -11,9 +9,9 @@ class AllSchoolsPage extends StatefulWidget {
 }
 
 class _AllSchoolsPageState extends State<AllSchoolsPage> {
-  late final List<SchoolData> allSchools = AllSchoolData.instance.allSchools;
-  late final List<bool> selected =
-      List<bool>.generate(allSchools.length, (int index) => false);
+  // late final Map<int, SchoolScore> allSchools = SchoolScoreLoader.instance.allScores;
+  // late final List<bool> selected =
+  //     List<bool>.generate(allSchools.length, (int index) => false);
 
   @override
   void initState() {
@@ -30,7 +28,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
       body: const Center(
 				child: Padding(
 					padding: EdgeInsets.all(40.0),
-					child: SortableSchoolTable(),
+					child: SortableTable(),
         )
       ),
     );

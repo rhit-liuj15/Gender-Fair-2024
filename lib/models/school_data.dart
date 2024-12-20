@@ -1,18 +1,16 @@
 class SchoolData {
 	int uid;
   String schoolName;
-  String schoolStateInitials;
-  int studentPopulation;
+	Map<int,Map<String, dynamic>> schoolData;
 
   SchoolData({
 		required this.uid,
     required this.schoolName,
-    required this.schoolStateInitials,
-    required this.studentPopulation,
+    required this.schoolData,
   });
 
   @override
   String toString() {
-    return "The school $schoolName is located in state/territory $schoolStateInitials with a student population of $studentPopulation";
+    return "The school $schoolName has UID $uid";
   }
 }
