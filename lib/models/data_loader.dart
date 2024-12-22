@@ -16,24 +16,84 @@ class DataLoader {
 
   Future<void> loadData() async {
 		if (!dataReady) {
-			var stateNamesUrl = Uri.http('10.0.0.48:4800', 'states');
-			try {
-				final response = await http.get(stateNamesUrl);
-				if (response.statusCode == 200) {
-					List<dynamic> data = jsonDecode(response.body);
-					stateNameToAbbreviations = <String,String>{};
-					for (var item in data) {
-						stateNameToAbbreviations[item['valueLabel']] = item['Codevalue'];
-					}
-					dataReady = true;
-				} else {
-					print('Failed to load data. HTTP Status Code: ${response.statusCode}');
-				}
-			} catch (e) {
-				print('Error occurred: $e');
-			}
+			// var stateNamesUrl = Uri.http('10.0.0.48:4800', 'states');
+			// try {
+			// 	final response = await http.get(stateNamesUrl);
+			// 	if (response.statusCode == 200) {
+			// 		List<dynamic> data = jsonDecode(response.body);
+			// 		stateNameToAbbreviations = <String,String>{};
+			// 		for (var item in data) {
+			// 			stateNameToAbbreviations[item['valueLabel']] = item['Codevalue'];
+			// 			print("stateNameToAbbreviations['${item['valueLabel']}'] = '${item['Codevalue']}';");
+			// 		}
+			// 		dataReady = true;
+			// 	} else {
+			// 		print('Failed to load data. HTTP Status Code: ${response.statusCode}');
+			// 	}
+			// } catch (e) {
+			// 	print('Error occurred: $e');
+			// }
 
-			
+			stateNameToAbbreviations['Alaska'] = 'AK';
+			stateNameToAbbreviations['Alabama'] = 'AL';
+			stateNameToAbbreviations['Arkansas'] = 'AR';
+			stateNameToAbbreviations['American Samoa'] = 'AS';
+			stateNameToAbbreviations['Arizona'] = 'AZ';
+			stateNameToAbbreviations['California'] = 'CA';
+			stateNameToAbbreviations['Colorado'] = 'CO';
+			stateNameToAbbreviations['Connecticut'] = 'CT';
+			stateNameToAbbreviations['District of Columbia'] = 'DC';
+			stateNameToAbbreviations['Delaware'] = 'DE';
+			stateNameToAbbreviations['Florida'] = 'FL';
+			stateNameToAbbreviations['Federated States of Micronesia'] = 'FM';
+			stateNameToAbbreviations['Georgia'] = 'GA';
+			stateNameToAbbreviations['Guam'] = 'GU';
+			stateNameToAbbreviations['Hawaii'] = 'HI';
+			stateNameToAbbreviations['Iowa'] = 'IA';
+			stateNameToAbbreviations['Idaho'] = 'ID';
+			stateNameToAbbreviations['Illinois'] = 'IL';
+			stateNameToAbbreviations['Indiana'] = 'IN';
+			stateNameToAbbreviations['Kansas'] = 'KS';
+			stateNameToAbbreviations['Kentucky'] = 'KY';
+			stateNameToAbbreviations['Louisiana'] = 'LA';
+			stateNameToAbbreviations['Massachusetts'] = 'MA';
+			stateNameToAbbreviations['Maryland'] = 'MD';
+			stateNameToAbbreviations['Maine'] = 'ME';
+			stateNameToAbbreviations['Marshall Islands'] = 'MH';
+			stateNameToAbbreviations['Michigan'] = 'MI';
+			stateNameToAbbreviations['Minnesota'] = 'MN';
+			stateNameToAbbreviations['Missouri'] = 'MO';
+			stateNameToAbbreviations['Northern Marianas'] = 'MP';
+			stateNameToAbbreviations['Mississippi'] = 'MS';
+			stateNameToAbbreviations['Montana'] = 'MT';
+			stateNameToAbbreviations['North Carolina'] = 'NC';
+			stateNameToAbbreviations['North Dakota'] = 'ND';
+			stateNameToAbbreviations['Nebraska'] = 'NE';
+			stateNameToAbbreviations['New Hampshire'] = 'NH';
+			stateNameToAbbreviations['New Jersey'] = 'NJ';
+			stateNameToAbbreviations['New Mexico'] = 'NM';
+			stateNameToAbbreviations['Nevada'] = 'NV';
+			stateNameToAbbreviations['New York'] = 'NY';
+			stateNameToAbbreviations['Ohio'] = 'OH';
+			stateNameToAbbreviations['Oklahoma'] = 'OK';
+			stateNameToAbbreviations['Oregon'] = 'OR';
+			stateNameToAbbreviations['Pennsylvania'] = 'PA';
+			stateNameToAbbreviations['Puerto Rico'] = 'PR';
+			stateNameToAbbreviations['Palau'] = 'PW';
+			stateNameToAbbreviations['Rhode Island'] = 'RI';
+			stateNameToAbbreviations['South Carolina'] = 'SC';
+			stateNameToAbbreviations['South Dakota'] = 'SD';
+			stateNameToAbbreviations['Tennessee'] = 'TN';
+			stateNameToAbbreviations['Texas'] = 'TX';
+			stateNameToAbbreviations['Utah'] = 'UT';
+			stateNameToAbbreviations['Virginia'] = 'VA';
+			stateNameToAbbreviations['Virgin Islands'] = 'VI';
+			stateNameToAbbreviations['Vermont'] = 'VT';
+			stateNameToAbbreviations['Washington'] = 'WA';
+			stateNameToAbbreviations['Wisconsin'] = 'WI';
+			stateNameToAbbreviations['West Virginia'] = 'WV';
+			stateNameToAbbreviations['Wyoming'] = 'WY';
+
 			addSchoolScore(SchoolScore(uid: 1826, schoolName: "UCLA", subscores: [17, 13, 9, 22]));
 			addSchoolScore(SchoolScore(uid: 7523, schoolName: "MIT", subscores: [20, 14, 29, 33]));
 			addSchoolScore(SchoolScore(uid: 4321, schoolName: "Stanford", subscores: [18, 12, 24, 30]));
