@@ -29,7 +29,7 @@ class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
       body: Center(
 				child: Padding(
 					padding: const EdgeInsets.all(40.0),
-					child: Text("Comparing UIDs ${SchoolScoreRow.selectedSchools.toString()}"),
+					child: Text("Comparing Schools ${SchoolScoreRow.selectedSchools.toString()}"),
         )
       ),
     );

@@ -3,15 +3,15 @@ import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/pages/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
-  static List<int> flexValues = List.unmodifiable([7,2,2,2,2,2,3]);
+  static List<int> flexValues = List.unmodifiable([2,7,2,2,2,2,2]);
   static List<String> columnNames = List.unmodifiable([
+		"Add To List",
 		"Institution Name", 
 		"Safety", 
 		"Employee Policy", 
 		"Diversity", 
 		"I Made This Up", 
 		"Total", 
-		"Add To List"
 	]);
   static List<bool> defaultSortOrder = List.unmodifiable([
 		true,
@@ -49,25 +49,6 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 		
 		// Change this 
     final List<Widget> widgets = [
-			InkWell(
-				child: Text(widget.school.schoolName),
-				onTap: () {
-					Navigator.of(context).push(
-						MaterialPageRoute(
-							builder: (context) => SchoolDetailPage(uid: widget.school.uid),
-						),
-					);
-				},
-			),
-      Text("${widget.school.subscores[0]}", textAlign: TextAlign.center,),
-      Text("${widget.school.subscores[1]}", textAlign: TextAlign.center,),
-      Text("${widget.school.subscores[2]}", textAlign: TextAlign.center,),
-      Text("${widget.school.subscores[3]}", textAlign: TextAlign.center,),
-      Text(
-				"${widget.school.score}",
-				style: const TextStyle(fontWeight: FontWeight.bold),
-				textAlign: TextAlign.center,
-			),
 			Checkbox(
 				value: SchoolScoreRow.selectedSchools.contains(widget.school.uid),
 				onChanged: (bool? newValue) {
@@ -82,7 +63,26 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 						}
 					);
 				},
-			)
+			),
+			InkWell(
+				child: Text(widget.school.schoolName, style: const TextStyle(fontSize: 18)),
+				onTap: () {
+					Navigator.of(context).push(
+						MaterialPageRoute(
+							builder: (context) => SchoolDetailPage(uid: widget.school.uid),
+						),
+					);
+				},
+			),
+      Text("${widget.school.subscores[0]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26)),
+      Text("${widget.school.subscores[1]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26)),
+      Text("${widget.school.subscores[2]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26)),
+      Text("${widget.school.subscores[3]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26)),
+      Text(
+				"${widget.school.score}",
+				style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900),
+				textAlign: TextAlign.center,
+			),
     ];
 
     return Padding(

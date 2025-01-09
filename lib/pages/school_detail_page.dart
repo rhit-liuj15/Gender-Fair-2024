@@ -21,12 +21,8 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   @override
   void initState() {
     super.initState();
-		if (DataLoader.instance.requestSchoolData(widget.uid)) {
-			schoolData = DataLoader.instance.allSchools[widget.uid]!;
-		} else {
-			print("Data for UID ${widget.uid} does not exist");
-			schoolData = defaultSchoolDataWithUID(widget.uid);
-		}
+		DataLoader.instance.requestSchoolData(widget.uid);
+		schoolData = DataLoader.instance.allSchools[widget.uid]!;
   }
 
   @override
@@ -39,7 +35,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
       body: Center(
 				child: Padding(
 					padding: const EdgeInsets.all(40.0),
-					child: Text(schoolData.schoolData.toString()),
+					child: Text("Name of school ${schoolData.uid} is ${schoolData.schoolName}, its data is ${schoolData.categories.keys.toString()}"),
         )
       ),
     );

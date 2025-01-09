@@ -142,8 +142,10 @@ class DataLoader {
 			addSchoolScore(SchoolScore(uid: 6041, schoolName: "University of Missouri", subscores: [15, 11, 26, 31]));
 			addSchoolScore(SchoolScore(uid: 8032, schoolName: "University of Nebraska", subscores: [19, 14, 30, 34]));
 			addSchoolScore(SchoolScore(uid: 9103, schoolName: "University of Oklahoma", subscores: [18, 12, 27, 29]));
-
+			
+			
 			dataReady = true;
+
 		}
   }
 
@@ -163,10 +165,13 @@ class DataLoader {
 		}
 	}
 
-	bool requestSchoolData(int uid) {
+	void requestSchoolData(int uid) {
 		// This is to be expanded later with an actual request
 		print("Making a request for UID $uid");
-		return allSchools.containsKey(uid);
+		if (!allSchools.containsKey(uid)) {
+			print("Data for UID ${uid} does not exist, an empty default is used instead.");
+			allSchools[uid] = defaultSchoolDataWithUID(uid);
+		}
 	}
 }
 

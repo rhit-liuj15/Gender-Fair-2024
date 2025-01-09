@@ -1,13 +1,12 @@
 class SchoolData {
 	int uid;
   String schoolName;
-	Map<String,dynamic> schoolData;
-	// The first string is a category name, and the 
+	Map<String,SchoolDataCategory> categories;
 
   SchoolData({
 		required this.uid,
     required this.schoolName,
-    required this.schoolData,
+    required this.categories,
   });
 
   @override
@@ -16,12 +15,22 @@ class SchoolData {
   }
 }
 
-
-
 SchoolData defaultSchoolDataWithUID(int uid) {
   return SchoolData(
     uid: uid,
     schoolName: "No data for uid $uid!",
-    schoolData: {},
+    categories: {},
   );
+}
+
+class SchoolDataCategory {
+	
+  final String categoryName;
+	Map<String,dynamic> data;
+
+  SchoolDataCategory({
+    required this.categoryName,
+    required this.data,
+  });
+
 }

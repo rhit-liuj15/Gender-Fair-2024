@@ -253,7 +253,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
 														child: 
 														TextButton(
 															onPressed: () {sortData(index);},
-															child: Text(SchoolScoreRow.columnNames[index]),
+															child: Text(SchoolScoreRow.columnNames[index], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
 														),
 													),
 												),
