@@ -117,24 +117,25 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
         int compareResult;
         switch (sortingBy) {
           case -1:
-            compareResult = a.uid.compareTo(b.uid);
-            break;
-          case 0:
-            compareResult = a.schoolName.compareTo(b.schoolName);
+            //compareResult = a.uid.compareTo(b.uid);
+            compareResult = b.score.compareTo(a.score);
             break;
           case 1:
-            compareResult = a.subscores[0].compareTo(b.subscores[0]);
+            compareResult = a.schoolName.compareTo(b.schoolName);
             break;
           case 2:
-            compareResult = a.subscores[1].compareTo(b.subscores[1]);
+            compareResult = a.subscores[0].compareTo(b.subscores[0]);
             break;
           case 3:
-            compareResult = a.subscores[2].compareTo(b.subscores[2]);
+            compareResult = a.subscores[1].compareTo(b.subscores[1]);
             break;
           case 4:
-            compareResult = a.subscores[3].compareTo(b.subscores[3]);
+            compareResult = a.subscores[2].compareTo(b.subscores[2]);
             break;
           case 5:
+            compareResult = a.subscores[3].compareTo(b.subscores[3]);
+            break;
+          case 6:
             compareResult = a.score.compareTo(b.score);
             break;
           default:
@@ -155,14 +156,15 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
             child: Row(
               children: [
                 SizedBox(
-                  width: 85, 
+                  width: 85,
                   height: 100,
                   child: Image.asset(
-                    'assets/logo.png', 
+                    'assets/logo.png',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -179,8 +181,8 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                     const SizedBox(height: 8.0),
-                    const Flexible(
+                      const SizedBox(height: 8.0),
+                      const Flexible(
                         child: Text(
                           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
                           "Vivamus lacinia odio vitae vestibulum vestibulum. "
@@ -191,7 +193,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                             fontSize: 14.0,
                             color: Colors.grey,
                           ),
-                           textAlign: TextAlign.center,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],
@@ -204,7 +206,8 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
           Expanded(
             child: Center(
               child: Padding(
-               padding: const EdgeInsets.symmetric(horizontal: 40.0, vertical: 10.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 40.0, vertical: 10.0),
                 child: Row(
                   children: [
                     Expanded(
@@ -312,41 +315,56 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                     ),
                     Expanded(
                       flex: 5,
-                      child: Column(
-                        children: [
-                          Row(
-                            children: List.generate(
-                              SchoolScoreRow.numColumns,
-                              (index) => Expanded(
-                                flex: SchoolScoreRow.flexValues[index],
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextButton(
-                                    onPressed: () {
-                                      sortData(index);
-                                    },
-                                    child: Text(
-                                      SchoolScoreRow.columnNames[index],
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold),
-                                      textAlign: TextAlign.center,
+                      child: Container(
+                        color: Colors.grey[
+                            200], // The light grey background color for the entire section
+                        child: Column(
+                          children: [
+                            // The header row
+                            Row(
+                              children: List.generate(
+                                SchoolScoreRow.numColumns,
+                                (index) => Expanded(
+                                  flex: SchoolScoreRow.flexValues[index],
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextButton(
+                                      onPressed: () {
+                                        sortData(index);
+                                      },
+                                      child: Text(
+                                        SchoolScoreRow.columnNames[index],
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold),
+                                        textAlign: TextAlign.center,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: schoolsFilteredFor.length,
-                              itemBuilder: (context, index) {
-                                return SchoolScoreRow(
-                                    school: schoolsFilteredFor[index]);
-                              },
+                            // The list of schools
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: schoolsFilteredFor.length,
+                                itemBuilder: (context, index) {
+                                  Color borderColor = (index % 2 == 0)
+                                      ? Colors.grey[300]!
+                                      : Colors.grey[500]!;
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: borderColor),
+                                    ),
+                                    child: SchoolScoreRow(
+                                      school: schoolsFilteredFor[index],
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],

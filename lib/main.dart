@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           onSecondary: Color.fromARGB(202, 255, 99, 2),
           background: Color(0xFFF5F5F5),
           onBackground: Colors.black,
-          surface: Color.fromARGB(160, 255, 255, 255),
+          surface: Color.fromARGB(224, 255, 255, 255),
           onSurface: Colors.black,
           error: Colors.red,
           onError: Colors.white,
