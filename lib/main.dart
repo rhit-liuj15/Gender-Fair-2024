@@ -1,6 +1,6 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/pages/all_schools_page.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -9,7 +9,7 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'School Ranking App',
@@ -29,9 +29,55 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const AllSchoolsPage(),
+      home: const GlassBackgroundPage(child: AllSchoolsPage()),
     );
   }
+}
 
-  
+class GlassBackgroundPage extends StatelessWidget {
+  final Widget child;
+
+  const GlassBackgroundPage({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background image or gradient
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.orange
+                      .withOpacity(0.9), // Stronger orange at the start
+                  Colors.deepOrange
+                      .withOpacity(0.8), // Deeper orange transition
+                  Colors.redAccent.withOpacity(0.7), // Add red for depth
+                ],
+                stops: [0.2, 0.7, 1.0], // Adjust distribution of colors
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+
+          // Glass effect
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 160, 50, 50).withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+          // Main content
+          SafeArea(
+            child: child,
+          ),
+        ],
+      ),
+    );
+  }
 }

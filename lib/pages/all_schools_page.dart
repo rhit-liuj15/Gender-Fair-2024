@@ -14,6 +14,7 @@ class AllSchoolsPage extends StatefulWidget {
 }
 
 class _AllSchoolsPageState extends State<AllSchoolsPage> {
+  int _hoveredColumnIndex = -1;
   List<SchoolScore> scoreList = <SchoolScore>[];
 
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
@@ -212,102 +213,101 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                   children: [
                     Expanded(
                       flex: 2,
-                      child: Card(
-                        child: Column(
-                          children: [
-                            const Text(
-                              "Filter and Compare Go Here",
-                              textAlign: TextAlign.center,
+                      child: Stack(
+                        children: [
+                          // Glass effect background
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(
+                                  0.2), // Semi-transparent glass effect
+                              borderRadius:
+                                  BorderRadius.circular(15), // Rounded edges
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(
+                                      0.1), // Subtle shadow for depth
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5),
+                                ),
+                              ],
                             ),
-                            const SizedBox(
-                              height: 20,
+                          ),
+                          // Filter and Compare Content
+                          Card(
+                            elevation:
+                                0, // Remove Card shadow to avoid layering issues
+                            color: Colors
+                                .transparent, // Transparent Card to blend with the glass effect
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  15), // Match background radius
                             ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  20.0, 5.0, 20.0, 5.0),
-                              child: RawAutocomplete(
-                                textEditingController:
-                                    filterTextEditingController,
-                                focusNode: filterTextFocusNode,
-                                onSelected: (String selection) {
-                                  setState(() {
-                                    filterTextEditingController.clear();
-                                    stateIsFilteredFor[stateNameToAbbreviations[
-                                        selection]!] = true;
-                                    statesFilteredFor = _statesFilteredFor;
-                                    schoolsFilteredFor =
-                                        statesFilteredFor.isEmpty
-                                            ? scoreList
-                                            : _schoolsFilteredFor;
-                                    sortDataByMethod();
-                                  });
-                                },
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<String>.empty();
-                                  }
-                                  return stateNames.where((String option) {
-                                    return option.toLowerCase().contains(
-                                        textEditingValue.text.toLowerCase());
-                                  });
-                                },
-                                optionsViewBuilder: (BuildContext context,
-                                    AutocompleteOnSelected<String> onSelected,
-                                    Iterable<String> options) {
-                                  return ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    itemCount: options.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      final String option =
-                                          options.elementAt(index);
-                                      return ListTile(
-                                        title: Text(option),
-                                        onTap: () => onSelected(option),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                children: [
+                                  const Text(
+                                    "Filter and Compare Go Here",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        20.0, 5.0, 20.0, 5.0),
+                                    child: TextField(
+                                      controller: filterTextEditingController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Search Schools',
+                                        hintText: 'Type school name...',
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        prefixIcon: Icon(Icons.search),
+                                      ),
+                                      onChanged: (String value) {
+                                        setState(() {
+                                          // Filter the school list based on the search input
+                                          schoolsFilteredFor = scoreList
+                                              .where((school) => school
+                                                  .schoolName
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase()))
+                                              .toList();
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Wrap(
+                                    children: stateAbbreviations.map((abbr) {
+                                      return Visibility(
+                                        visible: stateIsFilteredFor[abbr]!,
+                                        child: stateNameTiles[abbr]!,
+                                      );
+                                    }).toList(),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SchoolComparisonPage(),
+                                        ),
                                       );
                                     },
-                                  );
-                                },
-                                fieldViewBuilder: (BuildContext context,
-                                    TextEditingController textEditingController,
-                                    FocusNode focusNode,
-                                    VoidCallback onFieldSubmitted) {
-                                  return TextField(
-                                    controller: textEditingController,
-                                    focusNode: focusNode,
-                                    onSubmitted: (String value) {
-                                      onFieldSubmitted();
-                                    },
-                                    decoration: const InputDecoration(
-                                      labelText: 'State',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  );
-                                },
+                                    child: const Text("Compare Schools"),
+                                  ),
+                                ],
                               ),
                             ),
-                            Wrap(
-                              children: stateAbbreviations.map((abbr) {
-                                return Visibility(
-                                  visible: stateIsFilteredFor[abbr]!,
-                                  child: stateNameTiles[abbr]!,
-                                );
-                              }).toList(),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SchoolComparisonPage(),
-                                  ),
-                                );
-                              },
-                              child: const Text("Compare Schools"),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                     const SizedBox(
@@ -316,8 +316,10 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                     Expanded(
                       flex: 5,
                       child: Container(
-                        color: Colors.grey[
-                            200], // The light grey background color for the entire section
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                         child: Column(
                           children: [
                             // The header row
@@ -326,41 +328,118 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                                 SchoolScoreRow.numColumns,
                                 (index) => Expanded(
                                   flex: SchoolScoreRow.flexValues[index],
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        sortData(index);
+                                  child: MouseRegion(
+                                    onEnter: (_) {
+                                      setState(() {
+                                        _hoveredColumnIndex =
+                                            index; // Track the hovered column
+                                      });
+                                    },
+                                    onExit: (_) {
+                                      setState(() {
+                                        _hoveredColumnIndex =
+                                            -1; // Reset hover state
+                                      });
+                                    },
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        sortData(
+                                            index); // Trigger sorting logic
                                       },
-                                      child: Text(
-                                        SchoolScoreRow.columnNames[index],
-                                        style: const TextStyle(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: _hoveredColumnIndex == index
+                                              ? Colors.orange.withOpacity(
+                                                  0.2) // Hover background color
+                                              : Colors
+                                                  .transparent, // Default background
+                                          border: Border(
+                                            bottom: BorderSide(
+                                              color: _hoveredColumnIndex ==
+                                                      index
+                                                  ? Colors
+                                                      .orange // Bottom border on hover
+                                                  : Colors
+                                                      .transparent, // No border when not hovered
+                                              width: 2.0,
+                                            ),
+                                          ),
+                                        ),
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12.0),
+                                        child: Text(
+                                          SchoolScoreRow.columnNames[index],
+                                          style: TextStyle(
                                             fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                        textAlign: TextAlign.center,
+                                            fontWeight: FontWeight.bold,
+                                            color: _hoveredColumnIndex == index
+                                                ? Colors
+                                                    .orange // Text color changes on hover
+                                                : Colors.black,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
+
                             // The list of schools
                             Expanded(
-                              child: ListView.builder(
-                                itemCount: schoolsFilteredFor.length,
-                                itemBuilder: (context, index) {
-                                  Color borderColor = (index % 2 == 0)
-                                      ? Colors.grey[300]!
-                                      : Colors.grey[500]!;
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: borderColor),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 4),
                                     ),
-                                    child: SchoolScoreRow(
-                                      school: schoolsFilteredFor[index],
-                                    ),
-                                  );
-                                },
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: ListView.builder(
+                                    padding: const EdgeInsets.all(8.0),
+                                    itemCount: schoolsFilteredFor.length,
+                                    itemBuilder: (context, index) {
+                                      Color borderColor = (index % 2 == 0)
+                                          ? Colors.grey[300]!
+                                          : const Color.fromARGB(
+                                              255, 128, 127, 127)!;
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 4.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.white.withOpacity(0.5),
+                                            border:
+                                                Border.all(color: borderColor),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.05),
+                                                blurRadius: 4,
+                                                offset: Offset(0, 2),
+                                              ),
+                                            ],
+                                          ),
+                                          child: SchoolScoreRow(
+                                            school: schoolsFilteredFor[index],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
                             ),
                           ],
