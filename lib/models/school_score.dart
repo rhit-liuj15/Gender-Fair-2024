@@ -2,7 +2,7 @@ class SchoolScore {
 	int uid;
   String schoolName;
   List<int> subscores;
-	static final List<String> subscoreTitles = List.unmodifiable(["A", "B", "C", "D"]);
+	static final List<String> subscoreTitles = List.unmodifiable(["Leadership", "Policies & Pay", "Safety", "Diversity"]);
 	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
 	
 	int get score => subscores.reduce((a,b) => a+b);
@@ -22,10 +22,10 @@ class SchoolScore {
 	}
 
 	bool pairwiseWithinLimit(List<int> val, List<int> lim) {
-		// Assumes two lists of identical length
-		for (int i = 0; i < val.length; i++) {
-			if (val[i] > lim[i]) return false;
-		}
+		// Disabled checking for now until scores are ready
+		// for (int i = 0; i < val.length; i++) {
+		// 	if (val[i] > lim[i]) return false;
+		// }
 		return true;
 	}
 

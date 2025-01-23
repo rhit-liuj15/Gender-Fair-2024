@@ -34,8 +34,8 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
 
   List<String> filteringStates = <String>[];
   Map<String, String> stateNameToAbbreviations = <String, String>{};
-  int sortingBy = -1;
-  bool sortAscending = true;
+  int sortingBy = 6;
+  bool sortAscending = false;
 
   Map<String, FilterTextTile> stateNameTiles = <String, FilterTextTile>{};
   Map<String, bool> stateIsFilteredFor = <String, bool>{};
@@ -407,11 +407,6 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     itemCount: schoolsFilteredFor.length,
                                     itemBuilder: (context, index) {
-                                      Color borderColor = (index % 2 == 0)
-                                          ? Colors.grey[300]!
-                                          : const Color.fromARGB(
-                                              255, 128, 127, 127)!;
-
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 4.0),
@@ -420,7 +415,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                                             color:
                                                 Colors.white.withOpacity(0.5),
                                             border:
-                                                Border.all(color: borderColor),
+                                                Border.all(color: Colors.grey[300]!),
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                             boxShadow: [

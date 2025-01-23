@@ -4,15 +4,14 @@ import 'package:gender_fair_2024/pages/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
   static List<int> flexValues = List.unmodifiable([2, 7, 2, 2, 2, 2, 2]);
-  static List<String> columnNames = List.unmodifiable([
-    "Add To List",
-    "Institution Name",
-    "Safety",
-    "Employee Policy",
-    "Diversity",
-    "I Made This Up",
-    "Total",
-  ]);
+  static List<String> columnNames = List.unmodifiable(
+		[
+    	"Add To List",
+    	"Institution Name"
+		] + SchoolScore.subscoreTitles + [
+    	"Total",
+		]
+  );
   static List<bool> defaultSortOrder = List.unmodifiable([
     true,
     true,
