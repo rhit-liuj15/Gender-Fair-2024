@@ -44,25 +44,23 @@ class GlassBackgroundPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Background image or gradient
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
                   Colors.orange
-                      .withOpacity(0.9), // Stronger orange at the start
+                      .withOpacity(0.9),
                   Colors.deepOrange
-                      .withOpacity(0.8), // Deeper orange transition
-                  Colors.redAccent.withOpacity(0.7), // Add red for depth
+                      .withOpacity(0.8),
+                  Colors.redAccent.withOpacity(0.7), 
                 ],
-                stops: [0.2, 0.7, 1.0], // Adjust distribution of colors
+                stops: [0.2, 0.7, 1.0], 
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
           ),
 
-          // Glass effect
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
@@ -72,7 +70,7 @@ class GlassBackgroundPage extends StatelessWidget {
               ),
             ),
           ),
-          // Main content
+
           SafeArea(
             child: child,
           ),
