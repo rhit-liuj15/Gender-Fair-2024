@@ -15,6 +15,9 @@ class AllSchoolsPage extends StatefulWidget {
 
 class _AllSchoolsPageState extends State<AllSchoolsPage> {
   int _hoveredColumnIndex = -1;
+  int currentPage = 1;
+  final int schoolsPerPage = 20; // Adjust wehn I got all school values.
+
   List<SchoolScore> scoreList = <SchoolScore>[];
 
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
@@ -56,6 +59,17 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
   void initState() {
     super.initState();
     loadData();
+  }
+
+  List<SchoolScore> get paginatedSchools {
+    final startIndex = (currentPage - 1) * schoolsPerPage;
+    final endIndex = startIndex + schoolsPerPage;
+    return schoolsFilteredFor.sublist(
+      startIndex,
+      endIndex > schoolsFilteredFor.length
+          ? schoolsFilteredFor.length
+          : endIndex,
+    );
   }
 
   // Asynchronously load data from the singleton instance
@@ -272,7 +286,8 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                                       ),
                                       onChanged: (String value) {
                                         setState(() {
-                                          // Filter the school list based on the search input
+                                          currentPage =
+                                              1; // Reset to the first page when filtering
                                           schoolsFilteredFor = scoreList
                                               .where((school) => school
                                                   .schoolName
@@ -317,124 +332,188 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                       flex: 5,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: const Color.fromARGB(255, 52, 52, 52)
+                              .withOpacity(0.1),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Column(
                           children: [
-                            // The header row
-                            Row(
-                              children: List.generate(
-                                SchoolScoreRow.numColumns,
-                                (index) => Expanded(
-                                  flex: SchoolScoreRow.flexValues[index],
-                                  child: MouseRegion(
-                                    onEnter: (_) {
-                                      setState(() {
-                                        _hoveredColumnIndex =
-                                            index; // Track the hovered column
-                                      });
-                                    },
-                                    onExit: (_) {
-                                      setState(() {
-                                        _hoveredColumnIndex =
-                                            -1; // Reset hover state
-                                      });
-                                    },
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        sortData(
-                                            index); // Trigger sorting logic
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: _hoveredColumnIndex == index
-                                              ? Colors.orange.withOpacity(
-                                                  0.2) // Hover background color
-                                              : Colors
-                                                  .transparent, // Default background
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              color: _hoveredColumnIndex ==
-                                                      index
-                                                  ? Colors
-                                                      .orange // Bottom border on hover
-                                                  : Colors
-                                                      .transparent, // No border when not hovered
-                                              width: 2.0,
-                                            ),
-                                          ),
-                                        ),
-                                        alignment: Alignment.center,
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12.0),
-                                        child: Text(
-                                          SchoolScoreRow.columnNames[index],
-                                          style: TextStyle(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // "Sort by:" text and dropdown
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 16.0),
+                                  child: Row(
+                                    children: [
+                                      const Text(
+                                        "Sort by:",
+                                        style: TextStyle(
                                             fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: _hoveredColumnIndex == index
-                                                ? Colors
-                                                    .orange // Text color changes on hover
-                                                : Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      const SizedBox(width: 8.0),
+                                      DropdownButton<int>(
+                                        value: sortingBy,
+                                        onChanged: (int? newValue) {
+                                          if (newValue != null) {
+                                            setState(() {
+                                              sortingBy = newValue;
+                                              sortDataByMethod();
+                                            });
+                                          }
+                                        },
+                                        items: List.generate(
+                                          SchoolScoreRow.columnNames.length,
+                                          (index) {
+                                            // Skip the "Add to List" column
+                                            if (SchoolScoreRow
+                                                    .columnNames[index] ==
+                                                "Add To List") {
+                                              return null;
+                                            }
+                                            return DropdownMenuItem<int>(
+                                              value: index,
+                                              child: Text(
+                                                SchoolScoreRow
+                                                    .columnNames[index],
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            );
+                                          },
+                                        )
+                                            .whereType<DropdownMenuItem<int>>()
+                                            .toList(), // Remove nulls
+                                        isExpanded: false,
+                                        hint: const Text("Select column"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Column headers (non-clickable)
+                                Row(
+                                  children: List.generate(
+                                    SchoolScoreRow.numColumns,
+                                    (index) => Expanded(
+                                      flex: SchoolScoreRow.flexValues[index],
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            SchoolScoreRow.columnNames[index],
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
 
                             // The list of schools
                             Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(15),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 8,
-                                      offset: Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: ListView.builder(
-                                    padding: const EdgeInsets.all(8.0),
-                                    itemCount: schoolsFilteredFor.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
+                              child: Column(
+                                children: [
+                                  // ListView to display paginated schools
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(210, 229, 229, 228).withOpacity(0.9),
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(
+                                            color: const Color.fromARGB(255, 145, 148, 153),
+                                            width: 2.0),
+                                        boxShadow: [
+                                          BoxShadow(
                                             color:
-                                                Colors.white.withOpacity(0.5),
-                                            border:
-                                                Border.all(color: Colors.grey[300]!),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withOpacity(0.05),
-                                                blurRadius: 4,
-                                                offset: Offset(0, 2),
+                                                const Color.fromARGB(255, 36, 34, 34).withOpacity(0.2),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 5),
+                                          ),
+                                        ],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: ListView.builder(
+                                          padding: const EdgeInsets.all(8.0),
+                                          itemCount: paginatedSchools.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              decoration: BoxDecoration(
+                                                border: Border(
+                                                  bottom: BorderSide(
+                                                      color: const Color.fromARGB(255, 185, 182, 174)!,
+                                                      width: 1.0),
+                                                ),
                                               ),
-                                            ],
-                                          ),
-                                          child: SchoolScoreRow(
-                                            school: schoolsFilteredFor[index],
-                                          ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 4.0),
+                                                child: SchoolScoreRow(
+                                                    school: paginatedSchools[
+                                                        index]),
+                                              ),
+                                            );
+                                          },
                                         ),
-                                      );
-                                    },
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  // Pagination controls
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: currentPage > 1
+                                              ? () {
+                                                  setState(() {
+                                                    currentPage--;
+                                                  });
+                                                }
+                                              : null,
+                                          child: const Text("Previous"),
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Text(
+                                          "Page $currentPage of ${((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage).ceil()}",
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const SizedBox(width: 20),
+                                        ElevatedButton(
+                                          onPressed: currentPage <
+                                                  ((schoolsFilteredFor.length +
+                                                              schoolsPerPage -
+                                                              1) /
+                                                          schoolsPerPage)
+                                                      .ceil()
+                                              ? () {
+                                                  setState(() {
+                                                    currentPage++;
+                                                  });
+                                                }
+                                              : null,
+                                          child: const Text("Next"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
