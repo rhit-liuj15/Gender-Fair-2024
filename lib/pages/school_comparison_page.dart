@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/components/school_score_row.dart';
+import 'package:gender_fair_2024/models/data_loader.dart';
+import 'package:gender_fair_2024/models/school_data.dart';
 
 class SchoolComparisonPage extends StatefulWidget {
 
@@ -13,10 +15,20 @@ class SchoolComparisonPage extends StatefulWidget {
 
 class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
 
+  late Set<SchoolData> schoolDatas = {};
 
   @override
   void initState() {
     super.initState();
+		loadData();
+  }
+
+  // Asynchronously load data from the singleton instance
+  Future<void> loadData() async {
+    await DataLoader.instance.requestSchoolData(SchoolScoreRow.selectedSchools);
+    setState(() {
+    	schoolDatas = SchoolScoreRow.selectedSchools.map((key) => DataLoader.instance.allSchools[key]!).toSet();
+    });
   }
 
   @override
@@ -29,7 +41,7 @@ class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
       body: Center(
 				child: Padding(
 					padding: const EdgeInsets.all(40.0),
-					child: Text("Comparing Schools ${SchoolScoreRow.selectedSchools.toString()}"),
+					child: Text("Comparing Schools ${schoolDatas.toString()}"),
         )
       ),
     );
