@@ -17,7 +17,12 @@ class SchoolDetailPage extends StatefulWidget {
 }
 
 class _SchoolDetailPageState extends State<SchoolDetailPage> {
-  late SchoolData schoolData;
+  SchoolData schoolData = SchoolData(
+  uid: 0,
+  schoolName: 'Loading...',
+  categories: {},
+);
+
 
   @override
   void initState() {

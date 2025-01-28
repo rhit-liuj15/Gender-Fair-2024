@@ -15,7 +15,7 @@ class SchoolComparisonPage extends StatefulWidget {
 
 class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
 
-  late Set<SchoolData> schoolDatas = {};
+  Set<SchoolData> schoolDatas = {};
 
   @override
   void initState() {
