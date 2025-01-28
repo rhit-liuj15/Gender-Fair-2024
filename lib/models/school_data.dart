@@ -1,7 +1,7 @@
 class SchoolData {
-	int uid;
-  String schoolName;
-	Map<String,SchoolDataCategory> categories;
+	late int uid;
+  late String schoolName;
+	late Set<SchoolDataCategory> categories;
 
   SchoolData({
 		required this.uid,
@@ -9,18 +9,63 @@ class SchoolData {
     required this.categories,
   });
 
+	
+  SchoolData.fromJSON(dynamic json) {
+		uid = json["UNITID"];
+		schoolName = json["INSTNM"];
+		categories = {
+			SchoolDataCategory(
+				categoryName: "Basic Information",
+				data: {
+					"2023 Graduation Headcount" : json["DEGREETOT"],
+					"Fall 2023 Enrollment" : json["ENROLTOT"],
+				}
+			),
+			SchoolDataCategory(
+				categoryName: "Financials",
+				data: {
+					"Average Salary For Men" : json["SALARYPPM"],
+					"Average Salary For Women" : json["SALARYPPF"],
+				}
+			),
+			SchoolDataCategory(
+				categoryName: "Academic Staff Composition",
+				data: {
+					"Women Professors" : json["PROFWOMENPCT"],
+					"Women Associate Professors" : json["ASSOCPROFWOMEN"],
+					"Tenured Women Academic Staff" : json["TENUREWOMENPCT"],
+				}
+			),
+			SchoolDataCategory(
+				categoryName: "Non-Academic Staff Composition",
+				data: {
+					"Black" : json["NASBLACKPCT"],
+					"Hispanic" : json["NASHISPANICPCT"],
+					"Asian" : json["NASASIAPCT"],
+				}
+			),
+			SchoolDataCategory(
+				categoryName: "Safety",
+				data: {
+					"Hate Crimes Per Year 2020-2022" : json["YEARLYHATECRIME"],
+					"Hate Crimes Per Year 2020-2022 Per 1K Students" : json["YEARLYHATECRIME1K"],
+					"VAWA Per Year 2020-2022" : json["YEARLYVAWA"],
+					"VAWA Per Year 2020-2022 Per 1K Students" : json["YEARLYVAWA1K"],
+				}
+			),
+		};
+  }
+
+  SchoolData.unknownUID(int uid) {
+    uid = uid;
+    schoolName = "Unknown School $uid!";
+    categories = {};
+  }
+
   @override
   String toString() {
-    return "The school $schoolName has UID $uid";
+    return "\n$schoolName\nUID $uid\n" + categories.toString();
   }
-}
-
-SchoolData defaultSchoolDataWithUID(int uid) {
-  return SchoolData(
-    uid: uid,
-    schoolName: "No data for uid $uid!",
-    categories: {},
-  );
 }
 
 class SchoolDataCategory {
@@ -32,5 +77,10 @@ class SchoolDataCategory {
     required this.categoryName,
     required this.data,
   });
+
+	@override
+	 String toString() {
+		return "$categoryName: $data\n";
+	}
 
 }

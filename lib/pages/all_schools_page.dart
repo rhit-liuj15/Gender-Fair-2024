@@ -21,19 +21,19 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
   List<SchoolScore> scoreList = <SchoolScore>[];
 
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
-  List<SchoolScore> get _schoolsFilteredFor {
-    return scoreList;
-  }
+  // List<SchoolScore> get _schoolsFilteredFor {
+  //   return scoreList;
+  // }
 
   List<String> stateNames = <String>[];
-  List<String> get _stateNames {
-    return stateNameToAbbreviations.keys.toList();
-  }
+  // List<String> get _stateNames {
+  //   return stateNameToAbbreviations.keys.toList();
+  // }
 
   List<String> stateAbbreviations = <String>[];
-  List<String> get _stateAbbreviations {
-    return stateNameToAbbreviations.values.toList();
-  }
+  // List<String> get _stateAbbreviations {
+  //   return stateNameToAbbreviations.values.toList();
+  // }
 
   List<String> filteringStates = <String>[];
   Map<String, String> stateNameToAbbreviations = <String, String>{};
@@ -43,12 +43,12 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
   Map<String, FilterTextTile> stateNameTiles = <String, FilterTextTile>{};
   Map<String, bool> stateIsFilteredFor = <String, bool>{};
   List<String> statesFilteredFor = <String>[];
-  List<String> get _statesFilteredFor {
-    return stateIsFilteredFor.entries
-        .where((entry) => entry.value == true)
-        .map((entry) => entry.key)
-        .toList();
-  }
+  // List<String> get _statesFilteredFor {
+  //   return stateIsFilteredFor.entries
+  //       .where((entry) => entry.value == true)
+  //       .map((entry) => entry.key)
+  //       .toList();
+  // }
 
   final TextStyle textStyle = const TextStyle(fontSize: 18.0);
   final TextEditingController filterTextEditingController =
@@ -79,36 +79,35 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
       scoreList = DataLoader.instance.allScores.values.toList();
       stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
     });
-    stateNames = _stateNames;
-    stateAbbreviations = _stateAbbreviations;
-    statesFilteredFor = _statesFilteredFor;
-    schoolsFilteredFor =
-        statesFilteredFor.isEmpty ? scoreList : _schoolsFilteredFor;
-    sortDataByMethod();
-    populateStateNameTiles();
+    // stateNames = _stateNames;
+    // stateAbbreviations = _stateAbbreviations;
+    // statesFilteredFor = _statesFilteredFor;
+    schoolsFilteredFor = scoreList;
+    // schoolsFilteredFor = statesFilteredFor.isEmpty ? scoreList : _schoolsFilteredFor;
+    // populateStateNameTiles();
   }
 
-  void populateStateNameTiles() {
-    for (String name in stateNames) {
-      String abbr = stateNameToAbbreviations[name]!;
-      stateIsFilteredFor[abbr] = false;
-      stateNameTiles[abbr] = FilterTextTile(
-          state: name,
-          removeStateCallback: () {
-            if (stateIsFilteredFor.containsKey(abbr)) {
-              setState(() {
-                stateIsFilteredFor[abbr] = false;
-                statesFilteredFor = _statesFilteredFor;
-                schoolsFilteredFor =
-                    statesFilteredFor.isEmpty ? scoreList : _schoolsFilteredFor;
-                sortDataByMethod();
-              });
-            } else {
-              print("The abbreviation '$abbr' does not exist");
-            }
-          });
-    }
-  }
+  // void populateStateNameTiles() {
+  //   for (String name in stateNames) {
+  //     String abbr = stateNameToAbbreviations[name]!;
+  //     stateIsFilteredFor[abbr] = false;
+  //     stateNameTiles[abbr] = FilterTextTile(
+  //         state: name,
+  //         removeStateCallback: () {
+  //           if (stateIsFilteredFor.containsKey(abbr)) {
+  //             setState(() {
+  //               stateIsFilteredFor[abbr] = false;
+  //               statesFilteredFor = _statesFilteredFor;
+  //               schoolsFilteredFor =
+  //                   statesFilteredFor.isEmpty ? scoreList : _schoolsFilteredFor;
+  //               sortDataByMethod();
+  //             });
+  //           } else {
+  //             print("The abbreviation '$abbr' does not exist");
+  //           }
+  //         });
+  //   }
+  // }
 
   void sortData(int index) {
     setState(() {

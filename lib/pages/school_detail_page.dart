@@ -22,9 +22,18 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   @override
   void initState() {
     super.initState();
-    DataLoader.instance.requestSchoolData(widget.uid);
-    schoolData = DataLoader.instance.allSchools[widget.uid]!;
+		loadData();
   }
+
+
+  // Asynchronously load data from the singleton instance
+  Future<void> loadData() async {
+    await DataLoader.instance.requestSchoolData({widget.uid});
+    setState(() {
+    	schoolData = DataLoader.instance.allSchools[widget.uid]!;
+    });
+  }
+
   Widget buildPieChart(List<double> values, List<Color> colors, List<String> titles) {
   int touchedIndex = -1;
 
@@ -114,11 +123,6 @@ Widget buildHorizontalBarGraph(List<double> values, List<String> titles, Color b
   );
 }
 
-
-
-
-
-
 @override
 Widget build(BuildContext context) {
   return Scaffold(
@@ -127,6 +131,7 @@ Widget build(BuildContext context) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+					Text(schoolData.toString()),
           const SizedBox(height: 20),
           Text(
             "Diversity Distribution",
