@@ -5,7 +5,7 @@ import 'package:gender_fair_2024/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/pages/school_comparison_page.dart';
-// Adjust these imports to match your folder structure
+
 import 'filter_and_compare_pane.dart';
 import 'school_list_pane.dart';
 

@@ -1,228 +1,168 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_data.dart';
-
+import 'pie_chart_widget.dart';
+import 'bar_chart_widget.dart';
 
 class SchoolDetailPage extends StatefulWidget {
   final int uid;
-
-  const SchoolDetailPage({
-    super.key,
-    required this.uid,
-  });
+  const SchoolDetailPage({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<SchoolDetailPage> createState() => _SchoolDetailPageState();
 }
 
 class _SchoolDetailPageState extends State<SchoolDetailPage> {
-
   SchoolData schoolData = SchoolData.unknownUID(0);
-	
+
   @override
   void initState() {
     super.initState();
-		loadData();
+    loadData();
   }
 
-
-  // Asynchronously load data from the singleton instance
   Future<void> loadData() async {
     await DataLoader.instance.requestSchoolData({widget.uid});
     setState(() {
-    	schoolData = DataLoader.instance.allSchools[widget.uid]!;
+      schoolData = DataLoader.instance.allSchools[widget.uid]!;
     });
   }
 
-  Widget buildPieChart(List<double> values, List<Color> colors, List<String> titles) {
-  int touchedIndex = -1;
+  double toDouble(dynamic v) {
+    return (v is num) ? v.toDouble() : 0.0;
+  }
 
-  return StatefulBuilder(
-    builder: (context, setState) {
-      return PieChart(
-        PieChartData(
-          pieTouchData: PieTouchData(
-            touchCallback: (FlTouchEvent event, pieTouchResponse) {
-              setState(() {
-                if (!event.isInterestedForInteractions ||
-                    pieTouchResponse == null ||
-                    pieTouchResponse.touchedSection == null) {
-                  touchedIndex = -1;
-                  return;
-                }
-                touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-              });
-            },
-          ),
-          sections: List.generate(values.length, (index) {
-            final isTouched = index == touchedIndex;
-            final fontSize = isTouched ? 25.0 : 16.0;
-            final radius = isTouched ? 70.0 : 60.0;
+  @override
+  Widget build(BuildContext context) {
+    final academic = schoolData.categories.firstWhere(
+      (c) => c.categoryName == "Academic Staff Composition",
+      orElse: () => schoolData.categories.first,
+    );
+    final nonAcademic = schoolData.categories.firstWhere(
+      (c) => c.categoryName == "Non-Academic Staff Composition",
+      orElse: () => schoolData.categories.first,
+    );
+    final financials = schoolData.categories.firstWhere(
+      (c) => c.categoryName == "Financials",
+      orElse: () => schoolData.categories.first,
+    );
 
-            return PieChartSectionData(
-              color: colors[index],
-              value: values[index],
-              title: titles[index],
-              titleStyle: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.bold,
-              ),
-              radius: radius,
-            );
-          }),
-          centerSpaceRadius: 40,
-          borderData: FlBorderData(show: false),
-        ),
-      );
-    },
-  );
-}
+    final wProf = toDouble(academic.data["Women Professors"]);
+    final wAssoc = toDouble(academic.data["Women Associate Professors"]);
+    final wTenure = toDouble(academic.data["Tenured Women Academic Staff"]);
+    final profMen = 1.0 - wProf;
+    final assocMen = 1.0 - wAssoc;
+    final tenureMen = 1.0 - wTenure;
 
+    final black = toDouble(nonAcademic.data["Black"]);
+    final hispanic = toDouble(nonAcademic.data["Hispanic"]);
+    final asian = toDouble(nonAcademic.data["Asian"]);
+    final sumRace = black + hispanic + asian;
+    final white = (sumRace < 1.0) ? (1.0 - sumRace) : 0.0;
 
-Widget buildHorizontalBarGraph(List<double> values, List<String> titles, Color barColor) {
-  return BarChart(
-    BarChartData(
-      rotationQuarterTurns: 1, // This sets the chart to horizontal
-      barGroups: List.generate(values.length, (index) {
-        return BarChartGroupData(
-          x: index,
-          barRods: [
-            BarChartRodData(
-              toY: values[index], 
-              color: barColor,
-              width: 20,
-              borderRadius: BorderRadius.circular(4),
+    final nonAcademicChartData = {
+      "Black": black,
+      "Hispanic": hispanic,
+      "Asian": asian,
+      "White": white,
+    };
+
+    final avgSalaryMen = toDouble(financials.data["Average Salary For Men"]);
+    final avgSalaryWomen = toDouble(financials.data["Average Salary For Women"]);
+    final financialData = {
+      "Avg Salary Men": avgSalaryMen,
+      "Avg Salary Women": avgSalaryWomen,
+    };
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(schoolData.schoolName),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(schoolData.toString()),
+            const SizedBox(height: 20),
+
+            const Text(
+              "Academic Staff Composition",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
+            const SizedBox(height: 10),
+
+            // Horizontal Row with Centered Pie Charts
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: PieChartWidget(
+                      data: {
+                        "Women Professors": wProf,
+                        "Men Professors": profMen,
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                  SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: PieChartWidget(
+                      data: {
+                        "Women Assoc. Professors": wAssoc,
+                        "Men Assoc. Professors": assocMen,
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                  SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: PieChartWidget(
+                      data: {
+                        "Tenured Women": wTenure,
+                        "Tenured Men": tenureMen,
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            const Text(
+              "Non-Academic Staff Composition",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: 200,
+              height: 200,
+              child: PieChartWidget(data: nonAcademicChartData),
+            ),
+            const SizedBox(height: 30),
+
+            const Text(
+              "Financials",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 300,
+              width: 400,
+              child: BarChartWidget(data: financialData),
+            ),
+            const SizedBox(height: 30),
           ],
-        );
-      }),
-      barTouchData: BarTouchData(enabled: false),
-      gridData: FlGridData(show: false), // No grid lines
-      titlesData: FlTitlesData(
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 80,
-            getTitlesWidget: (value, meta) {
-              int index = value.toInt();
-              if (index >= 0 && index < titles.length) {
-                return Text(titles[index]); 
-              }
-              return const Text('');
-            },
-          ),
         ),
-        leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-        topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
-      borderData: FlBorderData(show: false), // No border
-      alignment: BarChartAlignment.center,
-      maxY: values.reduce((a, b) => a > b ? a : b) + 5,
-    ),
-  );
-}
-
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(title: Text(schoolData.schoolName)),
-    body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-					Text(schoolData.toString()),
-          const SizedBox(height: 20),
-          Text(
-            "Diversity Distribution",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: buildPieChart(
-                      [25.0, 35.0, 15.0, 25.0],
-                      [Colors.red, Colors.green, Colors.blue, Colors.orange],
-                      ["A", "B", "C", "D"],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Chart 1 Label",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 40),
-              Column(
-                children: [
-                  SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: buildPieChart(
-                      [20.0, 40.0, 40.0],
-                      [Colors.orange, Colors.purple, Colors.yellow, Colors.cyan],
-                      ["E", "F", "G", "H"],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Chart 2 Label",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 40),
-              Column(
-                children: [
-                  SizedBox(
-                    height: 200,
-                    width: 200,
-                    child: buildPieChart(
-                      [33.0, 33.0, 34.0],
-                      [Colors.pink, Colors.cyan, Colors.indigo],
-                      ["X", "Y", "Z"],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Chart 3 Label",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 40),
-          Text(
-            "Subscore Breakdown (Vertical)",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 300,
-            child: buildHorizontalBarGraph
-            (
-              [10.0, 20.0, 15.0, 25.0],
-              ["1", "2", "3", "4"],
-              Colors.blue,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-
-
-
-
+    );
+  }
 }
