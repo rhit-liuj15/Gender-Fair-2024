@@ -6,6 +6,9 @@ import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/pages/school_comparison_page.dart';
 
+import 'filter_and_compare_pane.dart';
+import 'school_list_pane.dart';
+
 class AllSchoolsPage extends StatefulWidget {
   const AllSchoolsPage({super.key});
 
@@ -16,25 +19,13 @@ class AllSchoolsPage extends StatefulWidget {
 class _AllSchoolsPageState extends State<AllSchoolsPage> {
   int _hoveredColumnIndex = -1;
   int currentPage = 1;
-  final int schoolsPerPage = 20; // Adjust wehn I got all school values.
+  final int schoolsPerPage = 20;
 
   List<SchoolScore> scoreList = <SchoolScore>[];
-
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
-  // List<SchoolScore> get _schoolsFilteredFor {
-  //   return scoreList;
-  // }
 
   List<String> stateNames = <String>[];
-  // List<String> get _stateNames {
-  //   return stateNameToAbbreviations.keys.toList();
-  // }
-
   List<String> stateAbbreviations = <String>[];
-  // List<String> get _stateAbbreviations {
-  //   return stateNameToAbbreviations.values.toList();
-  // }
-
   List<String> filteringStates = <String>[];
   Map<String, String> stateNameToAbbreviations = <String, String>{};
   int sortingBy = 6;
@@ -43,12 +34,6 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
   Map<String, FilterTextTile> stateNameTiles = <String, FilterTextTile>{};
   Map<String, bool> stateIsFilteredFor = <String, bool>{};
   List<String> statesFilteredFor = <String>[];
-  // List<String> get _statesFilteredFor {
-  //   return stateIsFilteredFor.entries
-  //       .where((entry) => entry.value == true)
-  //       .map((entry) => entry.key)
-  //       .toList();
-  // }
 
   final TextStyle textStyle = const TextStyle(fontSize: 18.0);
   final TextEditingController filterTextEditingController =
@@ -66,48 +51,18 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
     final endIndex = startIndex + schoolsPerPage;
     return schoolsFilteredFor.sublist(
       startIndex,
-      endIndex > schoolsFilteredFor.length
-          ? schoolsFilteredFor.length
-          : endIndex,
+      endIndex > schoolsFilteredFor.length ? schoolsFilteredFor.length : endIndex,
     );
   }
 
-  // Asynchronously load data from the singleton instance
   Future<void> loadData() async {
     await DataLoader.instance.loadData();
     setState(() {
       scoreList = DataLoader.instance.allScores.values.toList();
       stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
     });
-    // stateNames = _stateNames;
-    // stateAbbreviations = _stateAbbreviations;
-    // statesFilteredFor = _statesFilteredFor;
     schoolsFilteredFor = scoreList;
-    // schoolsFilteredFor = statesFilteredFor.isEmpty ? scoreList : _schoolsFilteredFor;
-    // populateStateNameTiles();
   }
-
-  // void populateStateNameTiles() {
-  //   for (String name in stateNames) {
-  //     String abbr = stateNameToAbbreviations[name]!;
-  //     stateIsFilteredFor[abbr] = false;
-  //     stateNameTiles[abbr] = FilterTextTile(
-  //         state: name,
-  //         removeStateCallback: () {
-  //           if (stateIsFilteredFor.containsKey(abbr)) {
-  //             setState(() {
-  //               stateIsFilteredFor[abbr] = false;
-  //               statesFilteredFor = _statesFilteredFor;
-  //               schoolsFilteredFor =
-  //                   statesFilteredFor.isEmpty ? scoreList : _schoolsFilteredFor;
-  //               sortDataByMethod();
-  //             });
-  //           } else {
-  //             print("The abbreviation '$abbr' does not exist");
-  //           }
-  //         });
-  //   }
-  // }
 
   void sortData(int index) {
     setState(() {
@@ -131,7 +86,6 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
         int compareResult;
         switch (sortingBy) {
           case -1:
-            //compareResult = a.uid.compareTo(b.uid);
             compareResult = b.score.compareTo(a.score);
             break;
           case 1:
@@ -156,8 +110,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
             throw ("Sort column index $sortingBy is not supported");
         }
         if (compareResult == 0) {
-          return a.uid
-              .compareTo(b.uid); // Backup sort, UID is guaranteed unique
+          return a.uid.compareTo(b.uid);
         }
         return sortAscending ? compareResult : -compareResult;
       });
@@ -169,9 +122,9 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
     return Scaffold(
       body: Column(
         children: [
+          // Top header
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
             child: Row(
               children: [
                 SizedBox(
@@ -188,15 +141,15 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         "School Ranking System",
                         style: TextStyle(
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 8.0),
-                      const Flexible(
+                      SizedBox(height: 8.0),
+                      Flexible(
                         child: Text(
                           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
                           "Vivamus lacinia odio vitae vestibulum vestibulum. "
@@ -213,310 +166,73 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 10.0),
+                SizedBox(width: 10.0),
               ],
             ),
           ),
+
+          // Main content row
           Expanded(
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 40.0, vertical: 10.0),
+                  horizontal: 40.0,
+                  vertical: 10.0,
+                ),
                 child: Row(
                   children: [
+                    // Left pane: filter, compare
                     Expanded(
                       flex: 2,
-                      child: Stack(
-                        children: [
-                          // Glass effect background
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(
-                                  0.2), // Semi-transparent glass effect
-                              borderRadius:
-                                  BorderRadius.circular(15), // Rounded edges
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(
-                                      0.1), // Subtle shadow for depth
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5),
-                                ),
-                              ],
+                      child: FilterAndComparePane(
+                        filterTextEditingController: filterTextEditingController,
+                        stateAbbreviations: stateAbbreviations,
+                        stateIsFilteredFor: stateIsFilteredFor,
+                        stateNameTiles: stateNameTiles,
+                        onSearchChange: (value) {
+                          setState(() {
+                            currentPage = 1;
+                            schoolsFilteredFor = scoreList
+                                .where((school) => school.schoolName
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase()))
+                                .toList();
+                          });
+                        },
+                        onComparePressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const SchoolComparisonPage(),
                             ),
-                          ),
-                          // Filter and Compare Content
-                          Card(
-                            elevation:
-                                0, // Remove Card shadow to avoid layering issues
-                            color: Colors
-                                .transparent, // Transparent Card to blend with the glass effect
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  15), // Match background radius
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                children: [
-                                  const Text(
-                                    "Filter and Compare Go Here",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        20.0, 5.0, 20.0, 5.0),
-                                    child: TextField(
-                                      controller: filterTextEditingController,
-                                      decoration: InputDecoration(
-                                        labelText: 'Search Schools',
-                                        hintText: 'Type school name...',
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        prefixIcon: Icon(Icons.search),
-                                      ),
-                                      onChanged: (String value) {
-                                        setState(() {
-                                          currentPage =
-                                              1; // Reset to the first page when filtering
-                                          schoolsFilteredFor = scoreList
-                                              .where((school) => school
-                                                  .schoolName
-                                                  .toLowerCase()
-                                                  .contains(
-                                                      value.toLowerCase()))
-                                              .toList();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Wrap(
-                                    children: stateAbbreviations.map((abbr) {
-                                      return Visibility(
-                                        visible: stateIsFilteredFor[abbr]!,
-                                        child: stateNameTiles[abbr]!,
-                                      );
-                                    }).toList(),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SchoolComparisonPage(),
-                                        ),
-                                      );
-                                    },
-                                    child: const Text("Compare Schools"),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
-                    const SizedBox(
-                      width: 30.0,
-                    ),
+
+                    const SizedBox(width: 30.0),
+
+                    // Right pane: sorting, list, pagination
                     Expanded(
                       flex: 5,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 52, 52, 52)
-                              .withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Column(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // "Sort by:" text and dropdown
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 16.0),
-                                  child: Row(
-                                    children: [
-                                      const Text(
-                                        "Sort by:",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(width: 8.0),
-                                      DropdownButton<int>(
-                                        value: sortingBy,
-                                        onChanged: (int? newValue) {
-                                          if (newValue != null) {
-                                            setState(() {
-                                              sortingBy = newValue;
-                                              sortDataByMethod();
-                                            });
-                                          }
-                                        },
-                                        items: List.generate(
-                                          SchoolScoreRow.columnNames.length,
-                                          (index) {
-                                            // Skip the "Add to List" column
-                                            if (SchoolScoreRow
-                                                    .columnNames[index] ==
-                                                "Add To List") {
-                                              return null;
-                                            }
-                                            return DropdownMenuItem<int>(
-                                              value: index,
-                                              child: Text(
-                                                SchoolScoreRow
-                                                    .columnNames[index],
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            );
-                                          },
-                                        )
-                                            .whereType<DropdownMenuItem<int>>()
-                                            .toList(), // Remove nulls
-                                        isExpanded: false,
-                                        hint: const Text("Select column"),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // Column headers (non-clickable)
-                                Row(
-                                  children: List.generate(
-                                    SchoolScoreRow.numColumns,
-                                    (index) => Expanded(
-                                      flex: SchoolScoreRow.flexValues[index],
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            SchoolScoreRow.columnNames[index],
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            // The list of schools
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  // ListView to display paginated schools
-                                  Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromARGB(210, 229, 229, 228).withOpacity(0.9),
-                                        borderRadius: BorderRadius.circular(15),
-                                        border: Border.all(
-                                            color: const Color.fromARGB(255, 145, 148, 153),
-                                            width: 2.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                const Color.fromARGB(255, 36, 34, 34).withOpacity(0.2),
-                                            blurRadius: 10,
-                                            offset: Offset(0, 5),
-                                          ),
-                                        ],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(15),
-                                        child: ListView.builder(
-                                          padding: const EdgeInsets.all(8.0),
-                                          itemCount: paginatedSchools.length,
-                                          itemBuilder: (context, index) {
-                                            return Container(
-                                              decoration: BoxDecoration(
-                                                border: Border(
-                                                  bottom: BorderSide(
-                                                      color: const Color.fromARGB(255, 185, 182, 174)!,
-                                                      width: 1.0),
-                                                ),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 4.0),
-                                                child: SchoolScoreRow(
-                                                    school: paginatedSchools[
-                                                        index]),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  // Pagination controls
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: currentPage > 1
-                                              ? () {
-                                                  setState(() {
-                                                    currentPage--;
-                                                  });
-                                                }
-                                              : null,
-                                          child: const Text("Previous"),
-                                        ),
-                                        const SizedBox(width: 20),
-                                        Text(
-                                          "Page $currentPage of ${((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage).ceil()}",
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        const SizedBox(width: 20),
-                                        ElevatedButton(
-                                          onPressed: currentPage <
-                                                  ((schoolsFilteredFor.length +
-                                                              schoolsPerPage -
-                                                              1) /
-                                                          schoolsPerPage)
-                                                      .ceil()
-                                              ? () {
-                                                  setState(() {
-                                                    currentPage++;
-                                                  });
-                                                }
-                                              : null,
-                                          child: const Text("Next"),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                      child: SchoolListPane(
+                        sortingBy: sortingBy,
+                        onSortByMethod: sortDataByMethod,
+                        onUpdateSortingBy: (int newIndex) {
+                          setState(() {
+                            sortingBy = newIndex;
+                            sortDataByMethod();
+                          });
+                        },
+                        onSortData: sortData,
+                        schoolsFilteredFor: schoolsFilteredFor,
+                        paginatedSchools: paginatedSchools,
+                        currentPage: currentPage,
+                        schoolsPerPage: schoolsPerPage,
+                        onPageChange: (int newPage) {
+                          setState(() {
+                            currentPage = newPage;
+                          });
+                        },
                       ),
                     ),
                   ],
