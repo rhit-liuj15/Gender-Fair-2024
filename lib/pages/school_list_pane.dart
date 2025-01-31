@@ -29,7 +29,8 @@ class SchoolListPane extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totalPages =
-        ((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage).ceil();
+        ((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage)
+            .ceil();
 
     return Container(
       decoration: BoxDecoration(
@@ -40,7 +41,8 @@ class SchoolListPane extends StatelessWidget {
         children: [
           // Sorting row
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            padding:
+                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
             child: Row(
               children: [
                 const Text(
@@ -92,9 +94,10 @@ class SchoolListPane extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       SchoolScoreRow.columnNames[index],
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: index == sortingBy ? Colors.blue : Colors.black, // Highlight sorted column
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -138,13 +141,15 @@ class SchoolListPane extends StatelessWidget {
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(
-                                  color: const Color.fromARGB(255, 185, 182, 174),
+                                  color:
+                                      const Color.fromARGB(255, 185, 182, 174),
                                   width: 1.0,
                                 ),
                               ),
                             ),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
                               child: SchoolScoreRow(
                                 school: paginatedSchools[index],
                               ),
@@ -155,7 +160,7 @@ class SchoolListPane extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Pagination controls
+
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Row(
@@ -163,22 +168,39 @@ class SchoolListPane extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: currentPage > 1
-                            ? () => onPageChange(currentPage - 1)
+                            ? () => onPageChange((currentPage - 1).clamp(1, totalPages))
                             : null,
                         child: const Text("Previous"),
                       ),
                       const SizedBox(width: 20),
-                      Text(
-                        "Page $currentPage of $totalPages",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                      SizedBox(
+                        width: 50,
+                        child: TextField(
+                          controller:
+                              TextEditingController(text: currentPage.toString()),
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                          ),
+                          onSubmitted: (value) {
+                            int? newPage = int.tryParse(value);
+                            if (newPage != null) {
+                              newPage = newPage.clamp(1, totalPages); 
+                              onPageChange(newPage);
+                            }
+                          },
                         ),
+                      ),
+                      Text(
+                        " of $totalPages",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: currentPage < totalPages
-                            ? () => onPageChange(currentPage + 1)
+                            ? () => onPageChange((currentPage + 1).clamp(1, totalPages))
                             : null,
                         child: const Text("Next"),
                       ),

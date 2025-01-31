@@ -46,14 +46,30 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
     loadData();
   }
 
-  List<SchoolScore> get paginatedSchools {
-    final startIndex = (currentPage - 1) * schoolsPerPage;
-    final endIndex = startIndex + schoolsPerPage;
-    return schoolsFilteredFor.sublist(
-      startIndex,
-      endIndex > schoolsFilteredFor.length ? schoolsFilteredFor.length : endIndex,
-    );
+List<SchoolScore> get paginatedSchools {
+  if (schoolsFilteredFor.isEmpty) {
+    return [];
   }
+
+  final totalPages =
+      ((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage).ceil();
+
+  if (currentPage > totalPages) {
+    currentPage = totalPages; 
+  } else if (currentPage < 1) {
+    currentPage = 1;
+  }
+
+  final startIndex = (currentPage - 1) * schoolsPerPage;
+  final endIndex = (startIndex + schoolsPerPage).clamp(0, schoolsFilteredFor.length);
+
+  return startIndex < schoolsFilteredFor.length
+      ? schoolsFilteredFor.sublist(startIndex, endIndex)
+      : [];
+}
+
+
+
 
   Future<void> loadData() async {
   await DataLoader.instance.loadData();
@@ -173,7 +189,6 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
             ),
           ),
 
-          // Main content row
           Expanded(
             child: Center(
               child: Padding(
