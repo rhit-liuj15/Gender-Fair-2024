@@ -56,13 +56,15 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
   }
 
   Future<void> loadData() async {
-    await DataLoader.instance.loadData();
-    setState(() {
-      scoreList = DataLoader.instance.allScores.values.toList();
-      stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
-    });
-    schoolsFilteredFor = scoreList;
-  }
+  await DataLoader.instance.loadData();
+  setState(() {
+    scoreList = DataLoader.instance.allScores.values.toList();
+    stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
+    schoolsFilteredFor = List.from(scoreList); 
+    sortDataByMethod(); 
+  });
+}
+
 
   void sortData(int index) {
     setState(() {

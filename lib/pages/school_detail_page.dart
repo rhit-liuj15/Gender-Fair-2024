@@ -14,6 +14,7 @@ class SchoolDetailPage extends StatefulWidget {
 
 class _SchoolDetailPageState extends State<SchoolDetailPage> {
   SchoolData schoolData = SchoolData.unknownUID(0);
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -24,7 +25,9 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   Future<void> loadData() async {
     await DataLoader.instance.requestSchoolData({widget.uid});
     setState(() {
-      schoolData = DataLoader.instance.allSchools[widget.uid]!;
+      schoolData = DataLoader.instance.allSchools[widget.uid] ??
+          SchoolData.unknownUID(widget.uid);
+      isLoading = false;
     });
   }
 
@@ -34,17 +37,31 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        appBar: AppBar(title: const Text("Loading...")),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     final academic = schoolData.categories.firstWhere(
       (c) => c.categoryName == "Academic Staff Composition",
-      orElse: () => schoolData.categories.first,
+      orElse: () => SchoolDataCategory(categoryName: "Unknown", data: {}),
     );
+
     final nonAcademic = schoolData.categories.firstWhere(
       (c) => c.categoryName == "Non-Academic Staff Composition",
-      orElse: () => schoolData.categories.first,
+      orElse: () => SchoolDataCategory(categoryName: "Unknown", data: {}),
     );
+
     final financials = schoolData.categories.firstWhere(
       (c) => c.categoryName == "Financials",
-      orElse: () => schoolData.categories.first,
+      orElse: () => SchoolDataCategory(categoryName: "Unknown", data: {}),
+    );
+
+    final safety = schoolData.categories.firstWhere(
+      (c) => c.categoryName == "Safety",
+      orElse: () => SchoolDataCategory(categoryName: "Unknown", data: {}),
     );
 
     final wProf = toDouble(academic.data["Women Professors"]);
@@ -68,101 +85,139 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
     };
 
     final avgSalaryMen = toDouble(financials.data["Average Salary For Men"]);
-    final avgSalaryWomen = toDouble(financials.data["Average Salary For Women"]);
+    final avgSalaryWomen =
+        toDouble(financials.data["Average Salary For Women"]);
+
     final financialData = {
       "Avg Salary Men": avgSalaryMen,
       "Avg Salary Women": avgSalaryWomen,
+    };
+
+    final hateCrimes = toDouble(safety.data["Hate Crimes Per Year 2020-2022"]);
+    final vawaIncidents = toDouble(safety.data["VAWA Per Year 2020-2022"]);
+
+    final safetyData = {
+      "Hate Crimes": hateCrimes,
+      "VAWA Cases": vawaIncidents,
     };
 
     return Scaffold(
       appBar: AppBar(
         title: Text(schoolData.schoolName),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(schoolData.toString()),
-            const SizedBox(height: 20),
+      body: schoolData.categories.isEmpty
+          ? const Center(child: Text("No data available for this school."))
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 40),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    //Text(schoolData.toString()),  //remove the text for data for now
+                    const SizedBox(height: 20),
 
-            const Text(
-              "Academic Staff Composition",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
+                    // Academic Pie Charts
+                    const Text(
+                      "Academic Staff Composition",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Wrap(
+                        spacing: 20,
+                        runSpacing: 20,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          PieChartWidget(
+                            data: {
+                              "Women Professors": wProf,
+                              "Men Professors": profMen,
+                            },
+                          ),
+                          PieChartWidget(
+                            data: {
+                              "Women Assoc. Professors": wAssoc,
+                              "Men Assoc. Professors": assocMen,
+                            },
+                          ),
+                          PieChartWidget(
+                            data: {
+                              "Tenured Women": wTenure,
+                              "Tenured Men": tenureMen,
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 30),
 
-            // Horizontal Row with Centered Pie Charts
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: PieChartWidget(
-                      data: {
-                        "Women Professors": wProf,
-                        "Men Professors": profMen,
-                      },
+                    // Non-Academic Pie Chart
+                    const Text(
+                      "Non-Academic Staff Composition",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  const SizedBox(width: 40),
-                  SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: PieChartWidget(
-                      data: {
-                        "Women Assoc. Professors": wAssoc,
-                        "Men Assoc. Professors": assocMen,
-                      },
+                    const SizedBox(height: 10),
+                    Center(
+                      child: PieChartWidget(data: nonAcademicChartData),
                     ),
-                  ),
-                  const SizedBox(width: 40),
-                  SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: PieChartWidget(
-                      data: {
-                        "Tenured Women": wTenure,
-                        "Tenured Men": tenureMen,
-                      },
+                    const SizedBox(height: 30),
+
+                    // Financials & Safety Charts (Side-by-Side)
+                    const Text(
+                      "Financials & Safety",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 300,
+                            width: 400,
+                            child: BarChartWidget(
+                              data: financialData,
+                              colors: [
+                                Colors.blue,
+                                Colors.pink
+                              ], // Financial chart colors
+                              labels: [
+                                "Men's Avg Salary",
+                                "Women's Avg Salary"
+                              ], // Custom Labels
+                            ),
+                          ),
+                          const SizedBox(width: 30),
+                          SizedBox(
+                            height: 300,
+                            width: 400,
+                            child: BarChartWidget(
+                              data: safetyData,
+                              colors: [
+                                Colors.red,
+                                Colors.orange
+                              ], // Safety chart colors
+                              labels: [
+                                "Hate ",
+                                "VAWA"
+                              ], // Custom Labels
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
-
-            const SizedBox(height: 30),
-
-            const Text(
-              "Non-Academic Staff Composition",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: 200,
-              height: 200,
-              child: PieChartWidget(data: nonAcademicChartData),
-            ),
-            const SizedBox(height: 30),
-
-            const Text(
-              "Financials",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 300,
-              width: 400,
-              child: BarChartWidget(data: financialData),
-            ),
-            const SizedBox(height: 30),
-          ],
-        ),
-      ),
     );
   }
 }
