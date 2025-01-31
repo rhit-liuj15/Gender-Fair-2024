@@ -1,0 +1,11 @@
+1. make the font dynamic to suit for differnt sized windows
+2. re-organize the border for visual improvement
+3.add filter when applicable
+4.add text description for VAWA, tenured women...
+5.Improve asthetic visual for bar chart and positioning.
+6.include sorting in other direction.
+7.expand the list view size.
+8.disallow compare click when no school selected
+9.actual compare function
+
+
