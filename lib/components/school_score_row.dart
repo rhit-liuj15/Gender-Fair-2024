@@ -3,14 +3,12 @@ import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/pages/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
-  static List<int> flexValues = List.unmodifiable([2, 7, 2, 2, 2, 2, 2]);
+  static List<int> flexValues = List.unmodifiable([2, 7, 2, 2, 2, 2, 2, 2]);
   static List<String> columnNames = List.unmodifiable(
 		[
     	"Add To List",
     	"Institution Name"
-		] + SchoolScore.subscoreTitles + [
-    	"Total",
-		]
+		] + SchoolScore.subscoreTitles +   ["Ranking", "Total"]
   );
   static List<bool> defaultSortOrder = List.unmodifiable([
     true,
@@ -45,48 +43,40 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
   Widget build(BuildContext context) {
     // Change this
     final List<Widget> widgets = [
-      Checkbox(
-        value: SchoolScoreRow.selectedSchools.contains(widget.school.uid),
-        onChanged: (bool? newValue) {
-          print(
-              "School ${widget.school.uid} ${widget.school.schoolName} has been ${newValue! ? "" : "de"}selected");
-          setState(() {
-            if (newValue) {
-              SchoolScoreRow.selectedSchools.add(widget.school.uid);
-            } else {
-              SchoolScoreRow.selectedSchools.remove(widget.school.uid);
-            }
-          });
-        },
-      ),
-      InkWell(
-        child: Text(widget.school.schoolName,
-            style: const TextStyle(fontSize: 18)),
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return Dialog(
-                child: SchoolDetailPage(uid: widget.school.uid),
-              );
-            },
+  Checkbox(
+    value: SchoolScoreRow.selectedSchools.contains(widget.school.uid),
+    onChanged: (bool? newValue) {
+      setState(() {
+        if (newValue!) {
+          SchoolScoreRow.selectedSchools.add(widget.school.uid);
+        } else {
+          SchoolScoreRow.selectedSchools.remove(widget.school.uid);
+        }
+      });
+    },
+  ),
+  InkWell(
+    child: Text(widget.school.schoolName, style: const TextStyle(fontSize: 18)),
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: SchoolDetailPage(uid: widget.school.uid),
           );
         },
-      ),
-      Text("${widget.school.subscores[0]}",
-          textAlign: TextAlign.center, style: const TextStyle(fontSize: 26)),
-      Text("${widget.school.subscores[1]}",
-          textAlign: TextAlign.center, style: const TextStyle(fontSize: 26)),
-      Text("${widget.school.subscores[2]}",
-          textAlign: TextAlign.center, style: const TextStyle(fontSize: 26)),
-      Text("${widget.school.subscores[3]}",
-          textAlign: TextAlign.center, style: const TextStyle(fontSize: 26)),
-      Text(
-        "${widget.school.score}",
-        style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w900),
-        textAlign: TextAlign.center,
-      ),
-    ];
+      );
+    },
+  ),
+  Text("${widget.school.subscores[0]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+Text("${widget.school.subscores[1]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+Text("${widget.school.subscores[2]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+Text("${widget.school.subscores[3]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+Text("#${widget.school.rank}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 221, 174, 47))),
+Text("${widget.school.score}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.green)),
+
+];
+
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),

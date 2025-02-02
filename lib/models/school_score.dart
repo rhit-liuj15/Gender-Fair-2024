@@ -4,6 +4,7 @@ class SchoolScore {
   List<int> subscores;
 	static final List<String> subscoreTitles = List.unmodifiable(["Leadership", "Policies & Pay", "Safety", "Diversity"]);
 	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
+  int rank = 0; 
 	
 	int get score => subscores.reduce((a,b) => a+b);
 
@@ -11,6 +12,7 @@ class SchoolScore {
 		required this.uid,
     required this.schoolName,
     required this.subscores,
+    this.rank = 0,
   }) {
 		if (subscoreTitles.length != maximumValues.length) {
 			throw("School subscore category specification has mismatched lengths");

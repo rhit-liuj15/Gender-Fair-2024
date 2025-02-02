@@ -14,30 +14,47 @@ class DataLoader {
 
   DataLoader._privateConstructor();
 
-  Future<void> loadData() async {
-    if (!_dataReady) {
-      var scoreUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'score');
-      try {
-        final response = await https.get(scoreUrl);
-        if (response.statusCode == 200) {
-          List<dynamic> data = jsonDecode(response.body);
-          for (var item in data) {
-            allScores[item['UNITID']] = SchoolScore(
-							uid: item['UNITID'],
-							schoolName: item['INSTNM'],
-							subscores: [item['LEADERSHIP'], item['POLICIES'], item['SAFETY'], item['DIVERSITY']]
-						);
-            // print("School ${item['INSTNM']} (id ${item['UNITID']}) has scores ${[item['LEADERSHIP'], item['POLICIES'], item['SAFETY'], item['DIVERSITY']]}");
-          }
-          _dataReady = true;
-        } else {
-          print('Failed to load data. HTTP Status Code: ${response.statusCode}');
+  void computeRankings() {
+  List<SchoolScore> sortedScores = allScores.values.toList();
+  sortedScores.sort((a, b) => b.score.compareTo(a.score)); // Sort in descending order
+
+  int rank = 1;
+  for (int i = 0; i < sortedScores.length; i++) {
+    if (i > 0 && sortedScores[i].score == sortedScores[i - 1].score) {
+      sortedScores[i].rank = sortedScores[i - 1].rank; // Same rank for same score
+    } else {
+      sortedScores[i].rank = rank;
+    }
+    rank++;
+  }
+}
+
+
+ Future<void> loadData() async {
+  if (!_dataReady) {
+    var scoreUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'score');
+    try {
+      final response = await https.get(scoreUrl);
+      if (response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(response.body);
+        for (var item in data) {
+          allScores[item['UNITID']] = SchoolScore(
+            uid: item['UNITID'],
+            schoolName: item['INSTNM'],
+            subscores: [item['LEADERSHIP'], item['POLICIES'], item['SAFETY'], item['DIVERSITY']]
+          );
         }
-      } catch (e) {
-        print('Error occurred: $e');
+        computeRankings(); // Call ranking computation here
+        _dataReady = true;
+      } else {
+        print('Failed to load data. HTTP Status Code: ${response.statusCode}');
       }
+    } catch (e) {
+      print('Error occurred: $e');
     }
   }
+}
+
 
   void addSchoolData(SchoolData data) {
     if (allSchools.containsKey(data.uid)) {

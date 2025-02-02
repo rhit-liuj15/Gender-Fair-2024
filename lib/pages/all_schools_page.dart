@@ -46,50 +46,51 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
     loadData();
   }
 
-List<SchoolScore> get paginatedSchools {
-  if (schoolsFilteredFor.isEmpty) {
-    return [];
+  List<SchoolScore> get paginatedSchools {
+    if (schoolsFilteredFor.isEmpty) {
+      return [];
+    }
+
+    final totalPages =
+        ((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage)
+            .ceil();
+
+    if (currentPage > totalPages) {
+      currentPage = totalPages;
+    } else if (currentPage < 1) {
+      currentPage = 1;
+    }
+
+    final startIndex = (currentPage - 1) * schoolsPerPage;
+    final endIndex =
+        (startIndex + schoolsPerPage).clamp(0, schoolsFilteredFor.length);
+
+    return startIndex < schoolsFilteredFor.length
+        ? schoolsFilteredFor.sublist(startIndex, endIndex)
+        : [];
   }
-
-  final totalPages =
-      ((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage).ceil();
-
-  if (currentPage > totalPages) {
-    currentPage = totalPages; 
-  } else if (currentPage < 1) {
-    currentPage = 1;
-  }
-
-  final startIndex = (currentPage - 1) * schoolsPerPage;
-  final endIndex = (startIndex + schoolsPerPage).clamp(0, schoolsFilteredFor.length);
-
-  return startIndex < schoolsFilteredFor.length
-      ? schoolsFilteredFor.sublist(startIndex, endIndex)
-      : [];
-}
-
-
-
 
   Future<void> loadData() async {
-  await DataLoader.instance.loadData();
-  setState(() {
-    scoreList = DataLoader.instance.allScores.values.toList();
-    stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
-    schoolsFilteredFor = List.from(scoreList); 
-    sortDataByMethod(); 
-  });
-}
-
+    await DataLoader.instance.loadData();
+    setState(() {
+      scoreList = DataLoader.instance.allScores.values.toList();
+      stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
+      schoolsFilteredFor = List.from(scoreList);
+      sortDataByMethod();
+    });
+  }
 
   void sortData(int index) {
     setState(() {
       if (sortingBy == index) {
-        sortAscending = !sortAscending;
+        if (index != 1) {
+          // Prevent toggling for Institution Name
+          sortAscending = !sortAscending;
+        }
       } else {
         sortingBy = index;
-        if (index < 0) {
-          sortAscending = true;
+        if (index == 1) {
+          sortAscending = true; // Always sort Institution Name A → Z
         } else {
           sortAscending = SchoolScoreRow.defaultSortOrder[index];
         }
@@ -103,12 +104,9 @@ List<SchoolScore> get paginatedSchools {
       schoolsFilteredFor.sort((a, b) {
         int compareResult;
         switch (sortingBy) {
-          case -1:
-            compareResult = b.score.compareTo(a.score);
-            break;
           case 1:
             compareResult = a.schoolName.compareTo(b.schoolName);
-            break;
+            return compareResult;
           case 2:
             compareResult = a.subscores[0].compareTo(b.subscores[0]);
             break;
@@ -124,11 +122,11 @@ List<SchoolScore> get paginatedSchools {
           case 6:
             compareResult = a.score.compareTo(b.score);
             break;
+          case 7:
+            compareResult = a.score.compareTo(b.score);
+            break;
           default:
             throw ("Sort column index $sortingBy is not supported");
-        }
-        if (compareResult == 0) {
-          return a.uid.compareTo(b.uid);
         }
         return sortAscending ? compareResult : -compareResult;
       });
@@ -142,7 +140,8 @@ List<SchoolScore> get paginatedSchools {
         children: [
           // Top header
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
             child: Row(
               children: [
                 SizedBox(
@@ -202,24 +201,32 @@ List<SchoolScore> get paginatedSchools {
                     Expanded(
                       flex: 2,
                       child: FilterAndComparePane(
-                        filterTextEditingController: filterTextEditingController,
+                        filterTextEditingController:
+                            filterTextEditingController,
                         stateAbbreviations: stateAbbreviations,
                         stateIsFilteredFor: stateIsFilteredFor,
                         stateNameTiles: stateNameTiles,
                         onSearchChange: (value) {
                           setState(() {
                             currentPage = 1;
-                            schoolsFilteredFor = scoreList
-                                .where((school) => school.schoolName
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase()))
-                                .toList();
+                            if (value.isEmpty) {
+                              schoolsFilteredFor =
+                                  List.from(scoreList); // Reset to all schools
+                            } else {
+                              schoolsFilteredFor = scoreList
+                                  .where((school) => school.schoolName
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                            }
+                            sortDataByMethod(); // Apply sorting after filtering
                           });
                         },
                         onComparePressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => const SchoolComparisonPage(),
+                              builder: (context) =>
+                                  const SchoolComparisonPage(),
                             ),
                           );
                         },
