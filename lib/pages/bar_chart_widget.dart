@@ -2,30 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class BarChartWidget extends StatelessWidget {
-  final Map<String, double> data; 
+  final Map<String, double> data;
   final List<String> labels;
+  final List<String> labelText;
   final List<Color> colors;
+  final String unit;
+  final String yAxisDescription; // ✅ New parameter for Y-axis label
 
   const BarChartWidget({
     Key? key,
     required this.data,
     required this.labels,
+    required this.labelText,
     required this.colors,
+    required this.yAxisDescription, // ✅ Now required
+    this.unit = "",
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final titles = data.keys.toList();
     final values = data.values.toList();
     final maxY = values.isEmpty ? 0.0 : ((values.reduce((a, b) => a > b ? a : b) / 10).ceil() * 10).toDouble();
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        RotatedBox(
+          quarterTurns: 3, // Rotates text 90 degrees counterclockwise
+          child: Text(
+            yAxisDescription,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(width: 8), // Spacing between Y-axis label and chart
+
         Expanded(
           child: BarChart(
             BarChartData(
-              barGroups: List.generate(titles.length, (index) {
+              barGroups: List.generate(labels.length, (index) {
                 return BarChartGroupData(
                   x: index,
                   barsSpace: 12,
@@ -40,19 +54,31 @@ class BarChartWidget extends StatelessWidget {
                 );
               }),
               barTouchData: BarTouchData(enabled: true),
-              gridData: FlGridData(show: false),
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: true,
+                drawHorizontalLine: true,
+                getDrawingHorizontalLine: (value) => FlLine(
+                  color: Colors.grey,
+                  strokeWidth: 1,
+                ),
+                getDrawingVerticalLine: (value) => FlLine(
+                  color: Colors.grey,
+                  strokeWidth: 1,
+                ),
+              ),
               titlesData: FlTitlesData(
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
-                    showTitles: false,
-                    reservedSize: 40,
+                    showTitles: true,
+                    reservedSize: 50,
                     getTitlesWidget: (value, meta) {
                       final i = value.toInt();
-                      if (i >= 0 && i < titles.length) {
+                      if (i >= 0 && i < labels.length) {
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            titles[i],
+                            labels[i],
                             textAlign: TextAlign.center,
                             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                           ),
@@ -65,8 +91,14 @@ class BarChartWidget extends StatelessWidget {
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    reservedSize: 50,
+                    reservedSize: 60,
                     getTitlesWidget: (value, meta) {
+                      if (value == 0) {
+                        return Text(
+                          '0',
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        );
+                      }
                       return Text(
                         '${value.toInt()}',
                         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -77,7 +109,10 @@ class BarChartWidget extends StatelessWidget {
                 rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
-              borderData: FlBorderData(show: false),
+              borderData: FlBorderData(
+                show: true,
+                border: Border.all(color: Colors.black, width: 1),
+              ),
               alignment: BarChartAlignment.center,
               maxY: maxY,
             ),
@@ -86,12 +121,12 @@ class BarChartWidget extends StatelessWidget {
         const SizedBox(width: 16),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(labels.length, (index) {
+          children: List.generate(labelText.length, (index) {
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
               child: Indicator(
                 color: colors[index],
-                text: labels[index],
+                text: labelText[index],
                 isSquare: true,
               ),
             );

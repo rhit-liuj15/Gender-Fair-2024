@@ -135,18 +135,27 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               "Women Professors": wProf,
                               "Men Professors": profMen,
                             },
+                            colors: [Colors.pink, Colors.blue],
                           ),
                           PieChartWidget(
                             data: {
                               "Women Assoc. Professors": wAssoc,
                               "Men Assoc. Professors": assocMen,
                             },
+                            colors: [
+                              const Color.fromARGB(255, 159, 35, 77),
+                              const Color.fromARGB(255, 33, 170, 26)
+                            ],
                           ),
                           PieChartWidget(
                             data: {
-                              "Tenured Women": wTenure,
-                              "Tenured Men": tenureMen,
+                              "Tenured Women Professors": wTenure,
+                              "Tenured Men Professors": tenureMen,
                             },
+                            colors: [
+                              const Color.fromARGB(255, 150, 43, 132),
+                              const Color.fromARGB(255, 25, 96, 154)
+                            ],
                           ),
                         ],
                       ),
@@ -162,10 +171,19 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                     ),
                     const SizedBox(height: 10),
                     Center(
-                      child: PieChartWidget(data: nonAcademicChartData),
+                      child: PieChartWidget(
+                        data: nonAcademicChartData,
+                        colors: [
+                          Colors.brown,
+                          Colors.orange,
+                          Colors.green,
+                          Colors.blue
+                        ],
+                        // dataPercentage: [black, hispanic,asian,white], 
+                        showPercentage: true, 
+                      ),
                     ),
                     const SizedBox(height: 30),
-
                     // Financials & Safety Charts (Side-by-Side)
                     const Text(
                       "Financials & Safety",
@@ -183,14 +201,14 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                             width: 400,
                             child: BarChartWidget(
                               data: financialData,
-                              colors: [
-                                Colors.blue,
-                                Colors.pink
-                              ], // Financial chart colors
-                              labels: [
+                              colors: [Colors.blue, Colors.pink],
+                              labels: ["Men", "Women"],
+                              labelText: [
                                 "Men's Avg Salary",
                                 "Women's Avg Salary"
-                              ], // Custom Labels
+                              ],
+                              yAxisDescription: "Avg Annual Salary (USD)",
+                              unit: "USD", 
                             ),
                           ),
                           const SizedBox(width: 30),
@@ -203,10 +221,13 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                 Colors.red,
                                 Colors.orange
                               ], // Safety chart colors
-                              labels: [
-                                "Hate ",
-                                "VAWA"
-                              ], // Custom Labels
+                              labels: ["Hate ", "VAWA"],
+                              labelText: [
+                                "Hate crime against women",
+                                "Violence against women act"
+                              ],
+                              yAxisDescription: "Cases per Year",
+                              unit: "case/yr",
                             ),
                           ),
                         ],

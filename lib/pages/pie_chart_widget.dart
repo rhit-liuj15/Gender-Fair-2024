@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class PieChartWidget extends StatefulWidget {
-  final Map<String, double> data;
+  final Map<String, double> data; 
   final double centerSpaceRadius;
+  final List<Color> colors;
+  final List<String>? dataPercentage; 
+  final bool showPercentage; // Boolean to control percentage display on legend
 
   const PieChartWidget({
     Key? key,
     required this.data,
+    required this.colors,
     this.centerSpaceRadius = 30,
+    this.dataPercentage, 
+    this.showPercentage = false,
   }) : super(key: key);
 
   @override
@@ -22,13 +28,19 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   Widget build(BuildContext context) {
     final labels = widget.data.keys.toList();
     final values = widget.data.values.toList();
-    final colors = List.generate(values.length, (index) => Colors.primaries[index % Colors.primaries.length]);
+    final colors = widget.colors;
+
+    final percentages = widget.showPercentage
+        ? widget.dataPercentage ??
+            values.map((value) => "${(value * 100).toStringAsFixed(1)}%").toList()
+        : List.filled(labels.length, "");
 
     double sumValues = values.fold(0, (prev, val) => prev + val);
     if (sumValues < 1.0) {
       labels.add("Other");
       values.add(1.0 - sumValues);
       colors.add(Colors.grey);
+      percentages.add("");
     }
 
     return LayoutBuilder(
@@ -62,15 +74,19 @@ class _PieChartWidgetState extends State<PieChartWidget> {
             ),
             const SizedBox(width: 16),
             SizedBox(
-              width: 100, 
+              width: 120, 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(labels.length, (index) {
+                  final displayText = percentages[index].isNotEmpty 
+                    ? "${labels[index]} : ${percentages[index]}" 
+                    : labels[index];
+                
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Indicator(
                       color: colors[index],
-                      text: labels[index],
+                      text: displayText,
                       isSquare: true,
                     ),
                   );
@@ -91,7 +107,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       return PieChartSectionData(
         color: colors[index],
         value: values[index],
-        title: values[index] > 0.05 ? values[index].toStringAsFixed(2) : "",
+        title: values[index] > 0.05 ? "${(values[index] * 100).toStringAsFixed(1)}%" : "", // ✅ Percentage inside chart
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
@@ -107,11 +123,12 @@ class Indicator extends StatelessWidget {
   final Color color;
   final String text;
   final bool isSquare;
+
   const Indicator({
     Key? key,
     required this.color,
     required this.text,
-    required this.isSquare,
+    this.isSquare = false,
   }) : super(key: key);
 
   @override

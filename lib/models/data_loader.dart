@@ -16,16 +16,26 @@ class DataLoader {
 
   void computeRankings() {
   List<SchoolScore> sortedScores = allScores.values.toList();
-  sortedScores.sort((a, b) => b.score.compareTo(a.score)); // Sort in descending order
+  sortedScores.sort((a, b) => b.score.compareTo(a.score)); 
 
-  int rank = 1;
+  int rank = 1; 
+  int rangeStart = 1; 
+  List<String> rankRanges = []; 
+
   for (int i = 0; i < sortedScores.length; i++) {
     if (i > 0 && sortedScores[i].score == sortedScores[i - 1].score) {
-      sortedScores[i].rank = sortedScores[i - 1].rank; // Same rank for same score
+      rangeStart = sortedScores[i - 1].rank;
     } else {
-      sortedScores[i].rank = rank;
+      rank = i + 1;
+      rangeStart = rank;
     }
-    rank++;
+    
+    if (i == sortedScores.length - 1 || sortedScores[i].score != sortedScores[i + 1].score) {
+      rankRanges.add("$rangeStart-${rank}");
+      rangeStart = rank + 1; 
+    }
+
+    sortedScores[i].rank = rank;
   }
 }
 

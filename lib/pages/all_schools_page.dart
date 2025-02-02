@@ -211,7 +211,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                             currentPage = 1;
                             if (value.isEmpty) {
                               schoolsFilteredFor =
-                                  List.from(scoreList); // Reset to all schools
+                                  List.from(scoreList); 
                             } else {
                               schoolsFilteredFor = scoreList
                                   .where((school) => school.schoolName
@@ -219,7 +219,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                                       .contains(value.toLowerCase()))
                                   .toList();
                             }
-                            sortDataByMethod(); // Apply sorting after filtering
+                            sortDataByMethod(); 
                           });
                         },
                         onComparePressed: () {
