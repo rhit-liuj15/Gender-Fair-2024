@@ -54,7 +54,7 @@ class DataLoader {
             subscores: [item['LEADERSHIP'], item['POLICIES'], item['SAFETY'], item['DIVERSITY']]
           );
         }
-        computeRankings(); // Call ranking computation here
+        computeRankings();
         _dataReady = true;
       } else {
         print('Failed to load data. HTTP Status Code: ${response.statusCode}');

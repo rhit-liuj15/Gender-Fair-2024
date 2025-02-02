@@ -113,7 +113,6 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    //Text(schoolData.toString()),  //remove the text for data for now
                     const SizedBox(height: 20),
 
                     // Academic Pie Charts
@@ -179,59 +178,105 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                           Colors.green,
                           Colors.blue
                         ],
-                        // dataPercentage: [black, hispanic,asian,white], 
-                        showPercentage: true, 
+                        showPercentage: true,
                       ),
                     ),
                     const SizedBox(height: 30),
-                    // Financials & Safety Charts (Side-by-Side)
-                    const Text(
-                      "Financials & Safety",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
+
+                    // Separate Financials and Safety Titles
+                    // const Text(
+                    //   "Financials",
+                    //   style:
+                    //       TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    //   textAlign: TextAlign.center,
+                    // ),
                     const SizedBox(height: 10),
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            height: 300,
-                            width: 400,
-                            child: BarChartWidget(
-                              data: financialData,
-                              colors: [Colors.blue, Colors.pink],
-                              labels: ["Men", "Women"],
-                              labelText: [
-                                "Men's Avg Salary",
-                                "Women's Avg Salary"
-                              ],
-                              yAxisDescription: "Avg Annual Salary (USD)",
-                              unit: "USD", 
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment
+                          .start, // Align the charts to the top
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(left: 0.0),
+                              child: Text(
+                                "Average Annual Salary by Gender (USD)",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 30),
-                          SizedBox(
-                            height: 300,
-                            width: 400,
-                            child: BarChartWidget(
-                              data: safetyData,
-                              colors: [
-                                Colors.red,
-                                Colors.orange
-                              ], // Safety chart colors
-                              labels: ["Hate ", "VAWA"],
-                              labelText: [
-                                "Hate crime against women",
-                                "Violence against women act"
-                              ],
-                              yAxisDescription: "Cases per Year",
-                              unit: "case/yr",
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 300,
+                              width: 400,
+                              child: BarChartWidget(
+                                data: financialData,
+                                colors: [Colors.blue, Colors.pink],
+                                labels: ["Men", "Women"],
+                                yAxisDescription: "Avg Annual Salary (USD)",
+                                unit: "USD",
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                        const SizedBox(
+                            width:
+                                30), // Space between Financials and the next two charts
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "Hate Crimes per Year",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 300,
+                              width: 400,
+                              child: BarChartWidget(
+                                data: {"Hate Crimes": hateCrimes},
+                                colors: [Colors.red],
+                                labels: ["Hate"],
+                                yAxisDescription: "Cases per Year",
+                                unit: "cases/yr",
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                            width: 30), // Space between the two new charts
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Text(
+                              "VAWA(Violence Against Women Act) Incidents per Year",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              height: 300,
+                              width: 400,
+                              child: BarChartWidget(
+                                data: {"VAWA(Violence Against Women Act) Cases": vawaIncidents},
+                                colors: [Colors.orange],
+                                labels: ["VAWA"],
+                                yAxisDescription: "Cases per Year",
+                                unit: "cases/yr",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
 
                     const SizedBox(height: 30),

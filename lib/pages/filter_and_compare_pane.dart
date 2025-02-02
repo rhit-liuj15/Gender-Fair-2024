@@ -76,10 +76,10 @@ class FilterAndComparePane extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-                TextButton(
-                  onPressed: onComparePressed,
-                  child: const Text("Compare Schools"),
-                ),
+                // TextButton(
+                //   onPressed: onComparePressed,
+                //   child: const Text("Compare Schools"),
+                // ),
               ],
             ),
           ),
