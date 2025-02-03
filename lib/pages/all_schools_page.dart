@@ -168,11 +168,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                       SizedBox(height: 8.0),
                       Flexible(
                         child: Text(
-                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-                          "Vivamus lacinia odio vitae vestibulum vestibulum. "
-                          "Cras ultricies ligula sed magna dictum porta. "
-                          "Donec sollicitudin molestie malesuada. "
-                          "Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.",
+                          "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, It empower prospective students to make informed decisions aligned with their values. ",
                           style: TextStyle(
                             fontSize: 14.0,
                             color: Colors.grey,

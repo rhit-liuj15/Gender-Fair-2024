@@ -12,12 +12,14 @@
 11.get rid of the compare title
 12.plain text for scores in detail page (also the maxium of score)
 
-13.SHOW RANK
+13. the dropdown actaully drop down.
 
 
-1.Show Rank (for all school): 2 different ranks
-2.bargraph: units 	coordinate mark the x and y axis 
-3.text description for VAWA, tenured women...
+
+1.COMPARE:
+	when multiple school >=2 selected, the compare button is clickable, and the text below the button will show the number of schools selected, when initiate compare, the leadership, policy, safty and Diversity data will be listed horizontoly the school will be listed next to each other.
+2.BREAK TIE
+	when sorted by a metric, the order of the school should be listed based on their ranking on tie when ranking is the same, it will be displayed at default order of same ranked schools.
 
 
 
