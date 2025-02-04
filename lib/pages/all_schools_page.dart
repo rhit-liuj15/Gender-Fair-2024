@@ -20,6 +20,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
   int _hoveredColumnIndex = -1;
   int currentPage = 1;
   final int schoolsPerPage = 20;
+  int selectedSchoolsCount = SchoolScoreRow.selectedSchools.length;
 
   List<SchoolScore> scoreList = <SchoolScore>[];
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
@@ -120,19 +121,25 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
             compareResult = a.subscores[3].compareTo(b.subscores[3]);
             break;
           case 6:
-            compareResult = a.score.compareTo(b.score);
-            break;
           case 7:
             compareResult = a.score.compareTo(b.score);
             break;
           default:
             throw ("Sort column index $sortingBy is not supported");
         }
+        if (compareResult == 0) {
+          return a.rank.compareTo(b.rank);
+        }
         return sortAscending ? compareResult : -compareResult;
       });
     });
   }
-  
+
+  void updateSelectedCount(int count) {
+    setState(() {
+      selectedSchoolsCount = count;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +210,8 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                         stateAbbreviations: stateAbbreviations,
                         stateIsFilteredFor: stateIsFilteredFor,
                         stateNameTiles: stateNameTiles,
-                        selectedSchools: SchoolScoreRow.selectedSchools.toList(), 
+                        selectedSchoolsCount:
+                            SchoolScoreRow.selectedSchools.length,
                         onSearchChange: (value) {
                           setState(() {
                             currentPage = 1;
@@ -222,8 +230,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                         onComparePressed: () {
                           showDialog(
                             context: context,
-                            barrierDismissible:
-                                true, 
+                            barrierDismissible: true,
                             builder: (BuildContext context) =>
                                 const SchoolComparisonPage(),
                           );
@@ -255,6 +262,8 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                             currentPage = newPage;
                           });
                         },
+                        onUpdateSelectedCount:
+                            updateSelectedCount,
                       ),
                     ),
                   ],

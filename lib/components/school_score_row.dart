@@ -4,6 +4,7 @@ import 'package:gender_fair_2024/pages/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
   static List<int> flexValues = List.unmodifiable([2, 7, 2, 2, 2, 2, 2, 2]);
+  final void Function(int) onUpdateSelectedCount; 
   static List<String> columnNames = List.unmodifiable(
 		[
     	"Add To List",
@@ -32,7 +33,7 @@ class SchoolScoreRow extends StatefulWidget {
 
   final SchoolScore school;
 
-  const SchoolScoreRow({super.key, required this.school});
+  const SchoolScoreRow({super.key, required this.school, required this.onUpdateSelectedCount});
 
   @override
   State<SchoolScoreRow> createState() => _SchoolScoreRowState();
@@ -44,17 +45,19 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
     // Change this
     final List<Widget> widgets = [
   Checkbox(
-    value: SchoolScoreRow.selectedSchools.contains(widget.school.uid),
-    onChanged: (bool? newValue) {
-      setState(() {
-        if (newValue!) {
-          SchoolScoreRow.selectedSchools.add(widget.school.uid);
-        } else {
-          SchoolScoreRow.selectedSchools.remove(widget.school.uid);
-        }
-      });
-    },
-  ),
+  value: SchoolScoreRow.selectedSchools.contains(widget.school.uid),
+  onChanged: (bool? newValue) {
+    setState(() {
+      if (newValue!) {
+        SchoolScoreRow.selectedSchools.add(widget.school.uid);
+      } else {
+        SchoolScoreRow.selectedSchools.remove(widget.school.uid);
+      }
+      widget.onUpdateSelectedCount(SchoolScoreRow.selectedSchools.length); 
+    });
+  },
+),
+
   InkWell(
     child: Text(widget.school.schoolName, style: const TextStyle(fontSize: 18)),
     onTap: () {

@@ -12,6 +12,7 @@ class SchoolListPane extends StatelessWidget {
   final int currentPage;
   final int schoolsPerPage;
   final ValueChanged<int> onPageChange;
+  final Function(int) onUpdateSelectedCount;
 
   const SchoolListPane({
     Key? key,
@@ -24,6 +25,7 @@ class SchoolListPane extends StatelessWidget {
     required this.currentPage,
     required this.schoolsPerPage,
     required this.onPageChange,
+    required this.onUpdateSelectedCount,
   }) : super(key: key);
 
   @override
@@ -97,7 +99,9 @@ class SchoolListPane extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: index == sortingBy ? Colors.blue : Colors.black, // Highlight sorted column
+                        color: index == sortingBy
+                            ? Colors.blue
+                            : Colors.black, // Highlight sorted column
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -114,27 +118,26 @@ class SchoolListPane extends StatelessWidget {
                 // The scrolling list of schools
                 Expanded(
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(210, 229, 229, 228)
-                          .withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 145, 148, 153),
-                        width: 2.0,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 36, 34, 34)
-                              .withOpacity(0.2),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
+                    // decoration: BoxDecoration(
+                    //   color: const Color.fromARGB(210, 229, 229, 228)
+                    //       .withOpacity(0.9),
+                    //   borderRadius: BorderRadius.circular(15),
+                    //   border: Border.all(
+                    //     color: const Color.fromARGB(255, 145, 148, 153),
+                    //     width: 2.0,
+                    //   ),
+                    //   boxShadow: [
+                    //     BoxShadow(
+                    //       color: const Color.fromARGB(255, 36, 34, 34)
+                    //           .withOpacity(0.2),
+                    //       blurRadius: 10,
+                    //       offset: const Offset(0, 5),
+                    //     ),
+                    //   ],
+                    // ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: ListView.builder(
-                        padding: const EdgeInsets.all(8.0),
                         itemCount: paginatedSchools.length,
                         itemBuilder: (context, index) {
                           return Container(
@@ -152,6 +155,8 @@ class SchoolListPane extends StatelessWidget {
                                   const EdgeInsets.symmetric(vertical: 4.0),
                               child: SchoolScoreRow(
                                 school: paginatedSchools[index],
+                                onUpdateSelectedCount:
+                                    onUpdateSelectedCount, 
                               ),
                             ),
                           );
@@ -168,7 +173,8 @@ class SchoolListPane extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: currentPage > 1
-                            ? () => onPageChange((currentPage - 1).clamp(1, totalPages))
+                            ? () => onPageChange(
+                                (currentPage - 1).clamp(1, totalPages))
                             : null,
                         child: const Text("Previous"),
                       ),
@@ -176,8 +182,8 @@ class SchoolListPane extends StatelessWidget {
                       SizedBox(
                         width: 50,
                         child: TextField(
-                          controller:
-                              TextEditingController(text: currentPage.toString()),
+                          controller: TextEditingController(
+                              text: currentPage.toString()),
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
@@ -186,7 +192,7 @@ class SchoolListPane extends StatelessWidget {
                           onSubmitted: (value) {
                             int? newPage = int.tryParse(value);
                             if (newPage != null) {
-                              newPage = newPage.clamp(1, totalPages); 
+                              newPage = newPage.clamp(1, totalPages);
                               onPageChange(newPage);
                             }
                           },
@@ -200,7 +206,8 @@ class SchoolListPane extends StatelessWidget {
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: currentPage < totalPages
-                            ? () => onPageChange((currentPage + 1).clamp(1, totalPages))
+                            ? () => onPageChange(
+                                (currentPage + 1).clamp(1, totalPages))
                             : null,
                         child: const Text("Next"),
                       ),

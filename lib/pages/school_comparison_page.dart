@@ -79,7 +79,7 @@ class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
         ),
         Center(
           child: Container(
-            width: 700,
+            width: 1000,
             padding: const EdgeInsets.all(20.0),
             decoration: BoxDecoration(
               color: Colors.white,

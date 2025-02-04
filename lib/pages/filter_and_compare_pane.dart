@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/components/filter_state_name_tile.dart';
 
-// Minimal widget for the left pane
 class FilterAndComparePane extends StatelessWidget {
   final TextEditingController filterTextEditingController;
   final List<String> stateAbbreviations;
@@ -9,7 +8,7 @@ class FilterAndComparePane extends StatelessWidget {
   final Map<String, FilterTextTile> stateNameTiles;
   final ValueChanged<String> onSearchChange;
   final VoidCallback onComparePressed;
-  final List<int> selectedSchools;
+  final int selectedSchoolsCount;
 
   const FilterAndComparePane({
     Key? key,
@@ -19,7 +18,7 @@ class FilterAndComparePane extends StatelessWidget {
     required this.stateNameTiles,
     required this.onSearchChange,
     required this.onComparePressed,
-    required this.selectedSchools,
+    required this.selectedSchoolsCount,
   }) : super(key: key);
 
   @override
@@ -50,7 +49,7 @@ class FilterAndComparePane extends StatelessWidget {
             child: Column(
               children: [
                 const Text(
-                  "Filter and Compare Go Here",
+                  "",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
@@ -78,11 +77,48 @@ class FilterAndComparePane extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-                TextButton(
-                  onPressed: onComparePressed,
-                  child: const Text("Compare Schools"),
+                const SizedBox(height: 10),
+                Container(
+                  decoration: BoxDecoration(
+                    color: selectedSchoolsCount >= 2
+                        ? Colors.blue
+                        : Colors.grey[300],
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: selectedSchoolsCount >= 2
+                        ? [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            )
+                          ]
+                        : [],
+                  ),
+                  child: TextButton(
+                    onPressed: selectedSchoolsCount >= 2 ? onComparePressed : null,
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (states) =>
+                            selectedSchoolsCount >= 2 ? Colors.white : Colors.grey,
+                      ),
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
+                    ),
+                    child: const Text(
+                      "Compare Schools",
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
-                
+                const SizedBox(height: 4),
+                Text(
+                  "$selectedSchoolsCount Selected",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: selectedSchoolsCount >= 2 ? Colors.green : Colors.grey,
+                  ),
+                ),
               ],
             ),
           ),
