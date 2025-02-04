@@ -132,6 +132,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
       });
     });
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -202,12 +203,12 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                         stateAbbreviations: stateAbbreviations,
                         stateIsFilteredFor: stateIsFilteredFor,
                         stateNameTiles: stateNameTiles,
+                        selectedSchools: SchoolScoreRow.selectedSchools.toList(), 
                         onSearchChange: (value) {
                           setState(() {
                             currentPage = 1;
                             if (value.isEmpty) {
-                              schoolsFilteredFor =
-                                  List.from(scoreList); 
+                              schoolsFilteredFor = List.from(scoreList);
                             } else {
                               schoolsFilteredFor = scoreList
                                   .where((school) => school.schoolName
@@ -215,15 +216,16 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                                       .contains(value.toLowerCase()))
                                   .toList();
                             }
-                            sortDataByMethod(); 
+                            sortDataByMethod();
                           });
                         },
                         onComparePressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const SchoolComparisonPage(),
-                            ),
+                          showDialog(
+                            context: context,
+                            barrierDismissible:
+                                true, 
+                            builder: (BuildContext context) =>
+                                const SchoolComparisonPage(),
                           );
                         },
                       ),

@@ -9,6 +9,7 @@ class FilterAndComparePane extends StatelessWidget {
   final Map<String, FilterTextTile> stateNameTiles;
   final ValueChanged<String> onSearchChange;
   final VoidCallback onComparePressed;
+  final List<int> selectedSchools;
 
   const FilterAndComparePane({
     Key? key,
@@ -18,6 +19,7 @@ class FilterAndComparePane extends StatelessWidget {
     required this.stateNameTiles,
     required this.onSearchChange,
     required this.onComparePressed,
+    required this.selectedSchools,
   }) : super(key: key);
 
   @override
@@ -76,10 +78,11 @@ class FilterAndComparePane extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-                // TextButton(
-                //   onPressed: onComparePressed,
-                //   child: const Text("Compare Schools"),
-                // ),
+                TextButton(
+                  onPressed: onComparePressed,
+                  child: const Text("Compare Schools"),
+                ),
+                
               ],
             ),
           ),
