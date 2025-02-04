@@ -176,7 +176,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                       SizedBox(height: 8.0),
                       Flexible(
                         child: Text(
-                          "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, It empower prospective students to make informed decisions aligned with their values. ",
+                          "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, It empower prospective students to make informed decisions aligned with their values. Currently, schools with identical rank and score are treated as having equal standing.",
                           style: TextStyle(
                             fontSize: 14.0,
                             color: Colors.grey,
