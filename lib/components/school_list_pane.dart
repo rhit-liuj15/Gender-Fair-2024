@@ -1,38 +1,69 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
+import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
 
-class SchoolListPane extends StatelessWidget {
-  final int sortingBy;
-  final VoidCallback onSortByMethod;
-  final ValueChanged<int> onUpdateSortingBy;
-  final Function(int) onSortData;
+class SchoolListPane extends StatefulWidget {
+  final ValueChanged<SchoolScoreColumnAttributes> updateSortingMetricCallback;
+  final SchoolScoreColumnAttributes sortingMetric;
+  final Function() updateSortCallback;
   final List<SchoolScore> schoolsFilteredFor;
-  final List<SchoolScore> paginatedSchools;
-  final int currentPage;
   final int schoolsPerPage;
-  final ValueChanged<int> onPageChange;
   final Function(int) onUpdateSelectedCount;
 
   const SchoolListPane({
-    Key? key,
-    required this.sortingBy,
-    required this.onSortByMethod,
-    required this.onUpdateSortingBy,
-    required this.onSortData,
+    super.key,
+    required this.updateSortingMetricCallback,
+    required this.sortingMetric,
+    required this.updateSortCallback,
     required this.schoolsFilteredFor,
-    required this.paginatedSchools,
-    required this.currentPage,
     required this.schoolsPerPage,
-    required this.onPageChange,
     required this.onUpdateSelectedCount,
-  }) : super(key: key);
+  });
+
+  @override
+  State<SchoolListPane> createState() => _SchoolListPaneState();
+}
+
+class _SchoolListPaneState extends State<SchoolListPane> {
+
+	int currentPage = 1;
+	int get numSchoolsOnPage => max<int>(min<int>(widget.schoolsFilteredFor.length - widget.schoolsPerPage*(currentPage-1), widget.schoolsPerPage),0);
+	int get totalPages =>
+			(widget.schoolsFilteredFor.length - 1) ~/ widget.schoolsPerPage	+ 1;
+			// ((widget.schoolsFilteredFor.length + widget.schoolsPerPage - 1) / widget.schoolsPerPage)
+			// 		.ceil();
+
+  List<SchoolScore> get schoolOnCurrentPage {
+    if (widget.schoolsFilteredFor.isEmpty) {
+      return [];
+    }
+
+    if (currentPage > totalPages) {
+      currentPage = totalPages;
+    } else if (currentPage < 1) {
+      currentPage = 1;
+    }
+
+    final startIndex = (currentPage - 1) * widget.schoolsPerPage;
+    final endIndex =
+        (startIndex + widget.schoolsPerPage).clamp(0, widget.schoolsFilteredFor.length);
+
+    return startIndex < widget.schoolsFilteredFor.length
+        ? widget.schoolsFilteredFor.sublist(startIndex, endIndex)
+        : [];
+  }
+
+	void onPageChange(int newPage) {
+		setState(() {
+			currentPage = newPage;
+		});
+	}
 
   @override
   Widget build(BuildContext context) {
-    final totalPages =
-        ((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage)
-            .ceil();
 
     return Container(
       decoration: BoxDecoration(
@@ -41,7 +72,6 @@ class SchoolListPane extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Sorting row
           Padding(
             padding:
                 const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -52,31 +82,27 @@ class SchoolListPane extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 8.0),
-                DropdownButton<int>(
-                  value: sortingBy,
-                  onChanged: (int? newValue) {
+                DropdownButton<SchoolScoreColumnAttributes>(
+                  value: widget.sortingMetric,
+                  onChanged: (SchoolScoreColumnAttributes? newValue) {
                     if (newValue != null) {
-                      onUpdateSortingBy(newValue);
+                      widget.updateSortingMetricCallback(newValue);
                     }
                   },
-                  items: List.generate(
-                    SchoolScoreRow.columnNames.length,
-                    (index) {
-                      if (SchoolScoreRow.columnNames[index] == "Add To List") {
-                        return null;
-                      }
-                      return DropdownMenuItem<int>(
-                        value: index,
-                        child: Text(
-                          SchoolScoreRow.columnNames[index],
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    },
-                  ).whereType<DropdownMenuItem<int>>().toList(),
+									// Generate dropdown entry for all sortable columns
+                  items: SchoolScoreColumnAttributes.values.where((item) => item.sortable).map(
+										(item) => 
+										DropdownMenuItem<SchoolScoreColumnAttributes>(
+											value: item,
+											child: Text(
+												item.name,
+												style: const TextStyle(
+													fontSize: 16,
+													fontWeight: FontWeight.bold,
+												),
+											),
+										)
+									).toList(),
                   isExpanded: false,
                   hint: const Text("Select column"),
                 ),
@@ -91,17 +117,15 @@ class SchoolListPane extends StatelessWidget {
               (index) => Expanded(
                 flex: SchoolScoreRow.flexValues[index],
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(4.0),
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
                       SchoolScoreRow.columnNames[index],
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: index == sortingBy
-                            ? Colors.blue
-                            : Colors.black, // Highlight sorted column
+                        color: Colors.black,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -117,53 +141,34 @@ class SchoolListPane extends StatelessWidget {
               children: [
                 // The scrolling list of schools
                 Expanded(
-                  child: Container(
-                    // decoration: BoxDecoration(
-                    //   color: const Color.fromARGB(210, 229, 229, 228)
-                    //       .withOpacity(0.9),
-                    //   borderRadius: BorderRadius.circular(15),
-                    //   border: Border.all(
-                    //     color: const Color.fromARGB(255, 145, 148, 153),
-                    //     width: 2.0,
-                    //   ),
-                    //   boxShadow: [
-                    //     BoxShadow(
-                    //       color: const Color.fromARGB(255, 36, 34, 34)
-                    //           .withOpacity(0.2),
-                    //       blurRadius: 10,
-                    //       offset: const Offset(0, 5),
-                    //     ),
-                    //   ],
-                    // ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: ListView.builder(
-                        itemCount: paginatedSchools.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color:
-                                      const Color.fromARGB(255, 185, 182, 174),
-                                  width: 1.0,
-                                ),
-                              ),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4.0),
-                              child: SchoolScoreRow(
-                                school: paginatedSchools[index],
-                                onUpdateSelectedCount:
-                                    onUpdateSelectedCount, 
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                  child: ClipRRect(
+										borderRadius: BorderRadius.circular(15),
+										child: ListView.builder(
+											itemCount: numSchoolsOnPage,
+											itemBuilder: (context, index) {
+												return Container(
+													decoration: const BoxDecoration(
+														border: Border(
+															bottom: BorderSide(
+																color:
+																		Color.fromARGB(255, 185, 182, 174),
+																width: 1.0,
+															),
+														),
+													),
+													child: Padding(
+														padding:
+																const EdgeInsets.symmetric(vertical: 4.0),
+														child: SchoolScoreRow(
+															school: schoolOnCurrentPage[index],
+															onUpdateSelectedCount:
+																	widget.onUpdateSelectedCount, 
+														),
+													),
+												);
+											},
+										),
+									),
                 ),
 
                 Padding(
@@ -171,6 +176,13 @@ class SchoolListPane extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      ElevatedButton(
+                        onPressed: currentPage > 1
+                            ? () {onPageChange(1);}
+                            : null,
+                        child: const Text("First"),
+                      ),
+                      const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: currentPage > 1
                             ? () => onPageChange(
@@ -210,6 +222,13 @@ class SchoolListPane extends StatelessWidget {
                                 (currentPage + 1).clamp(1, totalPages))
                             : null,
                         child: const Text("Next"),
+                      ),
+                      const SizedBox(width: 20),
+                      ElevatedButton(
+                        onPressed: currentPage < totalPages
+                            ? () {onPageChange(totalPages);}
+                            : null,
+                        child: const Text("Last"),
                       ),
                     ],
                   ),

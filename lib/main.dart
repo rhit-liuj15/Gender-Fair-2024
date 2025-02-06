@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/pages/all_schools_page.dart';
+import 'package:gender_fair_2024/pages/school_list_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const GlassBackgroundPage(child: AllSchoolsPage()),
+      home: const GlassBackgroundPage(child: SchoolListPage()),
     );
   }
 }

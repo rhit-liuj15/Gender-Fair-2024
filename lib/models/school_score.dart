@@ -1,34 +1,36 @@
+import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
+
 class SchoolScore {
+	
+	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
+  static final Map<SchoolScoreColumnAttributes, int> maximumScores = Map.unmodifiable({
+		SchoolScoreColumnAttributes.leadership: 35,
+		SchoolScoreColumnAttributes.polnpay: 35,
+		SchoolScoreColumnAttributes.safety: 15,
+		SchoolScoreColumnAttributes.diversity: 15,
+	});
+
+  int rank = 0; 
 	int uid;
   String schoolName;
-  List<int> subscores;
-	static final List<String> subscoreTitles = List.unmodifiable(["Leadership", "Policies & Pay", "Safety", "Diversity"]);
-	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
-  int rank = 0; 
+  Map<SchoolScoreColumnAttributes, int> subscores;
 	
-	int get score => subscores.reduce((a,b) => a+b);
+	int get score => subscores.values.toList().reduce((a,b)=>a+b);
 
   SchoolScore({
 		required this.uid,
     required this.schoolName,
     required this.subscores,
     this.rank = 0,
-  }) {
-		if (subscoreTitles.length != maximumValues.length) {
-			throw("School subscore category specification has mismatched lengths");
-		} else if (subscores.length != subscoreTitles.length) {
-			throw("The subscore entry for '$schoolName' has mismatched length");
-		} else if (!pairwiseWithinLimit(subscores, maximumValues)) {
+  }){
+		if (scoreOutOfBounds(subscores)) {
 			throw("The subscore entries for '$schoolName' exceeds specified limits: $subscores, $maximumValues");
 		}
 	}
 
-	bool pairwiseWithinLimit(List<int> val, List<int> lim) {
-		// Disabled checking for now until scores are ready
-		// for (int i = 0; i < val.length; i++) {
-		// 	if (val[i] > lim[i]) return false;
-		// }
-		return true;
+	bool scoreOutOfBounds(Map<SchoolScoreColumnAttributes, int> val) {
+		// Placeholder; usefulness to be contemplated.
+		return false;
 	}
 
   @override

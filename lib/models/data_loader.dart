@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
 import 'package:http/http.dart' as https;
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
@@ -31,7 +32,7 @@ class DataLoader {
     }
     
     if (i == sortedScores.length - 1 || sortedScores[i].score != sortedScores[i + 1].score) {
-      rankRanges.add("$rangeStart-${rank}");
+      rankRanges.add("$rangeStart-$rank");
       rangeStart = rank + 1; 
     }
 
@@ -51,7 +52,12 @@ class DataLoader {
           allScores[item['UNITID']] = SchoolScore(
             uid: item['UNITID'],
             schoolName: item['INSTNM'],
-            subscores: [item['LEADERSHIP'], item['POLICIES'], item['SAFETY'], item['DIVERSITY']]
+            subscores: Map.unmodifiable({
+							SchoolScoreColumnAttributes.leadership: item['LEADERSHIP'],
+							SchoolScoreColumnAttributes.polnpay: item['POLICIES'],
+							SchoolScoreColumnAttributes.safety: item['SAFETY'],
+							SchoolScoreColumnAttributes.diversity: item['DIVERSITY'],
+						}),
           );
         }
         computeRankings();

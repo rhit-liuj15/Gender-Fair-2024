@@ -4,21 +4,21 @@ import 'package:gender_fair_2024/components/filter_state_name_tile.dart';
 import 'package:gender_fair_2024/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
+import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
 import 'package:gender_fair_2024/pages/school_comparison_page.dart';
 
-import 'filter_and_compare_pane.dart';
-import 'school_list_pane.dart';
+import '../components/filter_and_compare_pane.dart';
+import '../components/school_list_pane.dart';
 
-class AllSchoolsPage extends StatefulWidget {
-  const AllSchoolsPage({super.key});
+class SchoolListPage extends StatefulWidget {
+  const SchoolListPage({super.key});
 
   @override
-  State<AllSchoolsPage> createState() => _AllSchoolsPageState();
+  State<SchoolListPage> createState() => _SchoolListPageState();
 }
 
-class _AllSchoolsPageState extends State<AllSchoolsPage> {
-  int _hoveredColumnIndex = -1;
-  int currentPage = 1;
+class _SchoolListPageState extends State<SchoolListPage> {
+  // int _hoveredColumnIndex = -1;
   final int schoolsPerPage = 20;
   int selectedSchoolsCount = SchoolScoreRow.selectedSchools.length;
 
@@ -29,8 +29,8 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
   List<String> stateAbbreviations = <String>[];
   List<String> filteringStates = <String>[];
   Map<String, String> stateNameToAbbreviations = <String, String>{};
-  int sortingBy = 6;
-  bool sortAscending = false;
+  SchoolScoreColumnAttributes sortingBy = SchoolScoreColumnAttributes.total;
+  bool sortDescending = SchoolScoreColumnAttributes.total.sortDescending;
 
   Map<String, FilterTextTile> stateNameTiles = <String, FilterTextTile>{};
   Map<String, bool> stateIsFilteredFor = <String, bool>{};
@@ -47,90 +47,58 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
     loadData();
   }
 
-  List<SchoolScore> get paginatedSchools {
-    if (schoolsFilteredFor.isEmpty) {
-      return [];
-    }
-
-    final totalPages =
-        ((schoolsFilteredFor.length + schoolsPerPage - 1) / schoolsPerPage)
-            .ceil();
-
-    if (currentPage > totalPages) {
-      currentPage = totalPages;
-    } else if (currentPage < 1) {
-      currentPage = 1;
-    }
-
-    final startIndex = (currentPage - 1) * schoolsPerPage;
-    final endIndex =
-        (startIndex + schoolsPerPage).clamp(0, schoolsFilteredFor.length);
-
-    return startIndex < schoolsFilteredFor.length
-        ? schoolsFilteredFor.sublist(startIndex, endIndex)
-        : [];
-  }
-
   Future<void> loadData() async {
     await DataLoader.instance.loadData();
     setState(() {
       scoreList = DataLoader.instance.allScores.values.toList();
       stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
       schoolsFilteredFor = List.from(scoreList);
-      sortDataByMethod();
+      sortData();
     });
   }
 
-  void sortData(int index) {
+  void updateSortMetric(SchoolScoreColumnAttributes column) {
+		if (sortingBy == column) {
+			sortDescending = !sortDescending;
+		} else {
+			sortingBy = column;
+			sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
+		}
+		sortData();
+	}
+
+  void sortData() {
     setState(() {
-      if (sortingBy == index) {
-        if (index != 1) {
-          // Prevent toggling for Institution Name
-          sortAscending = !sortAscending;
-        }
-      } else {
-        sortingBy = index;
-        if (index == 1) {
-          sortAscending = true; // Always sort Institution Name A → Z
-        } else {
-          sortAscending = SchoolScoreRow.defaultSortOrder[index];
-        }
+      Comparator<SchoolScore> comparator;
+      switch (sortingBy) {
+        case SchoolScoreColumnAttributes.instName:
+          comparator = (a, b) => a.schoolName.compareTo(b.schoolName);
+          break;
+
+        case SchoolScoreColumnAttributes.ranking:
+        case SchoolScoreColumnAttributes.total:
+          comparator = (a, b) => a.score.compareTo(b.score);
+          break;
+					
+				case SchoolScoreColumnAttributes.leadership:
+				case SchoolScoreColumnAttributes.polnpay:
+				case SchoolScoreColumnAttributes.safety:
+				case SchoolScoreColumnAttributes.diversity:
+          comparator = (a, b) => a.subscores[sortingBy]!.compareTo(b.subscores[sortingBy]!);
+          break;
+        default:
+          if (sortingBy.sortable) {
+            comparator = (a, b) => 0; // No sorting needed
+          } else {
+            throw ("Sort column '$sortingBy' is not supported");
+          }
       }
-      sortDataByMethod();
-    });
-  }
-
-  void sortDataByMethod() {
-    setState(() {
       schoolsFilteredFor.sort((a, b) {
-        int compareResult;
-        switch (sortingBy) {
-          case 1:
-            compareResult = a.schoolName.compareTo(b.schoolName);
-            return compareResult;
-          case 2:
-            compareResult = a.subscores[0].compareTo(b.subscores[0]);
-            break;
-          case 3:
-            compareResult = a.subscores[1].compareTo(b.subscores[1]);
-            break;
-          case 4:
-            compareResult = a.subscores[2].compareTo(b.subscores[2]);
-            break;
-          case 5:
-            compareResult = a.subscores[3].compareTo(b.subscores[3]);
-            break;
-          case 6:
-          case 7:
-            compareResult = a.score.compareTo(b.score);
-            break;
-          default:
-            throw ("Sort column index $sortingBy is not supported");
-        }
+        int compareResult = comparator(a, b);
         if (compareResult == 0) {
-          return a.rank.compareTo(b.rank);
+          compareResult = a.rank.compareTo(b.rank);
         }
-        return sortAscending ? compareResult : -compareResult;
+        return sortDescending ? -compareResult : compareResult;
       });
     });
   }
@@ -178,7 +146,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                         child: Text(
                           "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, It empower prospective students to make informed decisions aligned with their values. Currently, schools with identical rank and score are treated as having equal standing.",
                           style: TextStyle(
-                            fontSize: 14.0,
+                            fontSize: 30.0,
                             color: Colors.grey,
                           ),
                           textAlign: TextAlign.center,
@@ -187,7 +155,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                     ],
                   ),
                 ),
-                SizedBox(width: 10.0),
+                const SizedBox(width: 10.0),
               ],
             ),
           ),
@@ -214,7 +182,6 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                             SchoolScoreRow.selectedSchools.length,
                         onSearchChange: (value) {
                           setState(() {
-                            currentPage = 1;
                             if (value.isEmpty) {
                               schoolsFilteredFor = List.from(scoreList);
                             } else {
@@ -224,7 +191,7 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
                                       .contains(value.toLowerCase()))
                                   .toList();
                             }
-                            sortDataByMethod();
+                            sortData();
                           });
                         },
                         onComparePressed: () {
@@ -240,30 +207,15 @@ class _AllSchoolsPageState extends State<AllSchoolsPage> {
 
                     const SizedBox(width: 30.0),
 
-                    // Right pane: sorting, list, pagination
                     Expanded(
                       flex: 5,
                       child: SchoolListPane(
-                        sortingBy: sortingBy,
-                        onSortByMethod: sortDataByMethod,
-                        onUpdateSortingBy: (int newIndex) {
-                          setState(() {
-                            sortingBy = newIndex;
-                            sortDataByMethod();
-                          });
-                        },
-                        onSortData: sortData,
+                        updateSortingMetricCallback: updateSortMetric,
+												sortingMetric: sortingBy,
+                        updateSortCallback: sortData,
                         schoolsFilteredFor: schoolsFilteredFor,
-                        paginatedSchools: paginatedSchools,
-                        currentPage: currentPage,
                         schoolsPerPage: schoolsPerPage,
-                        onPageChange: (int newPage) {
-                          setState(() {
-                            currentPage = newPage;
-                          });
-                        },
-                        onUpdateSelectedCount:
-                            updateSelectedCount,
+                        onUpdateSelectedCount: updateSelectedCount,
                       ),
                     ),
                   ],

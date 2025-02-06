@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/components/pie_chart_widget.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_data.dart';
-import 'pie_chart_widget.dart';
-import 'bar_chart_widget.dart';
+import 'package:gender_fair_2024/components/bar_chart_widget.dart';
 
 class SchoolDetailPage extends StatefulWidget {
   final int uid;
-  const SchoolDetailPage({Key? key, required this.uid}) : super(key: key);
+  const SchoolDetailPage({super.key, required this.uid});
 
   @override
   State<SchoolDetailPage> createState() => _SchoolDetailPageState();
@@ -96,10 +96,10 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
     final hateCrimes = toDouble(safety.data["Hate Crimes Per Year 2020-2022"]);
     final vawaIncidents = toDouble(safety.data["VAWA Per Year 2020-2022"]);
 
-    final safetyData = {
-      "Hate Crimes": hateCrimes,
-      "VAWA Cases": vawaIncidents,
-    };
+    // final safetyData = {
+    //   "Hate Crimes": hateCrimes,
+    //   "VAWA Cases": vawaIncidents,
+    // };
 
     return Scaffold(
       appBar: AppBar(
@@ -134,27 +134,21 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               "Women Professors": wProf,
                               "Men Professors": profMen,
                             },
-                            colors: [Colors.pink, Colors.blue],
+                            colors: const [Colors.pink, Colors.blue],
                           ),
                           PieChartWidget(
                             data: {
                               "Women Assoc. Professors": wAssoc,
                               "Men Assoc. Professors": assocMen,
                             },
-                            colors: [
-                              const Color.fromARGB(255, 159, 35, 77),
-                              const Color.fromARGB(255, 33, 170, 26)
-                            ],
+                            colors: const [Colors.pink, Colors.blue],
                           ),
                           PieChartWidget(
                             data: {
                               "Tenured Women Professors": wTenure,
                               "Tenured Men Professors": tenureMen,
                             },
-                            colors: [
-                              const Color.fromARGB(255, 150, 43, 132),
-                              const Color.fromARGB(255, 25, 96, 154)
-                            ],
+                            colors: const [Colors.pink, Colors.blue],
                           ),
                         ],
                       ),
@@ -172,7 +166,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                     Center(
                       child: PieChartWidget(
                         data: nonAcademicChartData,
-                        colors: [
+                        colors: const [
                           Colors.brown,
                           Colors.orange,
                           Colors.green,
@@ -215,8 +209,8 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               width: 400,
                               child: BarChartWidget(
                                 data: financialData,
-                                colors: [Colors.blue, Colors.pink],
-                                labels: ["Men", "Women"],
+                                colors: const [Colors.blue, Colors.pink],
+                                labels: const ["Men", "Women"],
                                 yAxisDescription: "Avg Annual Salary (USD)",
                                 unit: "USD",
                               ),
@@ -242,8 +236,8 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               width: 400,
                               child: BarChartWidget(
                                 data: {"Hate Crimes": hateCrimes},
-                                colors: [Colors.red],
-                                labels: ["Hate"],
+                                colors: const [Colors.red],
+                                labels: const ["Hate"],
                                 yAxisDescription: "Cases per Year",
                                 unit: "cases/yr",
                               ),
@@ -268,8 +262,8 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               width: 400,
                               child: BarChartWidget(
                                 data: {"VAWA(Violence Against Women Act) Cases": vawaIncidents},
-                                colors: [Colors.orange],
-                                labels: ["VAWA"],
+                                colors: const [Colors.orange],
+                                labels: const ["VAWA"],
                                 yAxisDescription: "Cases per Year",
                                 unit: "cases/yr",
                               ),
