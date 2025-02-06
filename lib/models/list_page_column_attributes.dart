@@ -11,7 +11,8 @@ enum ListPageColumnAttributes {
 	polnpay(flexWidth: 2, name: "Policies & Pay", sortable: true, sortDescending: true),
 	safety(flexWidth: 2, name: "Safety", sortable: true, sortDescending: true),
 	diversity(flexWidth: 2, name: "Diversity", sortable: true, sortDescending: true),
-	total(flexWidth: 2, name: "Total", sortable: true, sortDescending: true);
+	total(flexWidth: 2, name: "Total", sortable: true, sortDescending: true),
+	;
 
   const ListPageColumnAttributes({
     required this.flexWidth,

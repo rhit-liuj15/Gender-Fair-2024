@@ -22,6 +22,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
   final int schoolsPerPage = 20;
   int selectedSchoolsCount = SchoolScoreRow.selectedSchools.length;
 
+	bool showOnlySelectedSchools= false;
   List<SchoolScore> scoreList = <SchoolScore>[];
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
 
@@ -183,10 +184,9 @@ class _SchoolListPageState extends State<SchoolListPage> {
                             SchoolScoreRow.selectedSchools.length,
                         onSearchChange: (value) {
                           setState(() {
-                            if (value.isEmpty) {
-                              schoolsFilteredFor = List.from(scoreList);
-                            } else {
-                              schoolsFilteredFor = scoreList
+														schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
+                            if (value.isNotEmpty) {
+                              schoolsFilteredFor = schoolsFilteredFor
                                   .where((school) => school.schoolName
                                       .toLowerCase()
                                       .contains(value.toLowerCase()))
@@ -195,6 +195,14 @@ class _SchoolListPageState extends State<SchoolListPage> {
                             sortData();
                           });
                         },
+												showOnlySelected: showOnlySelectedSchools,
+												onShowOnlySelectedToggle: (bool? newValue) {
+													setState(() {
+														showOnlySelectedSchools = newValue!;
+														schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
+                            sortData();
+													});
+												},
                         onComparePressed: () {
                           showDialog(
                             context: context,

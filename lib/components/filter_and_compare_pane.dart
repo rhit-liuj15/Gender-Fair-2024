@@ -8,6 +8,8 @@ class FilterAndComparePane extends StatelessWidget {
   final Map<String, FilterTextTile> stateNameTiles;
   final ValueChanged<String> onSearchChange;
   final VoidCallback onComparePressed;
+  final bool showOnlySelected;
+  final ValueChanged<bool?>  onShowOnlySelectedToggle;
   final int selectedSchoolsCount;
 
   const FilterAndComparePane({
@@ -18,6 +20,8 @@ class FilterAndComparePane extends StatelessWidget {
     required this.stateNameTiles,
     required this.onSearchChange,
     required this.onComparePressed,
+    required this.showOnlySelected,
+		required this.onShowOnlySelectedToggle,
     required this.selectedSchoolsCount,
   }) : super(key: key);
 
@@ -85,12 +89,12 @@ class FilterAndComparePane extends StatelessWidget {
                         : Colors.grey[300],
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: selectedSchoolsCount >= 2
-                        ? [
+                        ? const [
                             BoxShadow(
                               color: Colors.black26,
                               blurRadius: 4,
                               offset: Offset(0, 2),
-                            )
+                            ),
                           ]
                         : [],
                   ),
@@ -110,6 +114,11 @@ class FilterAndComparePane extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(height: 4),
+								Checkbox(
+									value: showOnlySelected,
+									onChanged: onShowOnlySelectedToggle,
+								),
                 const SizedBox(height: 4),
                 Text(
                   "$selectedSchoolsCount Selected",
