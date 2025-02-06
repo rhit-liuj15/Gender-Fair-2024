@@ -52,12 +52,14 @@ class DataLoader {
           allScores[item['UNITID']] = SchoolScore(
             uid: item['UNITID'],
             schoolName: item['INSTNM'],
-            subscores: Map.unmodifiable({
-							ListPageColumnAttributes.leadership: item['LEADERSHIP'],
-							ListPageColumnAttributes.polnpay: item['POLICIES'],
-							ListPageColumnAttributes.safety: item['SAFETY'],
-							ListPageColumnAttributes.diversity: item['DIVERSITY'],
-						}),
+            subscores: Map.unmodifiable(
+							<SchoolScoreAttributes, int>{
+								SchoolScoreAttributes.leadership: item['LEADERSHIP'],
+								SchoolScoreAttributes.polnpay: item['POLICIES'],
+								SchoolScoreAttributes.safety: item['SAFETY'],
+								SchoolScoreAttributes.diversity: item['DIVERSITY'],
+							}
+						),
           );
         }
         computeRankings();

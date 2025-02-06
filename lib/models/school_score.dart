@@ -2,12 +2,14 @@
 class SchoolScore {
 	
 	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
-  static final Map<SchoolScoreAttributes, int> maximumScores = Map.unmodifiable({
-		SchoolScoreAttributes.leadership: 35,
-		SchoolScoreAttributes.polnpay: 35,
-		SchoolScoreAttributes.safety: 15,
-		SchoolScoreAttributes.diversity: 15,
-	});
+  static final Map<SchoolScoreAttributes, int> maximumScores = Map.unmodifiable(
+		<SchoolScoreAttributes, int>{
+			SchoolScoreAttributes.leadership: 35,
+			SchoolScoreAttributes.polnpay: 35,
+			SchoolScoreAttributes.safety: 15,
+			SchoolScoreAttributes.diversity: 15,
+		}
+	);
 
   int rank = 0; 
 	int uid;
