@@ -70,7 +70,7 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 				case ListPageColumnAttributes.polnpay:
 				case ListPageColumnAttributes.safety:
 				case ListPageColumnAttributes.diversity:
-					return Text("${widget.school.subscores[item]}", 
+					return Text("${widget.school.subscores[ListPageColumnAttributes.listPageToSchoolScoreMapping[item]]}", 
 						textAlign: TextAlign.center,
 						style: subscoreStyle
 					);

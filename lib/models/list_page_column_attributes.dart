@@ -1,5 +1,7 @@
 
 
+import 'package:gender_fair_2024/models/school_score.dart';
+
 enum ListPageColumnAttributes {
   
 	addToList(flexWidth: 2, name: "Add To List", sortable: false, sortDescending: false),
@@ -35,4 +37,14 @@ enum ListPageColumnAttributes {
 
   static List<String> get colNames => 
 		ListPageColumnAttributes.values.map((item) => item.name).toList();
+
+		
+  static final Map<ListPageColumnAttributes, SchoolScoreAttributes> listPageToSchoolScoreMapping = Map.unmodifiable(
+		<ListPageColumnAttributes, SchoolScoreAttributes>{
+			ListPageColumnAttributes.leadership: SchoolScoreAttributes.leadership,
+			ListPageColumnAttributes.polnpay: SchoolScoreAttributes.polnpay,
+			ListPageColumnAttributes.safety: SchoolScoreAttributes.safety,
+			ListPageColumnAttributes.diversity: SchoolScoreAttributes.diversity,
+		}
+	);
 }

@@ -84,7 +84,8 @@ class _SchoolListPageState extends State<SchoolListPage> {
 				case ListPageColumnAttributes.polnpay:
 				case ListPageColumnAttributes.safety:
 				case ListPageColumnAttributes.diversity:
-          comparator = (a, b) => a.subscores[sortingBy]!.compareTo(b.subscores[sortingBy]!);
+          comparator = (a, b) => a.subscores[ListPageColumnAttributes.listPageToSchoolScoreMapping[sortingBy]]!
+							.compareTo(b.subscores[ListPageColumnAttributes.listPageToSchoolScoreMapping[sortingBy]]!);
           break;
         default:
           if (sortingBy.sortable) {
