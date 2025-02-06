@@ -4,7 +4,7 @@ import 'package:gender_fair_2024/components/filter_state_name_tile.dart';
 import 'package:gender_fair_2024/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
-import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
+import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 import 'package:gender_fair_2024/pages/school_comparison_page.dart';
 
 import '../components/filter_and_compare_pane.dart';
@@ -29,8 +29,8 @@ class _SchoolListPageState extends State<SchoolListPage> {
   List<String> stateAbbreviations = <String>[];
   List<String> filteringStates = <String>[];
   Map<String, String> stateNameToAbbreviations = <String, String>{};
-  SchoolScoreColumnAttributes sortingBy = SchoolScoreColumnAttributes.total;
-  bool sortDescending = SchoolScoreColumnAttributes.total.sortDescending;
+  ListPageColumnAttributes sortingBy = ListPageColumnAttributes.total;
+  bool sortDescending = ListPageColumnAttributes.total.sortDescending;
 
   Map<String, FilterTextTile> stateNameTiles = <String, FilterTextTile>{};
   Map<String, bool> stateIsFilteredFor = <String, bool>{};
@@ -57,7 +57,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
     });
   }
 
-  void updateSortMetric(SchoolScoreColumnAttributes column) {
+  void updateSortMetric(ListPageColumnAttributes column) {
 		if (sortingBy == column) {
 			sortDescending = !sortDescending;
 		} else {
@@ -71,19 +71,19 @@ class _SchoolListPageState extends State<SchoolListPage> {
     setState(() {
       Comparator<SchoolScore> comparator;
       switch (sortingBy) {
-        case SchoolScoreColumnAttributes.instName:
+        case ListPageColumnAttributes.instName:
           comparator = (a, b) => a.schoolName.compareTo(b.schoolName);
           break;
 
-        case SchoolScoreColumnAttributes.ranking:
-        case SchoolScoreColumnAttributes.total:
+        case ListPageColumnAttributes.ranking:
+        case ListPageColumnAttributes.total:
           comparator = (a, b) => a.score.compareTo(b.score);
           break;
 					
-				case SchoolScoreColumnAttributes.leadership:
-				case SchoolScoreColumnAttributes.polnpay:
-				case SchoolScoreColumnAttributes.safety:
-				case SchoolScoreColumnAttributes.diversity:
+				case ListPageColumnAttributes.leadership:
+				case ListPageColumnAttributes.polnpay:
+				case ListPageColumnAttributes.safety:
+				case ListPageColumnAttributes.diversity:
           comparator = (a, b) => a.subscores[sortingBy]!.compareTo(b.subscores[sortingBy]!);
           break;
         default:

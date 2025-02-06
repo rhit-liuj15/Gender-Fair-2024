@@ -1,6 +1,6 @@
 
 
-enum SchoolScoreColumnAttributes {
+enum ListPageColumnAttributes {
   
 	addToList(flexWidth: 2, name: "Add To List", sortable: false, sortDescending: false),
 	ranking(flexWidth: 2, name: "Ranking", sortable: false, sortDescending: false),
@@ -11,7 +11,7 @@ enum SchoolScoreColumnAttributes {
 	diversity(flexWidth: 2, name: "Diversity", sortable: true, sortDescending: true),
 	total(flexWidth: 2, name: "Total", sortable: true, sortDescending: true);
 
-  const SchoolScoreColumnAttributes({
+  const ListPageColumnAttributes({
     required this.flexWidth,
     required this.name,
     required this.sortable,
@@ -23,24 +23,16 @@ enum SchoolScoreColumnAttributes {
   final bool sortable;
 	final bool sortDescending;
 
-  static List<SchoolScoreColumnAttributes> get sortableItems => 
-		SchoolScoreColumnAttributes.values.where((item) => item.sortable).toList();
+  static List<ListPageColumnAttributes> get sortableItems => 
+		ListPageColumnAttributes.values.where((item) => item.sortable).toList();
 
-  static Map<SchoolScoreColumnAttributes,bool> get sortOrder => {
+  static Map<ListPageColumnAttributes,bool> get sortOrder => {
 		for (var item in sortableItems) item: item.sortDescending
 	};
-
-  static List<SchoolScoreColumnAttributes> subscoreItems =
-	[
-		SchoolScoreColumnAttributes.leadership,
-		SchoolScoreColumnAttributes.polnpay,
-		SchoolScoreColumnAttributes.safety,
-		SchoolScoreColumnAttributes.diversity
-	];
-
+	
   static List<int> get flexValues => 
-		SchoolScoreColumnAttributes.values.map((item) => item.flexWidth).toList();
+		ListPageColumnAttributes.values.map((item) => item.flexWidth).toList();
 
   static List<String> get colNames => 
-		SchoolScoreColumnAttributes.values.map((item) => item.name).toList();
+		ListPageColumnAttributes.values.map((item) => item.name).toList();
 }

@@ -1,19 +1,18 @@
-import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
 
 class SchoolScore {
 	
 	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
-  static final Map<SchoolScoreColumnAttributes, int> maximumScores = Map.unmodifiable({
-		SchoolScoreColumnAttributes.leadership: 35,
-		SchoolScoreColumnAttributes.polnpay: 35,
-		SchoolScoreColumnAttributes.safety: 15,
-		SchoolScoreColumnAttributes.diversity: 15,
+  static final Map<SchoolScoreAttributes, int> maximumScores = Map.unmodifiable({
+		SchoolScoreAttributes.leadership: 35,
+		SchoolScoreAttributes.polnpay: 35,
+		SchoolScoreAttributes.safety: 15,
+		SchoolScoreAttributes.diversity: 15,
 	});
 
   int rank = 0; 
 	int uid;
   String schoolName;
-  Map<SchoolScoreColumnAttributes, int> subscores;
+  Map<SchoolScoreAttributes, int> subscores;
 	
 	int get score => subscores.values.toList().reduce((a,b)=>a+b);
 
@@ -22,13 +21,9 @@ class SchoolScore {
     required this.schoolName,
     required this.subscores,
     this.rank = 0,
-  }){
-		if (scoreOutOfBounds(subscores)) {
-			throw("The subscore entries for '$schoolName' exceeds specified limits: $subscores, $maximumValues");
-		}
-	}
+  });
 
-	bool scoreOutOfBounds(Map<SchoolScoreColumnAttributes, int> val) {
+	bool scoreOutOfBounds(Map<SchoolScoreAttributes, int> val) {
 		// Placeholder; usefulness to be contemplated.
 		return false;
 	}
@@ -37,4 +32,29 @@ class SchoolScore {
   String toString() {
     return "The school $schoolName (UID $uid}) has scores $subscores";
   }
+}
+
+
+
+enum SchoolScoreAttributes {
+  
+	leadership(name: "Leadership"),
+	polnpay(name: "Policies & Pay"),
+	safety(name: "Safety"),
+	diversity(name: "Diversity"),
+	total(name: "Total");
+
+  const SchoolScoreAttributes({
+    required this.name,
+  });
+
+  final String name;
+
+  static List<SchoolScoreAttributes> subscoreItems =
+	[
+		SchoolScoreAttributes.leadership,
+		SchoolScoreAttributes.polnpay,
+		SchoolScoreAttributes.safety,
+		SchoolScoreAttributes.diversity
+	];
 }

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
+import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 import 'package:http/http.dart' as https;
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
@@ -53,10 +53,10 @@ class DataLoader {
             uid: item['UNITID'],
             schoolName: item['INSTNM'],
             subscores: Map.unmodifiable({
-							SchoolScoreColumnAttributes.leadership: item['LEADERSHIP'],
-							SchoolScoreColumnAttributes.polnpay: item['POLICIES'],
-							SchoolScoreColumnAttributes.safety: item['SAFETY'],
-							SchoolScoreColumnAttributes.diversity: item['DIVERSITY'],
+							ListPageColumnAttributes.leadership: item['LEADERSHIP'],
+							ListPageColumnAttributes.polnpay: item['POLICIES'],
+							ListPageColumnAttributes.safety: item['SAFETY'],
+							ListPageColumnAttributes.diversity: item['DIVERSITY'],
 						}),
           );
         }

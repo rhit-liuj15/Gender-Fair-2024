@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
-import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
+import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 import 'package:gender_fair_2024/pages/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
   final void Function(int) onUpdateSelectedCount; 
-  static List<int> flexValues = SchoolScoreColumnAttributes.flexValues;
-  static List<String> columnNames = SchoolScoreColumnAttributes.colNames;
-  static Map<SchoolScoreColumnAttributes,bool> defaultSortOrder = SchoolScoreColumnAttributes.sortOrder;
+  static List<int> flexValues = ListPageColumnAttributes.flexValues;
+  static List<String> columnNames = ListPageColumnAttributes.colNames;
+  static Map<ListPageColumnAttributes,bool> defaultSortOrder = ListPageColumnAttributes.sortOrder;
 
   static int get numColumns {
     if (flexValues.length != columnNames.length) {
@@ -36,9 +36,9 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
   @override
   Widget build(BuildContext context) {
 		
-    final List<Widget> widgets = SchoolScoreColumnAttributes.values.map((item) {
+    final List<Widget> widgets = ListPageColumnAttributes.values.map((item) {
 			switch(item) {
-				case SchoolScoreColumnAttributes.addToList:
+				case ListPageColumnAttributes.addToList:
 					return Checkbox(
 						value: SchoolScoreRow.selectedSchools.contains(widget.school.uid),
 						onChanged: (bool? newValue) {
@@ -52,7 +52,7 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 							});
 						},
 					);
-				case SchoolScoreColumnAttributes.instName:
+				case ListPageColumnAttributes.instName:
 					return InkWell(
 						child: Text(widget.school.schoolName, style: const TextStyle(fontSize: 18)),
 						onTap: () {
@@ -66,20 +66,20 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 							);
 						},
 					);
-				case SchoolScoreColumnAttributes.leadership:
-				case SchoolScoreColumnAttributes.polnpay:
-				case SchoolScoreColumnAttributes.safety:
-				case SchoolScoreColumnAttributes.diversity:
+				case ListPageColumnAttributes.leadership:
+				case ListPageColumnAttributes.polnpay:
+				case ListPageColumnAttributes.safety:
+				case ListPageColumnAttributes.diversity:
 					return Text("${widget.school.subscores[item]}", 
 						textAlign: TextAlign.center,
 						style: subscoreStyle
 					);
-				case SchoolScoreColumnAttributes.ranking:
+				case ListPageColumnAttributes.ranking:
 					return Text("#${widget.school.rank}", 
 						textAlign: TextAlign.center,
 						style: rankingStyle
 					);
-				case SchoolScoreColumnAttributes.total:
+				case ListPageColumnAttributes.total:
 					return Text("${widget.school.score}", 
 						textAlign: TextAlign.center,
 						style: totalScoreStyle
@@ -89,41 +89,6 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 			}
 		}).toList();
 
-    // final List<Widget> widgets2 = [
-		// 	Checkbox(
-		// 		value: SchoolScoreRow.selectedSchools.contains(widget.school.uid),
-		// 		onChanged: (bool? newValue) {
-		// 			setState(() {
-		// 				if (newValue!) {
-		// 					SchoolScoreRow.selectedSchools.add(widget.school.uid);
-		// 				} else {
-		// 					SchoolScoreRow.selectedSchools.remove(widget.school.uid);
-		// 				}
-		// 				widget.onUpdateSelectedCount(SchoolScoreRow.selectedSchools.length); 
-		// 			});
-		// 		},
-		// 	),
-
-		// 	InkWell(
-		// 		child: Text(widget.school.schoolName, style: const TextStyle(fontSize: 18)),
-		// 		onTap: () {
-		// 			showDialog(
-		// 				context: context,
-		// 				builder: (BuildContext context) {
-		// 					return Dialog(
-		// 						child: SchoolDetailPage(uid: widget.school.uid),
-		// 					);
-		// 				},
-		// 			);
-		// 		},
-		// 	),
-		// 	Text("#${widget.school.rank}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 221, 174, 47))),
-		// 	Text("${widget.school.subscores[0]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-		// 	Text("${widget.school.subscores[1]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-		// 	Text("${widget.school.subscores[2]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-		// 	Text("${widget.school.subscores[3]}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-		// 	Text("${widget.school.score}", textAlign: TextAlign.center, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.green)),
-		// ];
 
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),

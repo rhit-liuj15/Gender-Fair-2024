@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
-import 'package:gender_fair_2024/models/school_score_column_attributes.dart';
+import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 
 class SchoolListPane extends StatefulWidget {
-  final ValueChanged<SchoolScoreColumnAttributes> updateSortingMetricCallback;
-  final SchoolScoreColumnAttributes sortingMetric;
+  final ValueChanged<ListPageColumnAttributes> updateSortingMetricCallback;
+  final ListPageColumnAttributes sortingMetric;
   final Function() updateSortCallback;
   final List<SchoolScore> schoolsFilteredFor;
   final int schoolsPerPage;
@@ -82,17 +82,17 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 8.0),
-                DropdownButton<SchoolScoreColumnAttributes>(
+                DropdownButton<ListPageColumnAttributes>(
                   value: widget.sortingMetric,
-                  onChanged: (SchoolScoreColumnAttributes? newValue) {
+                  onChanged: (ListPageColumnAttributes? newValue) {
                     if (newValue != null) {
                       widget.updateSortingMetricCallback(newValue);
                     }
                   },
 									// Generate dropdown entry for all sortable columns
-                  items: SchoolScoreColumnAttributes.values.where((item) => item.sortable).map(
+                  items: ListPageColumnAttributes.values.where((item) => item.sortable).map(
 										(item) => 
-										DropdownMenuItem<SchoolScoreColumnAttributes>(
+										DropdownMenuItem<ListPageColumnAttributes>(
 											value: item,
 											child: Text(
 												item.name,
