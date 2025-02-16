@@ -9,7 +9,7 @@ class FilterAndComparePane extends StatelessWidget {
   final ValueChanged<String> onSearchChange;
   final VoidCallback onComparePressed;
   final bool showOnlySelected;
-  final ValueChanged<bool?>  onShowOnlySelectedToggle;
+  final ValueChanged<bool?> onShowOnlySelectedToggle;
   final int selectedSchoolsCount;
 
   const FilterAndComparePane({
@@ -21,7 +21,7 @@ class FilterAndComparePane extends StatelessWidget {
     required this.onSearchChange,
     required this.onComparePressed,
     required this.showOnlySelected,
-		required this.onShowOnlySelectedToggle,
+    required this.onShowOnlySelectedToggle,
     required this.selectedSchoolsCount,
   }) : super(key: key);
 
@@ -99,33 +99,44 @@ class FilterAndComparePane extends StatelessWidget {
                         : [],
                   ),
                   child: TextButton(
-                    onPressed: selectedSchoolsCount >= 2 ? onComparePressed : null,
+                    onPressed:
+                        selectedSchoolsCount >= 2 ? onComparePressed : null,
                     style: ButtonStyle(
                       foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (states) =>
-                            selectedSchoolsCount >= 2 ? Colors.white : Colors.grey,
+                        (states) => selectedSchoolsCount >= 2
+                            ? Colors.white
+                            : Colors.grey,
                       ),
                       padding: MaterialStateProperty.all<EdgeInsets>(
                           EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
                     ),
                     child: const Text(
                       "Compare Schools",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
                 const SizedBox(height: 4),
-								Checkbox(
-									value: showOnlySelected,
-									onChanged: onShowOnlySelectedToggle,
-								),
+                Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Checkbox(
+                        value: showOnlySelected,
+                        onChanged: onShowOnlySelectedToggle,
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 4),
                 Text(
-                  "$selectedSchoolsCount Selected",
+                  "$selectedSchoolsCount Selected, upon checking, only added-to-list are displayed",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: selectedSchoolsCount >= 2 ? Colors.green : Colors.grey,
+                    color:
+                        selectedSchoolsCount >= 2 ? Colors.green : Colors.grey,
                   ),
                 ),
               ],

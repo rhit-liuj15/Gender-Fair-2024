@@ -148,7 +148,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                         child: Text(
                           "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, It empower prospective students to make informed decisions aligned with their values. Currently, schools with identical rank and score are treated as having equal standing.",
                           style: TextStyle(
-                            fontSize: 30.0,
+                            fontSize: 16.0,
                             color: Colors.grey,
                           ),
                           textAlign: TextAlign.center,
