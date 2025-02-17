@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:gender_fair_2024/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
+import 'package:gender_fair_2024/components/metric_bar_chart.dart'; // Import the new widget
 
 class MyCustomScrollBehavior extends MaterialScrollBehavior {
   @override
@@ -37,8 +38,6 @@ class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
     super.dispose();
   }
 
-  double maxColumnWidth = 100;
-  
   Future<void> loadData() async {
     await DataLoader.instance.requestSchoolData(SchoolScoreRow.selectedSchools);
     setState(() {
@@ -47,23 +46,41 @@ class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
           .where((score) => score != null)
           .toList()
           .cast<SchoolScore>();
-
-      final textPainter = TextPainter(
-        textDirection: TextDirection.ltr,
-      );
-
-      for (var school in schoolScores) {
-        textPainter.text = TextSpan(
-          text: school.schoolName,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        );
-        textPainter.layout();
-        maxColumnWidth = maxColumnWidth > textPainter.width
-            ? maxColumnWidth
-            : textPainter.width + 20;
-      }
     });
   }
+
+  Widget _buildColorIndicatorSection(List<SchoolScore> schools) {
+  final List<Color> assignedColors = List.generate(
+    schools.length,
+    (index) {
+      final hue = (360.0 / schools.length) * index;
+      return HSLColor.fromAHSL(1.0, hue, 0.6, 0.6).toColor();
+    },
+  );
+  return Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    alignment: WrapAlignment.center,
+    children: List.generate(schools.length, (index) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 16,
+            height: 16,
+            color: assignedColors[index],
+          ),
+          const SizedBox(width: 4),
+          Text(
+            schools[index].schoolName,
+            style: const TextStyle(fontSize: 14),
+          ),
+        ],
+      );
+    }),
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -112,61 +129,48 @@ class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
                     ),
                   )
                 else
-                  SizedBox(
-                    height: 350,
-                    child: ScrollConfiguration(
-                      behavior: MyCustomScrollBehavior(),
-                      child: Scrollbar(
-                        controller: _scrollController,
-                        thumbVisibility: true,
-                        interactive: true,
-                        child: Listener(
-                          onPointerSignal: (pointerSignal) {
-                            if (pointerSignal is PointerScrollEvent) {
-                              final newOffset =
-                                  _scrollController.offset +
-                                      pointerSignal.scrollDelta.dy;
-                              if (_scrollController.hasClients) {
-                                _scrollController.jumpTo(newOffset);
-                              }
-                            }
-                          },
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            controller: _scrollController,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    metricTitle(""),
-                                    metricTitle("Leadership"),
-                                    metricTitle("Policies"),
-                                    metricTitle("Safety"),
-                                    metricTitle("Diversity"),
-                                    metricTitle("Total Score"),
-                                  ],
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: MetricBarChart(
+                                  schools: schoolScores,
+                                  metric: SchoolScoreAttributes.leadership,
                                 ),
-                                ...schoolScores.map(
-                                  (school) => Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      schoolTitle(school.schoolName),
-                                      metricValue("${school.subscores[SchoolScoreAttributes.leadership]}"),
-                                      metricValue("${school.subscores[SchoolScoreAttributes.polnpay]}"),
-                                      metricValue("${school.subscores[SchoolScoreAttributes.safety]}"),
-                                      metricValue("${school.subscores[SchoolScoreAttributes.diversity]}"),
-                                      metricValue("${school.score}",
-                                          isTotal: true),
-                                    ],
-                                  ),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                child: MetricBarChart(
+                                  schools: schoolScores,
+                                  metric: SchoolScoreAttributes.polnpay,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ),
+                          const SizedBox(height: 30),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: MetricBarChart(
+                                  schools: schoolScores,
+                                  metric: SchoolScoreAttributes.safety,
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                child: MetricBarChart(
+                                  schools: schoolScores,
+                                  metric: SchoolScoreAttributes.diversity,
+                                ),
+                              ),
+                            ],
+                          ),
+                          _buildColorIndicatorSection(schoolScores),
+                        ],
                       ),
                     ),
                   ),
@@ -175,65 +179,6 @@ class _SchoolComparisonPageState extends State<SchoolComparisonPage> {
           ),
         ),
       ],
-    );
-  }
-
-
-  Widget metricTitle(String title) {
-    return Container(
-      width: maxColumnWidth,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: const BoxDecoration(
-        border: Border(
-          right: BorderSide(color: Colors.black, width: 1),
-          bottom: BorderSide(color: Colors.black, width: 1),
-        ),
-      ),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Widget schoolTitle(String name) {
-    return Container(
-      width: maxColumnWidth,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: const BoxDecoration(
-        border: Border(
-          right: BorderSide(color: Colors.black, width: 1),
-          bottom: BorderSide(color: Colors.black, width: 1),
-        ),
-      ),
-      child: Text(
-        name,
-        textAlign: TextAlign.center,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  Widget metricValue(String value, {bool isTotal = false}) {
-    return Container(
-      width: maxColumnWidth,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      decoration: const BoxDecoration(
-        border: Border(
-          right: BorderSide(color: Colors.black, width: 1),
-          bottom: BorderSide(color: Colors.black, width: 1),
-        ),
-      ),
-      child: Text(
-        value,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-          color: isTotal ? Colors.green : Colors.black,
-        ),
-      ),
     );
   }
 }
