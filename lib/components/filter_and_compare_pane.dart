@@ -7,23 +7,21 @@ class FilterAndComparePane extends StatelessWidget {
   final Map<String, bool> stateIsFilteredFor;
   final Map<String, FilterTextTile> stateNameTiles;
   final ValueChanged<String> onSearchChange;
-  final VoidCallback onComparePressed;
   final bool showOnlySelected;
   final ValueChanged<bool?> onShowOnlySelectedToggle;
   final int selectedSchoolsCount;
 
   const FilterAndComparePane({
-    Key? key,
+    super.key,
     required this.filterTextEditingController,
     required this.stateAbbreviations,
     required this.stateIsFilteredFor,
     required this.stateNameTiles,
     required this.onSearchChange,
-    required this.onComparePressed,
     required this.showOnlySelected,
     required this.onShowOnlySelectedToggle,
     required this.selectedSchoolsCount,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -97,24 +95,6 @@ class FilterAndComparePane extends StatelessWidget {
                             ),
                           ]
                         : [],
-                  ),
-                  child: TextButton(
-                    onPressed:
-                        selectedSchoolsCount >= 2 ? onComparePressed : null,
-                    style: ButtonStyle(
-                      foregroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (states) => selectedSchoolsCount >= 2
-                            ? Colors.white
-                            : Colors.grey,
-                      ),
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
-                    ),
-                    child: const Text(
-                      "Compare Schools",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
                   ),
                 ),
                 const SizedBox(height: 4),

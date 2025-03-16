@@ -5,7 +5,6 @@ import 'package:gender_fair_2024/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
-import 'package:gender_fair_2024/pages/school_comparison_page.dart';
 
 import '../components/filter_and_compare_pane.dart';
 import '../components/school_list_pane.dart';
@@ -98,7 +97,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
       schoolsFilteredFor.sort((a, b) {
         int compareResult = comparator(a, b);
         if (compareResult == 0) {
-          compareResult = a.rank.compareTo(b.rank);
+          compareResult = a.score.compareTo(b.score);
         }
         return sortDescending ? -compareResult : compareResult;
       });
@@ -203,14 +202,6 @@ class _SchoolListPageState extends State<SchoolListPage> {
                             sortData();
 													});
 												},
-                        onComparePressed: () {
-                          showDialog(
-                            context: context,
-                            barrierDismissible: true,
-                            builder: (BuildContext context) =>
-                                const SchoolComparisonPage(),
-                          );
-                        },
                       ),
                     ),
 
