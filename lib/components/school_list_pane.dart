@@ -11,7 +11,7 @@ class SchoolListPane extends StatefulWidget {
   final Function() updateSortCallback;
   final List<SchoolScore> schoolsFilteredFor;
   final int schoolsPerPage;
-  final Function(int) onUpdateSelectedCount;
+  final Function() onUpdateSelected;
 
   const SchoolListPane({
     super.key,
@@ -20,7 +20,7 @@ class SchoolListPane extends StatefulWidget {
     required this.updateSortCallback,
     required this.schoolsFilteredFor,
     required this.schoolsPerPage,
-    required this.onUpdateSelectedCount,
+    required this.onUpdateSelected,
   });
 
   @override
@@ -161,8 +161,8 @@ class _SchoolListPaneState extends State<SchoolListPane> {
 																const EdgeInsets.symmetric(vertical: 4.0),
 														child: SchoolScoreRow(
 															school: schoolOnCurrentPage[index],
-															onUpdateSelectedCount:
-																	widget.onUpdateSelectedCount, 
+															onUpdateSelected:
+																	widget.onUpdateSelected, 
 														),
 													),
 												);

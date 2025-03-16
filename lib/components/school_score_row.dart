@@ -4,7 +4,7 @@ import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 import 'package:gender_fair_2024/pages/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
-  final void Function(int) onUpdateSelectedCount; 
+  final void Function() onUpdateSelected; 
   static List<int> flexValues = ListPageColumnAttributes.flexValues;
   static List<String> columnNames = ListPageColumnAttributes.colNames;
   static Map<ListPageColumnAttributes,bool> defaultSortOrder = ListPageColumnAttributes.sortOrder;
@@ -17,7 +17,7 @@ class SchoolScoreRow extends StatefulWidget {
   }
   static Set<int> selectedSchools = <int>{};
   final SchoolScore school;
-  const SchoolScoreRow({super.key, required this.school, required this.onUpdateSelectedCount});
+  const SchoolScoreRow({super.key, required this.school, required this.onUpdateSelected});
 
   @override
   State<SchoolScoreRow> createState() => _SchoolScoreRowState();
@@ -48,7 +48,7 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 								} else {
 									SchoolScoreRow.selectedSchools.remove(widget.school.uid);
 								}
-								widget.onUpdateSelectedCount(SchoolScoreRow.selectedSchools.length); 
+								widget.onUpdateSelected(); 
 							});
 						},
 					);

@@ -104,10 +104,11 @@ class _SchoolListPageState extends State<SchoolListPage> {
     });
   }
 
-  void updateSelectedCount(int count) {
+  void updateSelected() {
     setState(() {
-      selectedSchoolsCount = count;
+			schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
     });
+		sortData();
   }
 
   @override
@@ -215,7 +216,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                         updateSortCallback: sortData,
                         schoolsFilteredFor: schoolsFilteredFor,
                         schoolsPerPage: schoolsPerPage,
-                        onUpdateSelectedCount: updateSelectedCount,
+                        onUpdateSelected: updateSelected,
                       ),
                     ),
                   ],
