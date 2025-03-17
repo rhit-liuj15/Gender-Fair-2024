@@ -25,7 +25,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   Future<void> loadData() async {
     await DataLoader.instance.requestSchoolData({widget.uid});
     setState(() {
-      schoolData = DataLoader.instance.allSchools[widget.uid] ??
+      schoolData = DataLoader.instance.allSchoolData[widget.uid] ??
           SchoolData.unknownUID(widget.uid);
       isLoading = false;
     });

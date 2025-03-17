@@ -50,7 +50,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
   Future<void> loadData() async {
     await DataLoader.instance.loadData();
     setState(() {
-      scoreList = DataLoader.instance.allScores.values.toList();
+      scoreList = DataLoader.instance.allSchoolScores.values.toList();
       stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
       schoolsFilteredFor = List.from(scoreList);
       sortData();

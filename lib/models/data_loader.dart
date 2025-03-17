@@ -6,16 +6,17 @@ import 'package:gender_fair_2024/models/school_score.dart';
 class DataLoader {
   // I'm trying my best to guess this is how singleton works in flutter...
   Map<String, String> stateNameToAbbreviations = <String, String>{};
-  Map<int, SchoolData> allSchools = <int, SchoolData>{};
-  Map<int, SchoolScore> allScores = <int, SchoolScore>{};
-  // The reason these two are separate is that I plan to load all scores up front, but only request school's full details when necessary.
-  bool _dataReady = false;
+  Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
+  Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
+  Map<String, double> allAverages = <String, double>{};
+  // The reason allSchoolData and allSchoolScores are separate is that allSchoolScores are loaded up front, but allSchoolData is requested as necessary.
+  bool _initialDataLoadComplete = false;
   static final DataLoader instance = DataLoader._privateConstructor();
 
   DataLoader._privateConstructor();
 
   void computeRankings() {
-  List<SchoolScore> sortedScores = allScores.values.toList();
+  List<SchoolScore> sortedScores = allSchoolScores.values.toList();
   sortedScores.sort((a, b) => b.score.compareTo(a.score)); 
 
   int rank = 1; 
@@ -41,14 +42,15 @@ class DataLoader {
 
 
  Future<void> loadData() async {
-  if (!_dataReady) {
+  if (!_initialDataLoadComplete) {
     var scoreUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'score');
+    var averagesUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'averages');
     try {
-      final response = await https.get(scoreUrl);
-      if (response.statusCode == 200) {
-        List<dynamic> data = jsonDecode(response.body);
+      final scoreResponse = await https.get(scoreUrl);
+      if (scoreResponse.statusCode == 200) {
+        List<dynamic> data = jsonDecode(scoreResponse.body);
         for (var item in data) {
-          allScores[item['UNITID']] = SchoolScore(
+          allSchoolScores[item['UNITID']] = SchoolScore(
             uid: item['UNITID'],
             schoolName: item['INSTNM'],
             subscores: Map.unmodifiable(
@@ -62,10 +64,20 @@ class DataLoader {
           );
         }
         computeRankings();
-        _dataReady = true;
       } else {
-        print('Failed to load data. HTTP Status Code: ${response.statusCode}');
+        print('Failed to load score data. HTTP Status Code: ${scoreResponse.statusCode}');
       }
+      final averagesResponse = await https.get(averagesUrl);
+      if (averagesResponse.statusCode == 200) {
+        List<dynamic> data = jsonDecode(averagesResponse.body);
+        for (var item in data) {
+          allAverages[item['Name']] = double.tryParse(item['Value']) ?? -777;
+        }
+				print(allAverages);
+      } else {
+        print('Failed to load averages data. HTTP Status Code: ${averagesResponse.statusCode}');
+      }
+			_initialDataLoadComplete = true;
     } catch (e) {
       print('Error occurred: $e');
     }
@@ -74,18 +86,18 @@ class DataLoader {
 
 
   void addSchoolData(SchoolData data) {
-    if (allSchools.containsKey(data.uid)) {
+    if (allSchoolData.containsKey(data.uid)) {
       print(
-          "UID ${data.uid} is shared by '${data.schoolName}' and '${allScores[data.uid]!.schoolName}'. The former is not added to allSchools.");
+          "UID ${data.uid} is shared by '${data.schoolName}' and '${allSchoolScores[data.uid]!.schoolName}'. The former is not added to allSchoolData.");
     } else {
-      allSchools[data.uid] = data;
+      allSchoolData[data.uid] = data;
     }
   }
 
   Future<void> requestSchoolData(Set<int> uids) async {
     // This is to be expanded later with an actual request
-		Set<int> notPresentData = uids.difference(allSchools.keys.toSet());
-		print("UIDS ${allSchools.keys.toSet().intersection(uids)} already exist in data");
+		Set<int> notPresentData = uids.difference(allSchoolData.keys.toSet());
+		print("UIDS ${allSchoolData.keys.toSet().intersection(uids)} already exist in data");
 		if (notPresentData.isNotEmpty) {
 			String fetchUIDs = notPresentData.join(',');
 			var dataUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'data', {'uids': fetchUIDs});
@@ -98,7 +110,6 @@ class DataLoader {
 					for (var item in data) {
 						addSchoolData(SchoolData.fromJSON(item));
 					}
-					_dataReady = true;
 				} else {
 					print('Failed to load data. HTTP Status Code: ${response.statusCode}');
 				}

@@ -84,8 +84,8 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 						textAlign: TextAlign.center,
 						style: totalScoreStyle
 					);
-				default:
-					return Text("Unknown item '${item.name}'!"); // Consider this a return nothing
+				// default:
+				// 	return Text("Unknown item '${item.name}'!"); // Consider this a return nothing
 			}
 		}).toList();
 
