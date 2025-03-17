@@ -24,16 +24,11 @@ class _SchoolListPageState extends State<SchoolListPage> {
   List<SchoolScore> scoreList = <SchoolScore>[];
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
 
-  List<String> stateNames = <String>[];
-  List<String> stateAbbreviations = <String>[];
-  List<String> filteringStates = <String>[];
   Map<String, String> stateNameToAbbreviations = <String, String>{};
   ListPageColumnAttributes sortingBy = ListPageColumnAttributes.total;
   bool sortDescending = ListPageColumnAttributes.total.sortDescending;
 
-  Map<String, FilterTextTile> stateNameTiles = <String, FilterTextTile>{};
-  Map<String, bool> stateIsFilteredFor = <String, bool>{};
-  List<String> statesFilteredFor = <String>[];
+  Set<String> statesFilteredFor = <String>{};
 
   final TextStyle textStyle = const TextStyle(fontSize: 18.0);
   final TextEditingController filterTextEditingController =
@@ -176,9 +171,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                       child: FilterAndComparePane(
                         filterTextEditingController:
                             filterTextEditingController,
-                        stateAbbreviations: stateAbbreviations,
-                        stateIsFilteredFor: stateIsFilteredFor,
-                        stateNameTiles: stateNameTiles,
+                        statesFilteredFor: statesFilteredFor,
                         selectedSchoolsCount:
                             SchoolScoreRow.selectedSchools.length,
                         onSearchChange: (value) {

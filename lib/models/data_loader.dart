@@ -74,7 +74,6 @@ class DataLoader {
         for (var item in data) {
           allAverages[item['Name']] = double.tryParse(item['Value']) ?? -777;
         }
-				print(allAverages);
       } else {
         print('Failed to load averages data. HTTP Status Code: ${averagesResponse.statusCode}');
       }

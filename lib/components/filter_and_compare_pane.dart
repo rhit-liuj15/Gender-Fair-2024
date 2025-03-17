@@ -3,9 +3,7 @@ import 'package:gender_fair_2024/components/filter_state_name_tile.dart';
 
 class FilterAndComparePane extends StatelessWidget {
   final TextEditingController filterTextEditingController;
-  final List<String> stateAbbreviations;
-  final Map<String, bool> stateIsFilteredFor;
-  final Map<String, FilterTextTile> stateNameTiles;
+  final Set<String> statesFilteredFor;
   final ValueChanged<String> onSearchChange;
   final bool showOnlySelected;
   final ValueChanged<bool?> onShowOnlySelectedToggle;
@@ -14,9 +12,7 @@ class FilterAndComparePane extends StatelessWidget {
   const FilterAndComparePane({
     super.key,
     required this.filterTextEditingController,
-    required this.stateAbbreviations,
-    required this.stateIsFilteredFor,
-    required this.stateNameTiles,
+    required this.statesFilteredFor,
     required this.onSearchChange,
     required this.showOnlySelected,
     required this.onShowOnlySelectedToggle,
@@ -62,7 +58,7 @@ class FilterAndComparePane extends StatelessWidget {
                     controller: filterTextEditingController,
                     decoration: InputDecoration(
                       labelText: 'Search Schools',
-                      hintText: 'Type school name...',
+                      hintText: 'Type School Name Here',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -70,14 +66,6 @@ class FilterAndComparePane extends StatelessWidget {
                     ),
                     onChanged: onSearchChange,
                   ),
-                ),
-                Wrap(
-                  children: stateAbbreviations.map((abbr) {
-                    return Visibility(
-                      visible: stateIsFilteredFor[abbr] ?? false,
-                      child: stateNameTiles[abbr] ?? const SizedBox(),
-                    );
-                  }).toList(),
                 ),
                 const SizedBox(height: 10),
                 Container(
