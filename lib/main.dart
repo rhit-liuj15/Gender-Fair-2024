@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/pages/all_schools_page.dart';
+import 'package:gender_fair_2024/pages/school_list_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,11 +17,9 @@ class MyApp extends StatelessWidget {
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: Color.fromARGB(202, 255, 99, 2),
-          onPrimary: Color.fromARGB(202, 255, 99, 2),
-          secondary: Color.fromARGB(255, 99, 2, 202),
-          onSecondary: Color.fromARGB(202, 255, 99, 2),
-          background: Color(0xFFF5F5F5),
-          onBackground: Colors.black,
+          onPrimary: Colors.black,
+          secondary: Colors.cyan,
+          onSecondary: Colors.black,
           surface: Color.fromARGB(224, 255, 255, 255),
           onSurface: Colors.black,
           error: Colors.red,
@@ -29,7 +27,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const GlassBackgroundPage(child: AllSchoolsPage()),
+      home: const GlassBackgroundPage(child: SchoolListPage()),
     );
   }
 }
@@ -54,7 +52,7 @@ class GlassBackgroundPage extends StatelessWidget {
                       .withOpacity(0.8),
                   Colors.redAccent.withOpacity(0.7), 
                 ],
-                stops: [0.2, 0.7, 1.0], 
+                stops: const [0.2, 0.7, 1.0], 
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

@@ -1,1 +1,23 @@
-{"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"liuj15-school-comparison","configurations":{"web":"1:645569073682:web:f199649fd91dd0b6dbbecb","windows":"1:645569073682:web:eca8aeeff62ab71adbbecb"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "liuj15-school-comparison",
+          "configurations": {
+            "web": "1:645569073682:web:f199649fd91dd0b6dbbecb",
+            "windows": "1:645569073682:web:eca8aeeff62ab71adbbecb"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

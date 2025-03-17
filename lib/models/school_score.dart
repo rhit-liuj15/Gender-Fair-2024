@@ -1,36 +1,63 @@
+
 class SchoolScore {
+	
+	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
+  static final Map<SchoolScoreAttributes, int> maximumScores = Map.unmodifiable(
+		<SchoolScoreAttributes, int>{
+			SchoolScoreAttributes.leadership: 35,
+			SchoolScoreAttributes.polnpay: 35,
+			SchoolScoreAttributes.safety: 15,
+			SchoolScoreAttributes.diversity: 15,
+		}
+	);
+
+  int rank = 0; 
 	int uid;
   String schoolName;
-  List<int> subscores;
-	static final List<String> subscoreTitles = List.unmodifiable(["Leadership", "Policies & Pay", "Safety", "Diversity"]);
-	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
+  String schoolState;
+  Map<SchoolScoreAttributes, int> subscores;
 	
-	int get score => subscores.reduce((a,b) => a+b);
+	int get score => subscores.values.toList().reduce((a,b)=>a+b);
 
   SchoolScore({
 		required this.uid,
     required this.schoolName,
+    required this.schoolState,
     required this.subscores,
-  }) {
-		if (subscoreTitles.length != maximumValues.length) {
-			throw("School subscore category specification has mismatched lengths");
-		} else if (subscores.length != subscoreTitles.length) {
-			throw("The subscore entry for '$schoolName' has mismatched length");
-		} else if (!pairwiseWithinLimit(subscores, maximumValues)) {
-			throw("The subscore entries for '$schoolName' exceeds specified limits: $subscores, $maximumValues");
-		}
-	}
+    this.rank = 0,
+  });
 
-	bool pairwiseWithinLimit(List<int> val, List<int> lim) {
-		// Disabled checking for now until scores are ready
-		// for (int i = 0; i < val.length; i++) {
-		// 	if (val[i] > lim[i]) return false;
-		// }
-		return true;
+	bool scoreOutOfBounds(Map<SchoolScoreAttributes, int> val) {
+		return false;
 	}
 
   @override
   String toString() {
-    return "The school $schoolName (UID $uid}) has scores $subscores";
+    return "The school $schoolName (UID $uid) in state $schoolState has scores $subscores";
   }
+}
+
+
+
+enum SchoolScoreAttributes {
+  
+	leadership(name: "Leadership"),
+	polnpay(name: "Policies & Pay"),
+	safety(name: "Safety"),
+	diversity(name: "Diversity"),
+	total(name: "Total");
+
+  const SchoolScoreAttributes({
+    required this.name,
+  });
+
+  final String name;
+
+  static List<SchoolScoreAttributes> subscoreItems =
+	[
+		SchoolScoreAttributes.leadership,
+		SchoolScoreAttributes.polnpay,
+		SchoolScoreAttributes.safety,
+		SchoolScoreAttributes.diversity
+	];
 }
