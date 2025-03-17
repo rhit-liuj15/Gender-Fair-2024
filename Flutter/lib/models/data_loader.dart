@@ -111,7 +111,7 @@ class DataLoader {
 						addSchoolData(SchoolData.fromJSON(item));
 					}
 				} else {
-					print('Failed to load data. HTTP Status Code: ${response.statusCode}');
+					print('Failed to load school data. HTTP Status Code: ${response.statusCode}');
 				}
 			} catch (e) {
 				print('Error occurred: $e');
