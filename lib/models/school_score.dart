@@ -14,6 +14,7 @@ class SchoolScore {
   int rank = 0; 
 	int uid;
   String schoolName;
+  String schoolState;
   Map<SchoolScoreAttributes, int> subscores;
 	
 	int get score => subscores.values.toList().reduce((a,b)=>a+b);
@@ -21,18 +22,18 @@ class SchoolScore {
   SchoolScore({
 		required this.uid,
     required this.schoolName,
+    required this.schoolState,
     required this.subscores,
     this.rank = 0,
   });
 
 	bool scoreOutOfBounds(Map<SchoolScoreAttributes, int> val) {
-		// Placeholder; usefulness to be contemplated.
 		return false;
 	}
 
   @override
   String toString() {
-    return "The school $schoolName (UID $uid}) has scores $subscores";
+    return "The school $schoolName (UID $uid) in state $schoolState has scores $subscores";
   }
 }
 

@@ -9,13 +9,13 @@ class BarChartWidget extends StatelessWidget {
   final String yAxisDescription;
 
   const BarChartWidget({
-    Key? key,
+    super.key,
     required this.data,
     required this.labels,
     required this.colors,
     required this.yAxisDescription,
     this.unit = "",
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +57,11 @@ class BarChartWidget extends StatelessWidget {
                 show: true,
                 drawVerticalLine: true,
                 drawHorizontalLine: true,
-                getDrawingHorizontalLine: (value) => FlLine(
+                getDrawingHorizontalLine: (value) => const FlLine(
                   color: Colors.grey,
                   strokeWidth: 1,
                 ),
-                getDrawingVerticalLine: (value) => FlLine(
+                getDrawingVerticalLine: (value) => const FlLine(
                   color: Colors.grey,
                   strokeWidth: 1,
                 ),
@@ -108,9 +108,9 @@ class BarChartWidget extends StatelessWidget {
                   ),
                 ),
                 rightTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                 topTitles:
-                    AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
               ),
               borderData: FlBorderData(
                 show: true,

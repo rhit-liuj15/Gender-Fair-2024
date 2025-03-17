@@ -49,7 +49,7 @@ class SchoolData {
 
   @override
   String toString() {
-    return "\n$schoolName\nUID $uid\n" + categories.toString();
+    return "\n$schoolName\nUID $uid\n$categories";
   }
 }
 

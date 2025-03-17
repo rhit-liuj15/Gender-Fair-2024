@@ -111,7 +111,7 @@ class FilterAndComparePane extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "$selectedSchoolsCount Selected, upon checking, only added-to-list are displayed\nChange this to a button\nChange this to a button\nChange this to a button\nChange this to a button",
+                  "Compare $selectedSchoolsCount Selected Schools",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,

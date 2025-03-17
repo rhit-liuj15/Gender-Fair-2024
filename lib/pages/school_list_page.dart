@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:gender_fair_2024/components/filter_state_name_tile.dart';
 import 'package:gender_fair_2024/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';

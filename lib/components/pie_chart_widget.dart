@@ -9,13 +9,13 @@ class PieChartWidget extends StatefulWidget {
   final bool showPercentage; // Boolean to control percentage display on legend
 
   const PieChartWidget({
-    Key? key,
+    super.key,
     required this.data,
     required this.colors,
     this.centerSpaceRadius = 30,
     this.dataPercentage, 
     this.showPercentage = false,
-  }) : super(key: key);
+  });
 
   @override
   State<PieChartWidget> createState() => _PieChartWidgetState();
@@ -125,11 +125,11 @@ class Indicator extends StatelessWidget {
   final bool isSquare;
 
   const Indicator({
-    Key? key,
+    super.key,
     required this.color,
     required this.text,
     this.isSquare = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

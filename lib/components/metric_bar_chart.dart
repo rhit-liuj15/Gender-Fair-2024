@@ -7,10 +7,10 @@ class MetricBarChart extends StatelessWidget {
   final SchoolScoreAttributes metric;
 
   const MetricBarChart({
-    Key? key,
+    super.key,
     required this.schools,
     required this.metric,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
