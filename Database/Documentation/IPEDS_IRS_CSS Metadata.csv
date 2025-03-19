@@ -1,0 +1,33 @@
+UNITID,unitid
+INSTNM,institution name
+STATE,state abbreviation
+EIN,ein
+OPEID,opeid
+DEGREETOT,total number of people who receive a degree
+ENROLLTOT,total number of enrollment in fall 2023
+ACADEMICPOPM,number of instructional staff men
+ACADEMICPOPF,number of instructional staff women
+SALARYTOTM,total salary outlay men
+SALARYTOTF,total salary outlay women
+SALARYPPM,average salary outlay men
+SALARYPPF,average salary outlay women
+NONACD_BLKPCT,black percentage for non academic staff
+NONACD_HSPPCT,hispanic percentage for non academic staff
+NONACD_ASIAPCT,asian percentage for non academic staff
+PROFWOMENPCT,full professor percentage women
+ASSOCPROFWOMENPCT,associate professor percentage women
+TENUREWOMENPCT,tenured academic staff percentage women
+BLACKPROFWOMENPCT,black full professor percentage women
+BLACKASSOCPROFWOMENPCT,black associate professor percentage women
+BLACKTENUREWOMENPCT,black tenured academic staff percentage women
+HISPANICPROFWOMENPCT,hispanic full prof percentage women
+HISPANICASSOCPROFWOMENPCT,hispanic associate prof percentage women
+HISPANICTENUREWOMENPCT,hispanic tenured academic staff percentage women
+ASIANPROFWOMENPCT,asian full prof percentage women
+ASIANASSOCPROFWOMENPCT,asian associate prof percentage women
+ASIANTENUREWOMENPCT,asian tenured academic staff percentage women
+YEARLYHATECRIME,average number of hate crime per year (from 2020-2022)
+YEARLYHATECRIME1K,number of hate crimes for 1K student population per year
+YEARLYVAWA,average number of vawa crimes per year (from 2020-2022)
+YEARLYVAWA1K,number of vawa crimes for 1K student population per year
+HASDAYCARE,if school offer daycare
