@@ -16,11 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
-          primary: Color.fromARGB(202, 255, 99, 2),
-          onPrimary: Colors.black,
-          secondary: Colors.cyan,
-          onSecondary: Colors.black,
-          surface: Color.fromARGB(224, 255, 255, 255),
+          primary: Color(0xFFFF4713), 
+          onPrimary: Colors.white,
+          secondary: Color(0xFFFF4713), 
+          onSecondary: Colors.white,
+          surface: Colors.white,
           onSurface: Colors.black,
           error: Colors.red,
           onError: Colors.white,
@@ -46,19 +46,15 @@ class GlassBackgroundPage extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.orange
-                      .withOpacity(0.9),
-                  Colors.deepOrange
-                      .withOpacity(0.8),
-                  Colors.redAccent.withOpacity(0.7), 
+                  Colors.white.withOpacity(0.9),
+                  Color(0xFFFF4713).withOpacity(0.2),
                 ],
-                stops: const [0.2, 0.7, 1.0], 
+                stops: const [0.1, 1.0],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
           ),
-
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
@@ -68,7 +64,6 @@ class GlassBackgroundPage extends StatelessWidget {
               ),
             ),
           ),
-
           SafeArea(
             child: child,
           ),
