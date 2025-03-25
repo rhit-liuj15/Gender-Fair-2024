@@ -25,7 +25,7 @@ class FilterAndComparePane extends StatelessWidget {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.2),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
@@ -71,8 +71,8 @@ class FilterAndComparePane extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: selectedSchoolsCount >= 2
-                        ? Colors.blue
-                        : Colors.grey[300],
+                        ? const Color(0xFFFF4713)
+                        : const Color.fromARGB(255, 255, 255, 255),
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: selectedSchoolsCount >= 2
                         ? const [
