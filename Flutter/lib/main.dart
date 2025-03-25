@@ -16,11 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
-          primary: Color(0xFFFF4713), // orange
+          primary: Color(0xFFFF4713), 
           onPrimary: Colors.white,
-          secondary: Color(0xFFFF4713), // also orange
+          secondary: Color(0xFFFF4713), 
           onSecondary: Colors.white,
-          surface: Colors.white, // all backgrounds white
+          surface: Colors.white,
           onSurface: Colors.black,
           error: Colors.red,
           onError: Colors.white,
