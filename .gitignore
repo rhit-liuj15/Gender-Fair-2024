@@ -41,3 +41,6 @@ flutter/app.*.map.json
 flutter/android/app/debug
 flutter/android/app/profile
 flutter/android/app/release
+
+# Scoring folder may have CSVs in them for the script to use. Ignore any such csv, instead obtain a copy from the database
+Scoring/*.csv
