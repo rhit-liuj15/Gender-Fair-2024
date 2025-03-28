@@ -15,7 +15,7 @@ class SchoolData {
     categories = {
       SchoolDataCategory(categoryName: "Basic Information", data: {
         "2023 Graduation Headcount": json["DEGREETOT"],
-        "Fall 2023 Enrollment": json["ENROLTOT"],
+        "Fall 2023 Enrollment": json["ENROLLTOT"],
       }),
       SchoolDataCategory(categoryName: "Financials", data: {
         "Average Salary For Men": json["SALARYPPM"],
@@ -23,18 +23,17 @@ class SchoolData {
       }),
       SchoolDataCategory(categoryName: "Academic Staff Composition", data: {
         "Women Professors": json["PROFWOMENPCT"],
-        "Women Associate Professors": json["ASSOCPROFWOMEN"],
+        "Women Associate Professors": json["ASSOCPROFWOMENPCT"],
         "Tenured Women Academic Staff": json["TENUREWOMENPCT"],
       }),
       SchoolDataCategory(categoryName: "Non-Academic Staff Composition", data: {
-        "Black": json["NASBLACKPCT"],
-        "Hispanic": json["NASHISPANICPCT"],
-        "Asian": json["NASASIAPCT"],
+        "Black": json["NONACD_BLKPCT"],
+        "Hispanic": json["NONACD_HSPPCT"],
+        "Asian": json["NONACD_ASIAPCT"],
       }),
       SchoolDataCategory(categoryName: "Safety", data: {
         "Hate Crimes Per Year 2020-2022": json["YEARLYHATECRIME"],
-        "Hate Crimes Per Year 2020-2022 Per 1K Students":
-            json["YEARLYHATECRIME1K"],
+        "Hate Crimes Per Year 2020-2022 Per 1K Students": json["YEARLYHATECRIME1K"],
         "VAWA Per Year 2020-2022": json["YEARLYVAWA"],
         "VAWA Per Year 2020-2022 Per 1K Students": json["YEARLYVAWA1K"],
       }),
