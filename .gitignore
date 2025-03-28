@@ -42,5 +42,6 @@ Flutter/android/app/debug
 Flutter/android/app/profile
 Flutter/android/app/release
 
-# Scoring folder may have CSVs in them for the script to use. Ignore any such csv, instead obtain a copy from the database
+# Scoring folder may have CSVs and TXTs in them for the script to use. Ignore any such csv, instead obtain a copy from the database
 Scoring/*.csv
+Scoring/*.txt
