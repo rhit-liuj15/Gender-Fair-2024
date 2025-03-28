@@ -53,7 +53,7 @@ class DataLoader {
           allSchoolScores[item['UNITID']] = SchoolScore(
             uid: item['UNITID'],
             schoolName: item['INSTNM'],
-            schoolState: item['STABBR'],
+            schoolState: item['STATE'],
             subscores: Map.unmodifiable(
 							<SchoolScoreAttributes, int>{
 								SchoolScoreAttributes.leadership: item['LEADERSHIP'],
