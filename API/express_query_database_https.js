@@ -39,7 +39,7 @@ app.get('/hello', (req, res) => {
 app.get('/score', (req, res) => {
 	connection.query('CALL GetSchoolScores', (err, rows) => {
     if (err) {
-      res.status(500).json({ error: 'CALL GetSchoolScoreTest failed' })
+      res.status(500).json({ error: 'CALL GetSchoolScore failed' })
       return
     }
     res.json(rows[0])
