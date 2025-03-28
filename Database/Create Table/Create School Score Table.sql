@@ -12,6 +12,7 @@ CREATE TABLE `PublicFacingData`.`SchoolScores` (
 );
 
 
+
 INSERT INTO `PublicFacingData`.`SchoolScores` (`UNITID`,`INSTNM`,`STATE`,`POLICIES`,`LEADERSHIP`,`SAFETY`,`DIVERSITY`) VALUES
 (100654, "Alabama A & M University", "AL", 13, 4, 10, 18),
 (100663, "University of Alabama at Birmingham", "AL", 3, 10, 1, 23),
@@ -2407,4 +2408,3 @@ INSERT INTO `PublicFacingData`.`SchoolScores` (`UNITID`,`INSTNM`,`STATE`,`POLICI
 (460349, "Johnson & Wales University-Online", "RI", 15, 3, 14, 1),
 (464226, "Ottawa University-Surprise", "AZ", 15, 30, 12, 14),
 (475273, "Springfield College-Regional, Online, and Continuing Education", "MA", 0, 25, 20, 15);
-
