@@ -45,6 +45,7 @@ class DataLoader {
   if (!_initialDataLoadComplete) {
     var scoreUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'score');
     var averagesUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'averages');
+    var metadataUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'metadata');
     try {
       final scoreResponse = await https.get(scoreUrl);
       if (scoreResponse.statusCode == 200) {
