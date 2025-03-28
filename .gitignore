@@ -24,23 +24,23 @@ migrate_working_dir/
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
-flutter/.dart_tool/
-flutter/.flutter-plugins
-flutter/.flutter-plugins-dependencies
-flutter/.pub-cache/
-flutter/.pub/
-flutter/build/
+Flutter/.dart_tool/
+Flutter/.flutter-plugins
+Flutter/.flutter-plugins-dependencies
+Flutter/.pub-cache/
+Flutter/.pub/
+Flutter/build/
 
 # Symbolication related
-flutter/app.*.symbols
+Flutter/app.*.symbols
 
 # Obfuscation related
-flutter/app.*.map.json
+Flutter/app.*.map.json
 
 # Android Studio will place build artifacts here
-flutter/android/app/debug
-flutter/android/app/profile
-flutter/android/app/release
+Flutter/android/app/debug
+Flutter/android/app/profile
+Flutter/android/app/release
 
 # Scoring folder may have CSVs in them for the script to use. Ignore any such csv, instead obtain a copy from the database
 Scoring/*.csv
