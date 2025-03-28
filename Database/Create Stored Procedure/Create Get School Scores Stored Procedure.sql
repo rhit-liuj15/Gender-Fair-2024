@@ -1,24 +1,16 @@
 USE PublicFacingData;
 
-DROP PROCEDURE IF EXISTS GetSchoolScoreTest;
-DROP PROCEDURE IF EXISTS GetSchoolScore;
+DROP PROCEDURE IF EXISTS GetSchoolScores;
 
 delimiter $$
 
-CREATE PROCEDURE GetSchoolScoreTest ()
-BEGIN
-	SELECT UNITID, INSTNM, LEADERSHIP, POLICIES, SAFETY, DIVERSITY
-	FROM PublicFacingData.SchoolCategoryScoreTest;
-END$$
 
-CREATE PROCEDURE GetSchoolScore ()
+CREATE PROCEDURE GetSchoolScores ()
 BEGIN
 	SELECT UNITID, INSTNM, LEADERSHIP, POLICIES, SAFETY, DIVERSITY
-	FROM PublicFacingData.SchoolCategoryScore;
+	FROM PublicFacingData.SchoolScores;
 END$$
 
 delimiter ;
 
-CALL GetSchoolScoreTest();
-
-CALL GetSchoolScore();
+CALL GetSchoolScores();
