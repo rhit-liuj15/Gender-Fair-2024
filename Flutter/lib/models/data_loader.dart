@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:http/http.dart' as https;
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
@@ -77,8 +78,9 @@ class DataLoader {
       if (metadataResponse.statusCode == 200) {
         List<dynamic> data = jsonDecode(metadataResponse.body);
         for (var item in data) {
-					print(item);
+					Metadata.instance.addEntry(item["GROUP"], item["ABBR"], item["DESC"]);
         }
+				// print(Metadata.instance.toString());
       } else {
         print('Failed to load metadata data. HTTP Status Code: ${metadataResponse.statusCode}');
       }
