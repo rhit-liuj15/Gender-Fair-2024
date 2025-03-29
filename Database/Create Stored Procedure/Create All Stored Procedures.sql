@@ -9,13 +9,13 @@ delimiter $$
 
 CREATE PROCEDURE GetAverages ()
 BEGIN
--- 	SELECT "AveragePayMen" as "Name", sum(SAOUTLM)/sum(SAINSTM) as "Value" FROM merged_ipeds_css_irs.ipeds_css_irs
---     UNION ALL
--- 	SELECT "AveragePayWomen" as "Name", sum(SAOUTLW)/sum(SAINSTW) as "Value" FROM merged_ipeds_css_irs.ipeds_css_irs
---     UNION ALL
--- 	SELECT "AverageHateCrime" as "Name", avg(3.141592653589793) as "Value" FROM merged_ipeds_css_irs.ipeds_css_irs
---     UNION ALL
--- 	SELECT "AverageVAWA" as "Name", avg(1.14514) as "Value" FROM merged_ipeds_css_irs.ipeds_css_irs;
+	SELECT "AveragePayMen" as "Name", sum(SALARYTOTM)/sum(ACADEMICPOPM) as "Value" FROM SchoolData
+	UNION ALL
+	SELECT "AveragePayWomen" as "Name", sum(SALARYTOTF)/sum(ACADEMICPOPF) as "Value" FROM SchoolData
+	UNION ALL
+	SELECT "AverageHateCrime" as "Name", sum(YEARLYHATECRIME)/sum(ENROLLTOT)*1000 as "Value" FROM SchoolData
+	UNION ALL
+	SELECT "AverageVAWA" as "Name", sum(YEARLYVAWA)/sum(ENROLLTOT)*1000 as "Value" FROM SchoolData;
 END$$
 
 
