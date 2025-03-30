@@ -67,8 +67,8 @@ class _SchoolListPaneState extends State<SchoolListPane> {
 
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 52, 52, 52).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(15),
+        color: const Color.fromARGB(255, 255, 255, 255),
+        border: Border.all(color: Color(0xFFFF4713), width: 2),
       ),
       child: Column(
         children: [

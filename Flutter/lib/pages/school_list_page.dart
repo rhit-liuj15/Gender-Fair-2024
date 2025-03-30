@@ -115,6 +115,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                 const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
             child: Row(
               children: [
+                const SizedBox(width: 30.0),
                 SizedBox(
                   width: 85,
                   height: 100,
@@ -123,7 +124,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(width: 10.0),
+                const SizedBox(width: 50.0),
                 const Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -150,7 +151,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                     ],
                   ),
                 ),
-                const SizedBox(width: 10.0),
+                const SizedBox(width: 30.0),
               ],
             ),
           ),
