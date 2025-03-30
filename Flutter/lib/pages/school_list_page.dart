@@ -20,7 +20,10 @@ class _SchoolListPageState extends State<SchoolListPage> {
   final int schoolsPerPage = 20;
   int selectedSchoolsCount = SchoolScoreRow.selectedSchools.length;
 
-	bool showOnlySelectedSchools= false;
+  bool showOnlySelectedSchools = false;
+  bool showPublicSchools = true;
+  bool showPrivateSchools = true;
+
   List<SchoolScore> scoreList = <SchoolScore>[];
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
 
@@ -52,14 +55,14 @@ class _SchoolListPageState extends State<SchoolListPage> {
   }
 
   void updateSortMetric(ListPageColumnAttributes column) {
-		if (sortingBy == column) {
-			sortDescending = !sortDescending;
-		} else {
-			sortingBy = column;
-			sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
-		}
-		sortData();
-	}
+    if (sortingBy == column) {
+      sortDescending = !sortDescending;
+    } else {
+      sortingBy = column;
+      sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
+    }
+    sortData();
+  }
 
   void sortData() {
     setState(() {
@@ -73,13 +76,15 @@ class _SchoolListPageState extends State<SchoolListPage> {
         case ListPageColumnAttributes.total:
           comparator = (a, b) => a.score.compareTo(b.score);
           break;
-					
-				case ListPageColumnAttributes.leadership:
-				case ListPageColumnAttributes.polnpay:
-				case ListPageColumnAttributes.safety:
-				case ListPageColumnAttributes.diversity:
-          comparator = (a, b) => a.subscores[ListPageColumnAttributes.listPageToSchoolScoreMapping[sortingBy]]!
-							.compareTo(b.subscores[ListPageColumnAttributes.listPageToSchoolScoreMapping[sortingBy]]!);
+
+        case ListPageColumnAttributes.leadership:
+        case ListPageColumnAttributes.polnpay:
+        case ListPageColumnAttributes.safety:
+        case ListPageColumnAttributes.diversity:
+          comparator = (a, b) => a.subscores[ListPageColumnAttributes
+                  .listPageToSchoolScoreMapping[sortingBy]]!
+              .compareTo(b.subscores[ListPageColumnAttributes
+                  .listPageToSchoolScoreMapping[sortingBy]]!);
           break;
         default:
           if (sortingBy.sortable) {
@@ -98,11 +103,20 @@ class _SchoolListPageState extends State<SchoolListPage> {
     });
   }
 
+  void applyFilters() {
+    //place holder to apply filters
+  }
+
   void updateSelected() {
     setState(() {
-			schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
+      schoolsFilteredFor = showOnlySelectedSchools
+          ? scoreList
+              .where(
+                  (item) => SchoolScoreRow.selectedSchools.contains(item.uid))
+              .toList()
+          : scoreList;
     });
-		sortData();
+    sortData();
   }
 
   @override
@@ -175,9 +189,18 @@ class _SchoolListPageState extends State<SchoolListPage> {
                         statesFilteredFor: statesFilteredFor,
                         selectedSchoolsCount:
                             SchoolScoreRow.selectedSchools.length,
+                        showOnlySelected: showOnlySelectedSchools,
+                        showPublic: showPublicSchools,
+                        showPrivate: showPrivateSchools,
                         onSearchChange: (value) {
                           setState(() {
-														schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
+                            schoolsFilteredFor = showOnlySelectedSchools
+                                ? scoreList
+                                    .where((item) => SchoolScoreRow
+                                        .selectedSchools
+                                        .contains(item.uid))
+                                    .toList()
+                                : scoreList;
                             if (value.isNotEmpty) {
                               schoolsFilteredFor = schoolsFilteredFor
                                   .where((school) => school.schoolName
@@ -188,14 +211,33 @@ class _SchoolListPageState extends State<SchoolListPage> {
                             sortData();
                           });
                         },
-												showOnlySelected: showOnlySelectedSchools,
-												onShowOnlySelectedToggle: (bool? newValue) {
-													setState(() {
-														showOnlySelectedSchools = newValue!;
-														schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
+                        onShowOnlySelectedToggle: (bool? newValue) {
+                          setState(() {
+                            showOnlySelectedSchools = newValue!;
+                            schoolsFilteredFor = showOnlySelectedSchools
+                                ? scoreList
+                                    .where((item) => SchoolScoreRow
+                                        .selectedSchools
+                                        .contains(item.uid))
+                                    .toList()
+                                : scoreList;
                             sortData();
-													});
-												},
+                          });
+                        },
+                        onTogglePublic: (bool? newValue) {
+                          setState(() {
+                            showPublicSchools = newValue!;
+                            //applyFilters(); //TODO: no response yet, waiting for backend update
+                            sortData();
+                          });
+                        },
+                        onTogglePrivate: (bool? newValue) {
+                          setState(() {
+                            showPrivateSchools = newValue!;
+                           // applyFilters();
+                            sortData();
+                          });
+                        },
                       ),
                     ),
 
@@ -205,7 +247,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                       flex: 5,
                       child: SchoolListPane(
                         updateSortingMetricCallback: updateSortMetric,
-												sortingMetric: sortingBy,
+                        sortingMetric: sortingBy,
                         updateSortCallback: sortData,
                         schoolsFilteredFor: schoolsFilteredFor,
                         schoolsPerPage: schoolsPerPage,
