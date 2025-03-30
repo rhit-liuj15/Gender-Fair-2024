@@ -39,19 +39,27 @@ app.get('/hello', (req, res) => {
 app.get('/score', (req, res) => {
 	connection.query('CALL GetSchoolScores', (err, rows) => {
     if (err) {
-      res.status(500).json({ error: 'CALL GetSchoolScoreTest failed' })
+      res.status(500).json({ error: 'CALL GetSchoolScore failed' })
       return
     }
     res.json(rows[0])
 	})
 })
 
-
-// 
 app.get('/averages', (req, res) => {
 	connection.query('CALL GetAverages', (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'CALL GetAverages failed' })
+      return
+    }
+    res.json(rows[0])
+	})
+})
+
+app.get('/metadata', (req, res) => {
+	connection.query('CALL GetMetadata', (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: 'CALL GetMetadata failed' })
       return
     }
     res.json(rows[0])

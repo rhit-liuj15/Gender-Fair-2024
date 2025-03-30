@@ -3,6 +3,7 @@ INSTNM,institution name
 STATE,state abbreviation
 EIN,ein
 OPEID,opeid
+INSTFUNDINGTYPE,institution ownership and financial structure
 DEGREETOT,total number of people who receive a degree
 ENROLLTOT,total number of enrollment in fall 2023
 ACADEMICPOPM,number of instructional staff men

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/filter_state_name_tile.dart';
 
 class FilterAndComparePane extends StatelessWidget {
   final TextEditingController filterTextEditingController;
