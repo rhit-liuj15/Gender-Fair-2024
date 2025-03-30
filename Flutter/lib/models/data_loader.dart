@@ -1,10 +1,10 @@
 import 'dart:convert';
+import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:http/http.dart' as https;
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 class DataLoader {
-  // I'm trying my best to guess this is how singleton works in flutter...
   Map<String, String> stateNameToAbbreviations = <String, String>{};
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
@@ -16,35 +16,36 @@ class DataLoader {
   DataLoader._privateConstructor();
 
   void computeRankings() {
-  List<SchoolScore> sortedScores = allSchoolScores.values.toList();
-  sortedScores.sort((a, b) => b.score.compareTo(a.score)); 
+		List<SchoolScore> sortedScores = allSchoolScores.values.toList();
+		sortedScores.sort((a, b) => b.score.compareTo(a.score)); 
 
-  int rank = 1; 
-  int rangeStart = 1; 
-  List<String> rankRanges = []; 
+		int rank = 1; 
+		int rangeStart = 1; 
+		List<String> rankRanges = []; 
 
-  for (int i = 0; i < sortedScores.length; i++) {
-    if (i > 0 && sortedScores[i].score == sortedScores[i - 1].score) {
-      rangeStart = sortedScores[i - 1].rank;
-    } else {
-      rank = i + 1;
-      rangeStart = rank;
-    }
-    
-    if (i == sortedScores.length - 1 || sortedScores[i].score != sortedScores[i + 1].score) {
-      rankRanges.add("$rangeStart-$rank");
-      rangeStart = rank + 1; 
-    }
+		for (int i = 0; i < sortedScores.length; i++) {
+			if (i > 0 && sortedScores[i].score == sortedScores[i - 1].score) {
+				rangeStart = sortedScores[i - 1].rank;
+			} else {
+				rank = i + 1;
+				rangeStart = rank;
+			}
+			
+			if (i == sortedScores.length - 1 || sortedScores[i].score != sortedScores[i + 1].score) {
+				rankRanges.add("$rangeStart-$rank");
+				rangeStart = rank + 1; 
+			}
 
-    sortedScores[i].rank = rank;
-  }
-}
+			sortedScores[i].rank = rank;
+		}
+	}
 
 
  Future<void> loadData() async {
   if (!_initialDataLoadComplete) {
     var scoreUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'score');
     var averagesUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'averages');
+    var metadataUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'metadata');
     try {
       final scoreResponse = await https.get(scoreUrl);
       if (scoreResponse.statusCode == 200) {
@@ -53,7 +54,7 @@ class DataLoader {
           allSchoolScores[item['UNITID']] = SchoolScore(
             uid: item['UNITID'],
             schoolName: item['INSTNM'],
-            schoolState: item['STABBR'],
+            schoolState: item['STATE'],
             subscores: Map.unmodifiable(
 							<SchoolScoreAttributes, int>{
 								SchoolScoreAttributes.leadership: item['LEADERSHIP'],
@@ -68,18 +69,38 @@ class DataLoader {
       } else {
         print('Failed to load score data. HTTP Status Code: ${scoreResponse.statusCode}');
       }
+    } catch (e) {
+      print('Error occurred while fetching scores: $e');
+    }
+
+    try {
+      final metadataResponse = await https.get(metadataUrl);
+      if (metadataResponse.statusCode == 200) {
+        List<dynamic> data = jsonDecode(metadataResponse.body);
+        for (var item in data) {
+					Metadata.instance.addEntry(item["GROUP"], item["ABBR"], item["DESC"]);
+        }
+				// print(Metadata.instance.toString());
+      } else {
+        print('Failed to load metadata data. HTTP Status Code: ${metadataResponse.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred while fetching metadata: $e');
+    }
+		
+    try {
       final averagesResponse = await https.get(averagesUrl);
       if (averagesResponse.statusCode == 200) {
         List<dynamic> data = jsonDecode(averagesResponse.body);
         for (var item in data) {
-          allAverages[item['Name']] = double.tryParse(item['Value']) ?? -777;
+          allAverages[item['Name']] = item['Value'];
         }
       } else {
         print('Failed to load averages data. HTTP Status Code: ${averagesResponse.statusCode}');
       }
 			_initialDataLoadComplete = true;
     } catch (e) {
-      print('Error occurred: $e');
+      print('Error occurred while fetching averages: $e');
     }
   }
 }
