@@ -99,9 +99,11 @@ class FilterAndComparePane extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 //state filter
-                StateFilter(
-                  onSelectState: onStateSelect,
-                  // onRemoveState: onStateRemove,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
+                  child: StateFilter(
+                    onSelectState: onStateSelect,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Center(

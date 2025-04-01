@@ -109,9 +109,13 @@ class _StateFilterState extends State<StateFilter> {
       children: [
         TextField(
           controller: controller,
-          decoration: const InputDecoration(
-            labelText: 'Enter State Name',
-            border: OutlineInputBorder(),
+          decoration: InputDecoration(
+            labelText: 'Filter By State',
+            hintText: 'Enter State Name Here',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            prefixIcon: const Icon(Icons.filter_alt_sharp),
           ),
           onChanged: _filterStates,
         ),
@@ -127,7 +131,7 @@ class _StateFilterState extends State<StateFilter> {
               itemCount: filteredStates.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(filteredStates[index]['name']!),
+                  title: Text("${filteredStates[index]['name']!}, ${filteredStates[index]['abbr']!}"),
                   onTap: () {
                     // widget.onSelectState(filteredStates[index]);
                     _selectState(filteredStates[index]);
