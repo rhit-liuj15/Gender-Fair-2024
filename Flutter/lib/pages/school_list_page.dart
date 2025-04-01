@@ -102,9 +102,16 @@ class _SchoolListPageState extends State<SchoolListPage> {
     });
   }
 
-  void applyFilters() {
-    //place holder to apply filters
-  }
+// function for private/public filter
+  // void applyFilters() {
+  //   schoolsFilteredFor = showOnlySelectedSchools
+  //     ? scoreList
+  //       .where((item) => SchoolScoreRow
+  //       .selectedSchools
+  //       .contains(item.uid))
+  //       .toList()
+  //     : scoreList;
+  // }
 
   void updateSelected() {
     setState(() {
@@ -245,6 +252,13 @@ class _SchoolListPageState extends State<SchoolListPage> {
                           setState(() {
                             showPublicSchools = newValue!;
                             //applyFilters(); //TODO: no response yet, waiting for backend update
+                            // schoolsFilteredFor = showPublicSchools
+                            //     ? scoreList
+                            //         .where((item) => SchoolScoreRow
+                            //             .selectedSchools
+                            //             .contains(item.uid))
+                            //         .toList()
+                            //     : scoreList;
                             sortData();
                           });
                         },
@@ -252,6 +266,13 @@ class _SchoolListPageState extends State<SchoolListPage> {
                           setState(() {
                             showPrivateSchools = newValue!;
                            // applyFilters();
+                          //  schoolsFilteredFor = showPrivateSchools
+                          //       ? scoreList
+                          //           .where((item) => SchoolScoreRow
+                          //               .selectedSchools
+                          //               .contains(item.uid))
+                          //           .toList()
+                          //       : scoreList;
                             sortData();
                           });
                         },

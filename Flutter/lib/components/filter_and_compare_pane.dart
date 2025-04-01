@@ -6,7 +6,6 @@ class FilterAndComparePane extends StatelessWidget {
   final Set<String> statesFilteredFor;
   final ValueChanged<String> onSearchChange;
   final Function(List<Map<String, String>>) onStateSelect;
-  // final Function(List<Map<String, String>>) onStateRemove;
   final bool showOnlySelected;
   final ValueChanged<bool?> onShowOnlySelectedToggle;
   final int selectedSchoolsCount;
@@ -21,7 +20,6 @@ class FilterAndComparePane extends StatelessWidget {
     required this.statesFilteredFor,
     required this.onSearchChange,
     required this.onStateSelect,
-    // required this.onStateRemove,
     required this.showOnlySelected,
     required this.onShowOnlySelectedToggle,
     required this.selectedSchoolsCount,
