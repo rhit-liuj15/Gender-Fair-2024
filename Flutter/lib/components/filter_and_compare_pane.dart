@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/components/state_filter.dart';
 
 class FilterAndComparePane extends StatelessWidget {
   final TextEditingController filterTextEditingController;
   final Set<String> statesFilteredFor;
   final ValueChanged<String> onSearchChange;
+  final Function(List<Map<String, String>>) onStateSelect;
+  // final Function(List<Map<String, String>>) onStateRemove;
   final bool showOnlySelected;
   final ValueChanged<bool?> onShowOnlySelectedToggle;
   final int selectedSchoolsCount;
@@ -17,6 +20,8 @@ class FilterAndComparePane extends StatelessWidget {
     required this.filterTextEditingController,
     required this.statesFilteredFor,
     required this.onSearchChange,
+    required this.onStateSelect,
+    // required this.onStateRemove,
     required this.showOnlySelected,
     required this.onShowOnlySelectedToggle,
     required this.selectedSchoolsCount,
@@ -91,6 +96,12 @@ class FilterAndComparePane extends StatelessWidget {
                           ]
                         : [],
                   ),
+                ),
+                const SizedBox(height: 4),
+                //state filter
+                StateFilter(
+                  onSelectState: onStateSelect,
+                  // onRemoveState: onStateRemove,
                 ),
                 const SizedBox(height: 4),
                 Center(

@@ -210,6 +210,24 @@ class _SchoolListPageState extends State<SchoolListPage> {
                             sortData();
                           });
                         },
+                        // implement state filter function
+                        onStateSelect: (selectedStates) {
+                          setState(() {
+                            schoolsFilteredFor = showOnlySelectedSchools
+                                ? scoreList
+                                    .where((item) => SchoolScoreRow
+                                        .selectedSchools
+                                        .contains(item.uid))
+                                    .toList()
+                                : scoreList;
+                            if (selectedStates.isNotEmpty) {
+                              schoolsFilteredFor = schoolsFilteredFor.where((school) {
+                                return selectedStates.any((stateMap) => stateMap.containsValue(school.schoolState));
+                              }).toList();
+                            }
+                            sortData();
+                          });
+                        },
                         onShowOnlySelectedToggle: (bool? newValue) {
                           setState(() {
                             showOnlySelectedSchools = newValue!;
