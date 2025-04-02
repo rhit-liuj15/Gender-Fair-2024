@@ -11,8 +11,9 @@ class FilterAndComparePane extends StatelessWidget {
   final int selectedSchoolsCount;
   final bool showPublic;
   final bool showPrivate;
-  final ValueChanged<bool?> onTogglePublic;
-  final ValueChanged<bool?> onTogglePrivate;
+  // final ValueChanged<bool?> onTogglePublic;
+  // final ValueChanged<bool?> onTogglePrivate;
+  final ValueChanged<bool?> applyFilter;
 
   const FilterAndComparePane({
     super.key,
@@ -25,8 +26,9 @@ class FilterAndComparePane extends StatelessWidget {
     required this.selectedSchoolsCount,
     required this.showPublic,
     required this.showPrivate,
-    required this.onTogglePublic,
-    required this.onTogglePrivate,
+    // required this.onTogglePublic,
+    // required this.onTogglePrivate,
+    required this.applyFilter,
   });
 
   @override
@@ -110,13 +112,13 @@ class FilterAndComparePane extends StatelessWidget {
                     children: [
                       Checkbox(
                         value: showPublic,
-                        onChanged: onTogglePublic,
+                        onChanged: applyFilter,
                       ),
                       const Text("Public Schools"),
                       const SizedBox(width: 10),
                       Checkbox(
                         value: showPrivate,
-                        onChanged: onTogglePrivate,
+                        onChanged: applyFilter,
                       ),
                       const Text("Private Schools"),
                     ],

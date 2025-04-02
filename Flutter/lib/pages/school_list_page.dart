@@ -103,15 +103,9 @@ class _SchoolListPageState extends State<SchoolListPage> {
   }
 
 // function for private/public filter
-  // void applyFilters() {
-  //   schoolsFilteredFor = showOnlySelectedSchools
-  //     ? scoreList
-  //       .where((item) => SchoolScoreRow
-  //       .selectedSchools
-  //       .contains(item.uid))
-  //       .toList()
-  //     : scoreList;
-  // }
+  void applyFilters(bool? newValue) {
+    //placeholder
+  }
 
   void updateSelected() {
     setState(() {
@@ -229,7 +223,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                                 : scoreList;
                             if (selectedStates.isNotEmpty) {
                               schoolsFilteredFor = schoolsFilteredFor.where((school) {
-                                return selectedStates.any((stateMap) => stateMap.containsValue(school.schoolState));
+                                return selectedStates.any((stateMap) => stateMap.containsKey(school.schoolState));
                               }).toList();
                             }
                             sortData();
@@ -248,34 +242,35 @@ class _SchoolListPageState extends State<SchoolListPage> {
                             sortData();
                           });
                         },
-                        onTogglePublic: (bool? newValue) {
-                          setState(() {
-                            showPublicSchools = newValue!;
-                            //applyFilters(); //TODO: no response yet, waiting for backend update
-                            // schoolsFilteredFor = showPublicSchools
-                            //     ? scoreList
-                            //         .where((item) => SchoolScoreRow
-                            //             .selectedSchools
-                            //             .contains(item.uid))
-                            //         .toList()
-                            //     : scoreList;
-                            sortData();
-                          });
-                        },
-                        onTogglePrivate: (bool? newValue) {
-                          setState(() {
-                            showPrivateSchools = newValue!;
-                           // applyFilters();
-                          //  schoolsFilteredFor = showPrivateSchools
-                          //       ? scoreList
-                          //           .where((item) => SchoolScoreRow
-                          //               .selectedSchools
-                          //               .contains(item.uid))
-                          //           .toList()
-                          //       : scoreList;
-                            sortData();
-                          });
-                        },
+                        applyFilter: applyFilters,
+                        // onTogglePublic: (bool? newValue) {
+                        //   setState(() {
+                        //     showPublicSchools = newValue!;
+                        //     //applyFilters(); //TODO: no response yet, waiting for backend update
+                        //     // schoolsFilteredFor = showPublicSchools
+                        //     //     ? scoreList
+                        //     //         .where((item) => SchoolScoreRow
+                        //     //             .selectedSchools
+                        //     //             .contains(item.uid))
+                        //     //         .toList()
+                        //     //     : scoreList;
+                        //     sortData();
+                        //   });
+                        // },
+                        // onTogglePrivate: (bool? newValue) {
+                        //   setState(() {
+                        //     showPrivateSchools = newValue!;
+                        //    // applyFilters();
+                        //   //  schoolsFilteredFor = showPrivateSchools
+                        //   //       ? scoreList
+                        //   //           .where((item) => SchoolScoreRow
+                        //   //               .selectedSchools
+                        //   //               .contains(item.uid))
+                        //   //           .toList()
+                        //   //       : scoreList;
+                        //     sortData();
+                        //   });
+                        // },
                       ),
                     ),
 

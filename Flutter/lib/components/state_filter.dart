@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/models/metadata.dart';
 
 class StateFilter extends StatefulWidget {
   final Function(List<Map<String, String>>) onSelectState;
-  // final Function(List<Map<String, String>>) onRemoveState;
 
   const StateFilter({
     required this.onSelectState,
-    // required this.onRemoveState,
     super.key,
   });
 
@@ -16,69 +15,71 @@ class StateFilter extends StatefulWidget {
 
 class _StateFilterState extends State<StateFilter> {
   final TextEditingController controller = TextEditingController();
-  final List<Map<String, String>> states = [
-    {'name': 'Alabama', 'abbr': 'AL'},
-    {'name': 'Alaska', 'abbr': 'AK'},
-    {'name': 'Arizona', 'abbr': 'AZ'},
-    {'name': 'Arkansas', 'abbr': 'AR'},
-    {'name': 'California', 'abbr': 'CA'},
-    {'name': 'Colorado', 'abbr': 'CO'},
-    {'name': 'Connecticut', 'abbr': 'CT'},
-    {'name': 'Delaware', 'abbr': 'DE'},
-    {'name': 'Florida', 'abbr': 'FL'},
-    {'name': 'Georgia', 'abbr': 'GA'},
-    {'name': 'Hawaii', 'abbr': 'HI'},
-    {'name': 'Idaho', 'abbr': 'ID'},
-    {'name': 'Illinois', 'abbr': 'IL'},
-    {'name': 'Indiana', 'abbr': 'IN'},
-    {'name': 'Iowa', 'abbr': 'IA'},
-    {'name': 'Kansas', 'abbr': 'KS'},
-    {'name': 'Kentucky', 'abbr': 'KY'},
-    {'name': 'Louisiana', 'abbr': 'LA'},
-    {'name': 'Maine', 'abbr': 'ME'},
-    {'name': 'Maryland', 'abbr': 'MD'},
-    {'name': 'Massachusetts', 'abbr': 'MA'},
-    {'name': 'Michigan', 'abbr': 'MI'},
-    {'name': 'Minnesota', 'abbr': 'MN'},
-    {'name': 'Mississippi', 'abbr': 'MS'},
-    {'name': 'Missouri', 'abbr': 'MO'},
-    {'name': 'Montana', 'abbr': 'MT'},
-    {'name': 'Nebraska', 'abbr': 'NE'},
-    {'name': 'Nevada', 'abbr': 'NV'},
-    {'name': 'New Hampshire', 'abbr': 'NH'},
-    {'name': 'New Jersey', 'abbr': 'NJ'},
-    {'name': 'New Mexico', 'abbr': 'NM'},
-    {'name': 'New York', 'abbr': 'NY'},
-    {'name': 'North Carolina', 'abbr': 'NC'},
-    {'name': 'North Dakota', 'abbr': 'ND'},
-    {'name': 'Ohio', 'abbr': 'OH'},
-    {'name': 'Oklahoma', 'abbr': 'OK'},
-    {'name': 'Oregon', 'abbr': 'OR'},
-    {'name': 'Pennsylvania', 'abbr': 'PA'},
-    {'name': 'Rhode Island', 'abbr': 'RI'},
-    {'name': 'South Carolina', 'abbr': 'SC'},
-    {'name': 'South Dakota', 'abbr': 'SD'},
-    {'name': 'Tennessee', 'abbr': 'TN'},
-    {'name': 'Texas', 'abbr': 'TX'},
-    {'name': 'Utah', 'abbr': 'UT'},
-    {'name': 'Vermont', 'abbr': 'VT'},
-    {'name': 'Virginia', 'abbr': 'VA'},
-    {'name': 'Washington', 'abbr': 'WA'},
-    {'name': 'West Virginia', 'abbr': 'WV'},
-    {'name': 'Wisconsin', 'abbr': 'WI'},
-    {'name': 'Wyoming', 'abbr': 'WY'},
-  ];
+  Map<String, String> states = Metadata.instance.getMetadataCategory(1).metadataPairs;
+  // final List<Map<String, String>> states = [
+  //   {'name': 'Alabama', 'abbr': 'AL'},
+  //   {'name': 'Alaska', 'abbr': 'AK'},
+  //   {'name': 'Arizona', 'abbr': 'AZ'},
+  //   {'name': 'Arkansas', 'abbr': 'AR'},
+  //   {'name': 'California', 'abbr': 'CA'},
+  //   {'name': 'Colorado', 'abbr': 'CO'},
+  //   {'name': 'Connecticut', 'abbr': 'CT'},
+  //   {'name': 'Delaware', 'abbr': 'DE'},
+  //   {'name': 'Florida', 'abbr': 'FL'},
+  //   {'name': 'Georgia', 'abbr': 'GA'},
+  //   {'name': 'Hawaii', 'abbr': 'HI'},
+  //   {'name': 'Idaho', 'abbr': 'ID'},
+  //   {'name': 'Illinois', 'abbr': 'IL'},
+  //   {'name': 'Indiana', 'abbr': 'IN'},
+  //   {'name': 'Iowa', 'abbr': 'IA'},
+  //   {'name': 'Kansas', 'abbr': 'KS'},
+  //   {'name': 'Kentucky', 'abbr': 'KY'},
+  //   {'name': 'Louisiana', 'abbr': 'LA'},
+  //   {'name': 'Maine', 'abbr': 'ME'},
+  //   {'name': 'Maryland', 'abbr': 'MD'},
+  //   {'name': 'Massachusetts', 'abbr': 'MA'},
+  //   {'name': 'Michigan', 'abbr': 'MI'},
+  //   {'name': 'Minnesota', 'abbr': 'MN'},
+  //   {'name': 'Mississippi', 'abbr': 'MS'},
+  //   {'name': 'Missouri', 'abbr': 'MO'},
+  //   {'name': 'Montana', 'abbr': 'MT'},
+  //   {'name': 'Nebraska', 'abbr': 'NE'},
+  //   {'name': 'Nevada', 'abbr': 'NV'},
+  //   {'name': 'New Hampshire', 'abbr': 'NH'},
+  //   {'name': 'New Jersey', 'abbr': 'NJ'},
+  //   {'name': 'New Mexico', 'abbr': 'NM'},
+  //   {'name': 'New York', 'abbr': 'NY'},
+  //   {'name': 'North Carolina', 'abbr': 'NC'},
+  //   {'name': 'North Dakota', 'abbr': 'ND'},
+  //   {'name': 'Ohio', 'abbr': 'OH'},
+  //   {'name': 'Oklahoma', 'abbr': 'OK'},
+  //   {'name': 'Oregon', 'abbr': 'OR'},
+  //   {'name': 'Pennsylvania', 'abbr': 'PA'},
+  //   {'name': 'Rhode Island', 'abbr': 'RI'},
+  //   {'name': 'South Carolina', 'abbr': 'SC'},
+  //   {'name': 'South Dakota', 'abbr': 'SD'},
+  //   {'name': 'Tennessee', 'abbr': 'TN'},
+  //   {'name': 'Texas', 'abbr': 'TX'},
+  //   {'name': 'Utah', 'abbr': 'UT'},
+  //   {'name': 'Vermont', 'abbr': 'VT'},
+  //   {'name': 'Virginia', 'abbr': 'VA'},
+  //   {'name': 'Washington', 'abbr': 'WA'},
+  //   {'name': 'West Virginia', 'abbr': 'WV'},
+  //   {'name': 'Wisconsin', 'abbr': 'WI'},
+  //   {'name': 'Wyoming', 'abbr': 'WY'},
+  // ];
   
   List<Map<String, String>> filteredStates = [];
   List<Map<String, String>> selectedStates = [];
 
-  void _filterStates(String query) {
+  void _filterStates(String query) { 
     setState(() {
       if (query.isEmpty) {
         filteredStates = [];
       } else {
-        filteredStates = states
-            .where((state) => state['name']!.toLowerCase().contains(query.toLowerCase()))
+        filteredStates = states.entries
+            .where((entry) => entry.value.toLowerCase().contains(query.toLowerCase()))
+            .map((entry) => {entry.key: entry.value})
             .toList();
       }
     });
@@ -86,7 +87,7 @@ class _StateFilterState extends State<StateFilter> {
 
   void _selectState(Map<String, String> state) {
     setState(() {
-      if (!selectedStates.contains(state)) {
+      if (!selectedStates.any((s) => s.keys.first == state.keys.first)) {
         selectedStates.add(state);
         widget.onSelectState(selectedStates);
       }
@@ -131,7 +132,7 @@ class _StateFilterState extends State<StateFilter> {
               itemCount: filteredStates.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text("${filteredStates[index]['name']!}, ${filteredStates[index]['abbr']!}"),
+                  title: Text("${filteredStates[index].values.first}, ${filteredStates[index].keys.first}"),
                   onTap: () {
                     // widget.onSelectState(filteredStates[index]);
                     _selectState(filteredStates[index]);
@@ -150,7 +151,7 @@ class _StateFilterState extends State<StateFilter> {
                 onPressed: () {
                   _removeState(state);
                 }, 
-                child: Text('Remove ${state['abbr']!}'),
+                child: Text('Remove ${state.keys.first}'),
               );
             }).toList(),
           ),
