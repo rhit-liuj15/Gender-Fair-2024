@@ -1,6 +1,8 @@
 USE PublicFacingData;
 
--- NOTE: This is a temporary fix while finalized merge script is not available.alter
+-- NOTE: This is a temporary fix while finalized merge script is not available
+
+DROP TABLE IF EXISTS SchoolData;
 
 CREATE TABLE SchoolData AS
 SELECT * FROM merged_ipeds_css_irs.ipeds_css_irs;
