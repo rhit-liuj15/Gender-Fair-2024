@@ -35,6 +35,11 @@ INSERT INTO `PublicFacingData`.`Metadata` (`GROUP`, `ABBR`, `DESC`)
 SELECT 1, Codevalue, LEFT(valueLabel, 100) FROM ipeds_2024_db.valuesets22
 	where varName = "STABBR"
 	order by Codevalue;
+    
+INSERT INTO `PublicFacingData`.`Metadata` (`GROUP`, `ABBR`, `DESC`) 
+SELECT 2, Codevalue, LEFT(valueLabel, 100) FROM ipeds_2024_db.valuesets22
+	where varName = "CNTLAFFI"
+	order by Codevalue;
 
 
 SELECT * FROM `PublicFacingData`.`Metadata`;
