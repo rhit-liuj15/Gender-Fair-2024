@@ -67,8 +67,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   List<PieChartSectionData> showingSections(List<String> labels, List<double> values, List<Color> colors) {
     return List.generate(values.length, (index) {
       final isTouched = index == touchedIndex;
-      final fontSize = isTouched ? widget.size*0.12 : widget.size*0.09;
-      final radius = isTouched ? widget.size*0.4 : widget.size*0.3;
+      final fontSize = isTouched ? widget.size*0.099 : widget.size*0.09;
+      final radius = isTouched ? widget.size*0.33 : widget.size*0.3;
       return PieChartSectionData(
         color: colors[index],
         value: values[index],

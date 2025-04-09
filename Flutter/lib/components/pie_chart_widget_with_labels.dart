@@ -34,7 +34,6 @@ class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
     final labels = widget.dataset.keys.toList();
     final values = widget.dataset.values.toList();
     final colors = widget.colors;
-    final percentages = values.map((value) => "${(value * 100).toStringAsFixed(1)}%").toList();
 
 		// There are edge cases in the data which this does not handle well (see for example St. John's College, UID 163976).
 		// In principal this is a nice feature, but until the data is properly formed this is not usable.
@@ -82,15 +81,11 @@ class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(labels.length, (index) {
-                  final displayText = percentages[index].isNotEmpty 
-                    ? "${labels[index]} : ${percentages[index]}" 
-                    : labels[index];
-                
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Indicator(
                       color: colors[index],
-                      text: displayText,
+                      text: labels[index],
                       isSquare: true,
                     ),
                   );
@@ -107,7 +102,7 @@ class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
     return List.generate(values.length, (index) {
       final isTouched = index == touchedIndex;
       final fontSize = isTouched ? widget.size*0.12 : widget.size*0.09;
-      final radius = isTouched ? widget.size*0.4 : widget.size*0.3;
+      final radius = isTouched ? widget.size*0.32 : widget.size*0.3;
       return PieChartSectionData(
         color: colors[index],
         value: values[index],
