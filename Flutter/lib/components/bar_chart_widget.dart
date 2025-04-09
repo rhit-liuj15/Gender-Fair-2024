@@ -3,22 +3,19 @@ import 'package:fl_chart/fl_chart.dart';
 
 class BarChartWidget extends StatelessWidget {
   final Map<String, double> data;
-  final List<String> labels;
   final List<Color> colors;
-  final String unit;
   final String yAxisDescription;
 
   const BarChartWidget({
     super.key,
     required this.data,
-    required this.labels,
     required this.colors,
     required this.yAxisDescription,
-    this.unit = "",
   });
 
   @override
   Widget build(BuildContext context) {
+    final labels = data.keys.toList();
     final values = data.values.toList();
     // Calculate the maxY value, ensuring it's at least 10
     final maxY = values.isEmpty ? 10.0 : (values.reduce((a, b) => a > b ? a : b) < 10 ? 10.0 : values.reduce((a, b) => a > b ? a : b));

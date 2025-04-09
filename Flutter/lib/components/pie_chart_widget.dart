@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class PieChartWidget extends StatefulWidget {
-  final Map<String, double> data; 
+  final Map<String, double> dataset;
+	final String title;
   final double centerSpaceRadius;
   final List<Color> colors;
   final List<String>? dataPercentage; 
@@ -10,7 +11,8 @@ class PieChartWidget extends StatefulWidget {
 
   const PieChartWidget({
     super.key,
-    required this.data,
+    required this.dataset,
+		required this.title,
     required this.colors,
     this.centerSpaceRadius = 30,
     this.dataPercentage, 
@@ -26,22 +28,29 @@ class _PieChartWidgetState extends State<PieChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final labels = widget.data.keys.toList();
-    final values = widget.data.values.toList();
-    final colors = widget.colors;
 
+		if (widget.dataset.length != widget.colors.length) {
+			throw Exception("Pie chart '${widget.title}' has ${widget.dataset.length} data entries and ${widget.colors.length} color entries supplied, which does not match up");
+		}
+
+    final labels = widget.dataset.keys.toList();
+    final values = widget.dataset.values.toList();
+    final colors = widget.colors;
     final percentages = widget.showPercentage
         ? widget.dataPercentage ??
             values.map((value) => "${(value * 100).toStringAsFixed(1)}%").toList()
         : List.filled(labels.length, "");
 
-    double sumValues = values.fold(0, (prev, val) => prev + val);
-    if (sumValues < 1.0) {
-      labels.add("Other");
-      values.add(1.0 - sumValues);
-      colors.add(Colors.grey);
-      percentages.add("");
-    }
+		// There are edge cases in the data which this does not handle well (see for example St. John's College, UID 163976).
+		// In principal this is a nice feature, but until the data is properly formed this is not usable.
+
+    // double sumValues = values.fold(0, (prev, val) => prev + val);
+    // if (sumValues < 1.0) {
+    //   labels.add("Other");
+    //   values.add(1.0 - sumValues);
+    //   colors.add(Colors.grey);
+    //   percentages.add("");
+    // }
 
     return LayoutBuilder(
       builder: (context, constraints) {

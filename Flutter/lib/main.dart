@@ -47,7 +47,7 @@ class GlassBackgroundPage extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   Colors.white.withOpacity(0.9),
-                  Color(0xFFFF4713).withOpacity(0.2),
+                  const Color(0xFFFF4713).withOpacity(0.2),
                 ],
                 stops: const [0.1, 1.0],
                 begin: Alignment.topLeft,

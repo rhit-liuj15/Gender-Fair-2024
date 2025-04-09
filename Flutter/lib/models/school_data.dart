@@ -1,68 +1,28 @@
 class SchoolData {
   int uid = 0;
   String schoolName = '';
-  Set<SchoolDataCategory> categories = {};
+  late Map<String, dynamic> data;
 
   SchoolData({
     required this.uid,
     required this.schoolName,
-    required this.categories,
+    required this.data,
   });
 
   SchoolData.fromJSON(dynamic json) {
     uid = json["UNITID"];
     schoolName = json["INSTNM"];
-    categories = {
-      SchoolDataCategory(categoryName: "Basic Information", data: {
-        "2023 Graduation Headcount": json["DEGREETOT"],
-        "Fall 2023 Enrollment": json["ENROLLTOT"],
-      }),
-      SchoolDataCategory(categoryName: "Financials", data: {
-        "Average Salary For Men": json["SALARYPPM"],
-        "Average Salary For Women": json["SALARYPPF"],
-      }),
-      SchoolDataCategory(categoryName: "Academic Staff Composition", data: {
-        "Women Professors": json["PROFWOMENPCT"],
-        "Women Associate Professors": json["ASSOCPROFWOMENPCT"],
-        "Tenured Women Academic Staff": json["TENUREWOMENPCT"],
-      }),
-      SchoolDataCategory(categoryName: "Non-Academic Staff Composition", data: {
-        "Black": json["NONACD_BLKPCT"],
-        "Hispanic": json["NONACD_HSPPCT"],
-        "Asian": json["NONACD_ASIAPCT"],
-      }),
-      SchoolDataCategory(categoryName: "Safety", data: {
-        "Hate Crimes Per Year 2020-2022": json["YEARLYHATECRIME"],
-        "Hate Crimes Per Year 2020-2022 Per 1K Students": json["YEARLYHATECRIME1K"],
-        "VAWA Per Year 2020-2022": json["YEARLYVAWA"],
-        "VAWA Per Year 2020-2022 Per 1K Students": json["YEARLYVAWA1K"],
-      }),
-    };
+    data = json;
   }
 
   SchoolData.unknownUID(int uid) {
     uid = uid;
     schoolName = "Unknown School $uid!";
-    categories = {};
+    data = {};
   }
 
   @override
   String toString() {
-    return "\n$schoolName\nUID $uid\n$categories";
-  }
-}
-
-class SchoolDataCategory {
-  final String categoryName;
-  Map<String, dynamic> data;
-
-  SchoolDataCategory({
-    required this.categoryName,
-    required this.data,
-  });
-
-  @override
-  String toString() {
-    return "$categoryName: $data\n";
+    return "\n$schoolName\nUID $uid\nData: $data";
   }
 }

@@ -5,7 +5,6 @@ import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 class DataLoader {
-  Map<String, String> stateNameToAbbreviations = <String, String>{};
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
   Map<String, double> allAverages = <String, double>{};
