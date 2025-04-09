@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-class PieChartWidget extends StatefulWidget {
+class PieChartWidgetWithLabels extends StatefulWidget {
   final Map<String, double> dataset;
 	final String title;
   final double size;
   final double pieChartShowPercentageSliceSizeCutoff;
   final List<Color> colors;
 
-  const PieChartWidget({
+  const PieChartWidgetWithLabels({
     super.key,
     required this.dataset,
 		required this.title,
@@ -18,10 +18,10 @@ class PieChartWidget extends StatefulWidget {
   });
 
   @override
-  State<PieChartWidget> createState() => _PieChartWidgetState();
+  State<PieChartWidgetWithLabels> createState() => _PieChartWidgetWithLabelsState();
 }
 
-class _PieChartWidgetState extends State<PieChartWidget> {
+class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
   int touchedIndex = -1;
 
   @override
@@ -34,31 +34,70 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     final labels = widget.dataset.keys.toList();
     final values = widget.dataset.values.toList();
     final colors = widget.colors;
+    final percentages = values.map((value) => "${(value * 100).toStringAsFixed(1)}%").toList();
+
+		// There are edge cases in the data which this does not handle well (see for example St. John's College, UID 163976).
+		// In principal this is a nice feature, but until the data is properly formed this is not usable.
+
+    // double sumValues = values.fold(0, (prev, val) => prev + val);
+    // if (sumValues < 1.0) {
+    //   labels.add("Other");
+    //   values.add(1.0 - sumValues);
+    //   colors.add(Colors.grey);
+    //   percentages.add("");
+    // }
 
     return LayoutBuilder(
       builder: (context, constraints) {
-				return SizedBox(
-					width: widget.size,
-					height: widget.size*1.3,
-					child: PieChart(
-						PieChartData(
-							pieTouchData: PieTouchData(
-								touchCallback: (event, response) {
-									setState(() {
-										if (!event.isInterestedForInteractions || response?.touchedSection == null) {
-											touchedIndex = -1;
-										} else {
-											touchedIndex = response!.touchedSection!.touchedSectionIndex;
-										}
-									});
-								},
-							),
-							sections: showingSections(labels, values, colors),
-							borderData: FlBorderData(show: false),
-							sectionsSpace: 0,
-							centerSpaceRadius: widget.size*0.15,
-						),
-					),
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: widget.size,
+              height: widget.size*1.3,
+              child: PieChart(
+                PieChartData(
+                  pieTouchData: PieTouchData(
+                    touchCallback: (event, response) {
+                      setState(() {
+                        if (!event.isInterestedForInteractions || response?.touchedSection == null) {
+                          touchedIndex = -1;
+                        } else {
+                          touchedIndex = response!.touchedSection!.touchedSectionIndex;
+                        }
+                      });
+                    },
+                  ),
+                  sections: showingSections(labels, values, colors),
+                  borderData: FlBorderData(show: false),
+                  sectionsSpace: 0,
+                  centerSpaceRadius: widget.size*0.15,
+                ),
+              ),
+            ),
+            SizedBox(width: widget.size*0.4),
+            SizedBox(
+              width: 120, 
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(labels.length, (index) {
+                  final displayText = percentages[index].isNotEmpty 
+                    ? "${labels[index]} : ${percentages[index]}" 
+                    : labels[index];
+                
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Indicator(
+                      color: colors[index],
+                      text: displayText,
+                      isSquare: true,
+                    ),
+                  );
+                }),
+              ),
+            ),
+          ],
         );
       },
     );

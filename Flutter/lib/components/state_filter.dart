@@ -60,7 +60,7 @@ class _StateFilterState extends State<StateFilter> {
   }
 
   void onSelectState() {
-    if (selectedStates.isEmpty) {
+    if (!selectedStates.values.any((item) => item)) {
       widget.filterFunctions.remove('States');
     } else {
       List<String> filteredStatesList = selectedStates.entries
