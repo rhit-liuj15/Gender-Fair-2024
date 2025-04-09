@@ -17,24 +17,16 @@ class SchoolListPage extends StatefulWidget {
 class _SchoolListPageState extends State<SchoolListPage> {
   // int _hoveredColumnIndex = -1;
   final int schoolsPerPage = 20;
-  int selectedSchoolsCount = SchoolScoreRow.selectedSchools.length;
+  int selectedSchoolsCount = SchoolScore.selectedSchools.length;
 
-  bool showOnlySelectedSchools = false;
-  bool showPublicSchools = true;
-  bool showPrivateSchools = true;
+	final Map<String, List<SchoolScore> Function(List<SchoolScore>)> filterFunctions = {};
 
   List<SchoolScore> scoreList = <SchoolScore>[];
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
 
-  Map<String, String> stateNameToAbbreviations = <String, String>{};
   ListPageColumnAttributes sortingBy = ListPageColumnAttributes.total;
   bool sortDescending = ListPageColumnAttributes.total.sortDescending;
 
-  Set<String> statesFilteredFor = <String>{};
-
-  final TextStyle textStyle = const TextStyle(fontSize: 18.0);
-  final TextEditingController filterTextEditingController =
-      TextEditingController();
   final FocusNode filterTextFocusNode = FocusNode();
 
   @override
@@ -44,10 +36,8 @@ class _SchoolListPageState extends State<SchoolListPage> {
   }
 
   Future<void> loadData() async {
-    await DataLoader.instance.loadData();
     setState(() {
       scoreList = DataLoader.instance.allSchoolScores.values.toList();
-      stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
       schoolsFilteredFor = List.from(scoreList);
       sortData();
     });
@@ -60,6 +50,22 @@ class _SchoolListPageState extends State<SchoolListPage> {
       sortingBy = column;
       sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
     }
+    sortData();
+  }
+
+  void updateShownSchools() {
+    setState(() {
+			schoolsFilteredFor = scoreList;
+			for (List<SchoolScore> Function(List<SchoolScore>) func in filterFunctions.values) {
+				schoolsFilteredFor = func(schoolsFilteredFor);
+			}
+      // schoolsFilteredFor = showOnlySelectedSchools
+      //     ? scoreList
+      //         .where(
+      //             (item) => SchoolScoreRow.selectedSchools.contains(item.uid))
+      //         .toList()
+      //     : scoreList;
+    });
     sortData();
   }
 
@@ -100,23 +106,6 @@ class _SchoolListPageState extends State<SchoolListPage> {
         return sortDescending ? -compareResult : compareResult;
       });
     });
-  }
-
-// function for private/public filter
-  void applyFilters(bool? newValue) {
-    //placeholder
-  }
-
-  void updateSelected() {
-    setState(() {
-      schoolsFilteredFor = showOnlySelectedSchools
-          ? scoreList
-              .where(
-                  (item) => SchoolScoreRow.selectedSchools.contains(item.uid))
-              .toList()
-          : scoreList;
-    });
-    sortData();
   }
 
   @override
@@ -184,93 +173,10 @@ class _SchoolListPageState extends State<SchoolListPage> {
                     Expanded(
                       flex: 2,
                       child: FilterAndComparePane(
-                        filterTextEditingController:
-                            filterTextEditingController,
-                        statesFilteredFor: statesFilteredFor,
                         selectedSchoolsCount:
-                            SchoolScoreRow.selectedSchools.length,
-                        showOnlySelected: showOnlySelectedSchools,
-                        showPublic: showPublicSchools,
-                        showPrivate: showPrivateSchools,
-                        onSearchChange: (value) {
-                          setState(() {
-                            schoolsFilteredFor = showOnlySelectedSchools
-                                ? scoreList
-                                    .where((item) => SchoolScoreRow
-                                        .selectedSchools
-                                        .contains(item.uid))
-                                    .toList()
-                                : scoreList;
-                            if (value.isNotEmpty) {
-                              schoolsFilteredFor = schoolsFilteredFor
-                                  .where((school) => school.schoolName
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()))
-                                  .toList();
-                            }
-                            sortData();
-                          });
-                        },
-                        // implement state filter function
-                        onStateSelect: (selectedStates) {
-                          setState(() {
-                            schoolsFilteredFor = showOnlySelectedSchools
-                                ? scoreList
-                                    .where((item) => SchoolScoreRow
-                                        .selectedSchools
-                                        .contains(item.uid))
-                                    .toList()
-                                : scoreList;
-                            if (selectedStates.isNotEmpty) {
-                              schoolsFilteredFor = schoolsFilteredFor.where((school) {
-                                return selectedStates.any((stateMap) => stateMap.containsKey(school.schoolState));
-                              }).toList();
-                            }
-                            sortData();
-                          });
-                        },
-                        onShowOnlySelectedToggle: (bool? newValue) {
-                          setState(() {
-                            showOnlySelectedSchools = newValue!;
-                            schoolsFilteredFor = showOnlySelectedSchools
-                                ? scoreList
-                                    .where((item) => SchoolScoreRow
-                                        .selectedSchools
-                                        .contains(item.uid))
-                                    .toList()
-                                : scoreList;
-                            sortData();
-                          });
-                        },
-                        applyFilter: applyFilters,
-                        // onTogglePublic: (bool? newValue) {
-                        //   setState(() {
-                        //     showPublicSchools = newValue!;
-                        //     //applyFilters(); //TODO: no response yet, waiting for backend update
-                        //     // schoolsFilteredFor = showPublicSchools
-                        //     //     ? scoreList
-                        //     //         .where((item) => SchoolScoreRow
-                        //     //             .selectedSchools
-                        //     //             .contains(item.uid))
-                        //     //         .toList()
-                        //     //     : scoreList;
-                        //     sortData();
-                        //   });
-                        // },
-                        // onTogglePrivate: (bool? newValue) {
-                        //   setState(() {
-                        //     showPrivateSchools = newValue!;
-                        //    // applyFilters();
-                        //   //  schoolsFilteredFor = showPrivateSchools
-                        //   //       ? scoreList
-                        //   //           .where((item) => SchoolScoreRow
-                        //   //               .selectedSchools
-                        //   //               .contains(item.uid))
-                        //   //           .toList()
-                        //   //       : scoreList;
-                        //     sortData();
-                        //   });
-                        // },
+                            SchoolScore.selectedSchools.length,
+												filterFunctions: filterFunctions,
+												updateShownSchools: updateShownSchools,
                       ),
                     ),
 
@@ -284,7 +190,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                         updateSortCallback: sortData,
                         schoolsFilteredFor: schoolsFilteredFor,
                         schoolsPerPage: schoolsPerPage,
-                        onUpdateSelected: updateSelected,
+                        onUpdateSelected: updateShownSchools,
                       ),
                     ),
                   ],

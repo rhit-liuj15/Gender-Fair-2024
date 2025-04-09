@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/components/state_name_tile.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
+import 'package:gender_fair_2024/models/school_score.dart';
 
 class StateFilter extends StatefulWidget {
-  final Function(List<Map<String, String>>) onSelectState;
+  final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
+      filterFunctions;
+  final Function() updateShownSchools;
 
   const StateFilter({
-    required this.onSelectState,
     super.key,
+    required this.filterFunctions,
+    required this.updateShownSchools,
   });
 
   @override
@@ -15,92 +20,60 @@ class StateFilter extends StatefulWidget {
 
 class _StateFilterState extends State<StateFilter> {
   final TextEditingController controller = TextEditingController();
-  Map<String, String> states = Metadata.instance.getMetadataCategory(1).metadataPairs;
-  // final List<Map<String, String>> states = [
-  //   {'name': 'Alabama', 'abbr': 'AL'},
-  //   {'name': 'Alaska', 'abbr': 'AK'},
-  //   {'name': 'Arizona', 'abbr': 'AZ'},
-  //   {'name': 'Arkansas', 'abbr': 'AR'},
-  //   {'name': 'California', 'abbr': 'CA'},
-  //   {'name': 'Colorado', 'abbr': 'CO'},
-  //   {'name': 'Connecticut', 'abbr': 'CT'},
-  //   {'name': 'Delaware', 'abbr': 'DE'},
-  //   {'name': 'Florida', 'abbr': 'FL'},
-  //   {'name': 'Georgia', 'abbr': 'GA'},
-  //   {'name': 'Hawaii', 'abbr': 'HI'},
-  //   {'name': 'Idaho', 'abbr': 'ID'},
-  //   {'name': 'Illinois', 'abbr': 'IL'},
-  //   {'name': 'Indiana', 'abbr': 'IN'},
-  //   {'name': 'Iowa', 'abbr': 'IA'},
-  //   {'name': 'Kansas', 'abbr': 'KS'},
-  //   {'name': 'Kentucky', 'abbr': 'KY'},
-  //   {'name': 'Louisiana', 'abbr': 'LA'},
-  //   {'name': 'Maine', 'abbr': 'ME'},
-  //   {'name': 'Maryland', 'abbr': 'MD'},
-  //   {'name': 'Massachusetts', 'abbr': 'MA'},
-  //   {'name': 'Michigan', 'abbr': 'MI'},
-  //   {'name': 'Minnesota', 'abbr': 'MN'},
-  //   {'name': 'Mississippi', 'abbr': 'MS'},
-  //   {'name': 'Missouri', 'abbr': 'MO'},
-  //   {'name': 'Montana', 'abbr': 'MT'},
-  //   {'name': 'Nebraska', 'abbr': 'NE'},
-  //   {'name': 'Nevada', 'abbr': 'NV'},
-  //   {'name': 'New Hampshire', 'abbr': 'NH'},
-  //   {'name': 'New Jersey', 'abbr': 'NJ'},
-  //   {'name': 'New Mexico', 'abbr': 'NM'},
-  //   {'name': 'New York', 'abbr': 'NY'},
-  //   {'name': 'North Carolina', 'abbr': 'NC'},
-  //   {'name': 'North Dakota', 'abbr': 'ND'},
-  //   {'name': 'Ohio', 'abbr': 'OH'},
-  //   {'name': 'Oklahoma', 'abbr': 'OK'},
-  //   {'name': 'Oregon', 'abbr': 'OR'},
-  //   {'name': 'Pennsylvania', 'abbr': 'PA'},
-  //   {'name': 'Rhode Island', 'abbr': 'RI'},
-  //   {'name': 'South Carolina', 'abbr': 'SC'},
-  //   {'name': 'South Dakota', 'abbr': 'SD'},
-  //   {'name': 'Tennessee', 'abbr': 'TN'},
-  //   {'name': 'Texas', 'abbr': 'TX'},
-  //   {'name': 'Utah', 'abbr': 'UT'},
-  //   {'name': 'Vermont', 'abbr': 'VT'},
-  //   {'name': 'Virginia', 'abbr': 'VA'},
-  //   {'name': 'Washington', 'abbr': 'WA'},
-  //   {'name': 'West Virginia', 'abbr': 'WV'},
-  //   {'name': 'Wisconsin', 'abbr': 'WI'},
-  //   {'name': 'Wyoming', 'abbr': 'WY'},
-  // ];
-  
-  List<Map<String, String>> filteredStates = [];
-  List<Map<String, String>> selectedStates = [];
+  Map<String, String> states =
+      Metadata.instance.getMetadataCategory(1).metadataPairs;
 
-  void _filterStates(String query) { 
+  List<MapEntry<String, String>> autocompleteStates = [];
+  Map<String, bool> selectedStates = {
+    for (var key in Metadata.instance.getMetadataCategory(1).metadataPairs.keys)
+      key: false,
+  };
+
+  void _updateAutocomplete(String inputString) {
     setState(() {
-      if (query.isEmpty) {
-        filteredStates = [];
+      if (inputString.isEmpty) {
+        autocompleteStates = [];
       } else {
-        filteredStates = states.entries
-            .where((entry) => entry.value.toLowerCase().contains(query.toLowerCase()))
-            .map((entry) => {entry.key: entry.value})
-            .toList();
+				String inputStringLower = inputString.toLowerCase();
+        autocompleteStates = states.entries.where(
+					(entry) => (entry.key.toLowerCase().contains(inputStringLower) ||
+              entry.value.toLowerCase().contains(inputStringLower))
+        ).toList();
       }
     });
   }
 
-  void _selectState(Map<String, String> state) {
+  void _selectState(MapEntry<String, String> state) {
     setState(() {
-      if (!selectedStates.any((s) => s.keys.first == state.keys.first)) {
-        selectedStates.add(state);
-        widget.onSelectState(selectedStates);
-      }
+      selectedStates[state.key] = true;
+      onSelectState();
+      autocompleteStates = [];
       controller.clear();
-      filteredStates = [];
     });
   }
 
-  void _removeState(Map<String, String> state) {
+  void _removeState(String state) {
     setState(() {
       selectedStates.remove(state);
-      widget.onSelectState(selectedStates);
+      onSelectState();
     });
+  }
+
+  void onSelectState() {
+    if (selectedStates.isEmpty) {
+      widget.filterFunctions.remove('States');
+    } else {
+      List<String> filteredStatesList = selectedStates.entries
+          .where((element) => element.value)
+          .map((entry) => entry.key)
+          .toList();
+      widget.filterFunctions['States'] = (List<SchoolScore> scores) {
+        return scores
+            .where((school) => filteredStatesList.contains(school.schoolState))
+            .toList();
+      };
+    }
+    widget.updateShownSchools();
   }
 
   @override
@@ -118,10 +91,10 @@ class _StateFilterState extends State<StateFilter> {
             ),
             prefixIcon: const Icon(Icons.filter_alt_sharp),
           ),
-          onChanged: _filterStates,
+          onChanged: _updateAutocomplete,
         ),
         const SizedBox(height: 10),
-        if (filteredStates.isNotEmpty)
+        if (autocompleteStates.isNotEmpty)
           Container(
             height: 150,
             decoration: BoxDecoration(
@@ -129,32 +102,31 @@ class _StateFilterState extends State<StateFilter> {
               borderRadius: BorderRadius.circular(5),
             ),
             child: ListView.builder(
-              itemCount: filteredStates.length,
+              itemCount: autocompleteStates.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text("${filteredStates[index].values.first}, ${filteredStates[index].keys.first}"),
+                  title: Text(autocompleteStates[index].value),
                   onTap: () {
-                    // widget.onSelectState(filteredStates[index]);
-                    _selectState(filteredStates[index]);
-                    controller.clear();
-                    setState(() => filteredStates = []);
+                    _selectState(autocompleteStates[index]);
+                    setState(() {
+                      autocompleteStates = [];
+                    });
                   },
                 );
               },
             ),
           ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            children: selectedStates.map((state) {
-              return ElevatedButton(
-                onPressed: () {
-                  _removeState(state);
-                }, 
-                child: Text('Remove ${state.keys.first}'),
-              );
-            }).toList(),
-          ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          children: selectedStates.entries
+              .where((entry) => entry.value)
+              .map((entry) => StateNameTile(
+                    state: states[entry.key]!,
+                    removeStateCallback: () => _removeState(entry.key),
+                  ))
+              .toList(),
+        ),
       ],
     );
   }

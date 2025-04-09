@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/pages/school_list_page.dart';
 
-void main() {
+Future<void> main() async {
+	await DataLoader.instance.loadData();
   runApp(const MyApp());
 }
 
