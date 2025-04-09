@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class FilterTextTile extends StatelessWidget {
+class StateNameTile extends StatelessWidget {
   final String state;
 	final TextStyle textStyle = const TextStyle(fontSize: 12.0);
 	final void Function() removeStateCallback;
 	
-  const FilterTextTile({
+  const StateNameTile({
 		super.key,
 		required this.state,
 		required this.removeStateCallback,

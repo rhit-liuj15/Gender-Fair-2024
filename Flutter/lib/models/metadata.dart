@@ -37,7 +37,7 @@ class Metadata {
 class MetadataCategory {
 	final int categoryNumber;
 	late String categoryDescription = "";
-  static final Map<String, String> metadataPairs = <String, String>{};
+  final Map<String, String> metadataPairs = <String, String>{};
 
   MetadataCategory({
 		required this.categoryNumber,
