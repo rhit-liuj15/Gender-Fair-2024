@@ -80,7 +80,6 @@ class DataLoader {
         for (var item in data) {
 					Metadata.instance.addEntry(item["GROUP"], item["ABBR"], item["DESC"]);
         }
-				// print(Metadata.instance.toString());
       } else {
         print('Failed to load metadata data. HTTP Status Code: ${metadataResponse.statusCode}');
       }
@@ -108,6 +107,7 @@ class DataLoader {
 
   void addSchoolData(SchoolData data) {
     if (allSchoolData.containsKey(data.uid)) {
+			// This is informational. It does not impact the user.
       print(
           "UID ${data.uid} is shared by '${data.schoolName}' and '${allSchoolScores[data.uid]!.schoolName}'. The former is not added to allSchoolData.");
     } else {

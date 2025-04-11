@@ -124,7 +124,6 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
 											scrollDirection: Axis.vertical,
 											itemCount: schoolCategories.length,
 											itemBuilder: (context, index) {
-												print(index);
 												return Row(
 													mainAxisSize: MainAxisSize.min,
 													children: [
