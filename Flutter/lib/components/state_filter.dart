@@ -36,8 +36,10 @@ class _StateFilterState extends State<StateFilter> {
       } else {
 				String inputStringLower = inputString.toLowerCase();
         autocompleteStates = states.entries.where(
+					// If it the user entered states that matches 1a) the state name or 1b) the state abbreviation and 2) does not already exist in the selected states
 					(entry) => (entry.key.toLowerCase().contains(inputStringLower) ||
-              entry.value.toLowerCase().contains(inputStringLower))
+              entry.value.toLowerCase().contains(inputStringLower)) &&
+							!selectedStates[entry.key]!
         ).toList();
       }
     });
