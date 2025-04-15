@@ -111,7 +111,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 									alignment: WrapAlignment.center,
 									children: [
 										PieChartWidget(
-											title: "Non-academic Staff Gender Ratio",
+											title: "Professors",
 											dataset: {
 												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
 												"Men": 1.0 -
@@ -121,7 +121,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 											colors: const [Colors.pink, Colors.blue],
 										),
 										PieChartWidget(
-											title: "Non-academic Staff Gender Ratio",
+											title: "Associate Professors",
 											dataset: {
 												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
 												"Men": 1.0 -
@@ -131,7 +131,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 											colors: const [Colors.pink, Colors.blue],
 										),
 										PieChartWidget(
-											title: "Non-academic Staff Gender Ratio",
+											title: "Assistant Professors",
 											dataset: {
 												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
 												"Men": 1.0 -
@@ -141,7 +141,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 											colors: const [Colors.pink, Colors.blue],
 										),
 										PieChartWidget(
-											title: "Non-academic Staff Gender Ratio",
+											title: "Instructors",
 											dataset: {
 												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
 												"Men": 1.0 -
@@ -151,7 +151,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 											colors: const [Colors.pink, Colors.blue],
 										),
 										PieChartWidgetWithLabels(
-											title: "Non-academic Staff Gender Ratio",
+											title: "Lecturers",
 											dataset: {
 												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
 												"Men": 1.0 -
@@ -171,7 +171,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 									alignment: WrapAlignment.center,
 									children: [
 										PieChartWidget(
-											title: "Academic Staff Race Ratio",
+											title: "Professors",
 											dataset: {
 												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
 												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
@@ -182,6 +182,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 														(schoolData.data["ACDASIAPCT"] ?? 0.0),
 											},
 											size: 120,
+											showTitle: false,
 											colors: const [
 												Colors.brown,
 												Colors.orange,
@@ -190,7 +191,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 											],
 										),
 										PieChartWidget(
-											title: "Academic Staff Race Ratio",
+											title: "Associate Professors",
 											dataset: {
 												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
 												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
@@ -201,6 +202,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 														(schoolData.data["ACDASIAPCT"] ?? 0.0),
 											},
 											size: 120,
+											showTitle: false,
 											colors: const [
 												Colors.brown,
 												Colors.orange,
@@ -209,7 +211,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 											],
 										),
 										PieChartWidget(
-											title: "Academic Staff Race Ratio",
+											title: "Assistant Professors",
 											dataset: {
 												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
 												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
@@ -220,6 +222,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 														(schoolData.data["ACDASIAPCT"] ?? 0.0),
 											},
 											size: 120,
+											showTitle: false,
 											colors: const [
 												Colors.brown,
 												Colors.orange,
@@ -228,7 +231,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 											],
 										),
 										PieChartWidget(
-											title: "Academic Staff Race Ratio",
+											title: "Instructors",
 											dataset: {
 												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
 												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
@@ -239,6 +242,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 														(schoolData.data["ACDASIAPCT"] ?? 0.0),
 											},
 											size: 120,
+											showTitle: false,
 											colors: const [
 												Colors.brown,
 												Colors.orange,
@@ -247,7 +251,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 											],
 										),
 										PieChartWidgetWithLabels(
-											title: "Academic Staff Race Ratio",
+											title: "Lecturers",
 											dataset: {
 												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
 												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
@@ -258,6 +262,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 														(schoolData.data["ACDASIAPCT"] ?? 0.0),
 											},
 											size: 120,
+											showTitle: false,
 											colors: const [
 												Colors.brown,
 												Colors.orange,

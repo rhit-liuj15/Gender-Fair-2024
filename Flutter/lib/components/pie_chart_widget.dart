@@ -4,17 +4,23 @@ import 'package:fl_chart/fl_chart.dart';
 class PieChartWidget extends StatefulWidget {
   final Map<String, double> dataset;
 	final String title;
+	final bool showTitle;
   final double size;
   final double pieChartShowPercentageSliceSizeCutoff;
   final List<Color> colors;
+	final TextAlign titleTextAlign;
+	final double textSizeRatio;
 
   const PieChartWidget({
     super.key,
-    required this.dataset,
 		required this.title,
+    required this.dataset,
     required this.colors,
+		this.showTitle = true,
     this.size = 200,
     this.pieChartShowPercentageSliceSizeCutoff = 0.1,
+		this.titleTextAlign = TextAlign.center,
+		this.textSizeRatio = 0.10,
   });
 
   @override
@@ -39,25 +45,46 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       builder: (context, constraints) {
 				return SizedBox(
 					width: widget.size,
-					height: widget.size*1.3,
-					child: PieChart(
-						PieChartData(
-							pieTouchData: PieTouchData(
-								touchCallback: (event, response) {
-									setState(() {
-										if (!event.isInterestedForInteractions || response?.touchedSection == null) {
-											touchedIndex = -1;
-										} else {
-											touchedIndex = response!.touchedSection!.touchedSectionIndex;
-										}
-									});
-								},
+					child: Column(
+						mainAxisSize: MainAxisSize.min,
+					  children: [
+							if (widget.showTitle) ...[
+								SizedBox(
+									width: widget.size,
+									height: widget.size*0.4,
+									child: Center(
+										child: Text(
+											widget.title,
+											textAlign: widget.titleTextAlign,
+											style: TextStyle(fontWeight: FontWeight.bold, fontSize: widget.textSizeRatio*widget.size),
+										),
+									),
+								),
+							],
+					    SizedBox(
+								width: widget.size,
+								height: widget.size*1.3,
+								child: PieChart(
+									PieChartData(
+										pieTouchData: PieTouchData(
+											touchCallback: (event, response) {
+												setState(() {
+													if (!event.isInterestedForInteractions || response?.touchedSection == null) {
+														touchedIndex = -1;
+													} else {
+														touchedIndex = response!.touchedSection!.touchedSectionIndex;
+													}
+												});
+											},
+										),
+										sections: showingSections(labels, values, colors),
+										borderData: FlBorderData(show: false),
+										sectionsSpace: 0,
+										centerSpaceRadius: widget.size*0.15,
+									),
+								),
 							),
-							sections: showingSections(labels, values, colors),
-							borderData: FlBorderData(show: false),
-							sectionsSpace: 0,
-							centerSpaceRadius: widget.size*0.15,
-						),
+					  ],
 					),
         );
       },
@@ -83,42 +110,5 @@ class _PieChartWidgetState extends State<PieChartWidget> {
 				titlePositionPercentageOffset: (values[index] >= widget.pieChartShowPercentageSliceSizeCutoff) ? 0.5 : 1.4,
       );
     });
-  }
-}
-
-class Indicator extends StatelessWidget {
-  final Color color;
-  final String text;
-  final bool isSquare;
-
-  const Indicator({
-    super.key,
-    required this.color,
-    required this.text,
-    this.isSquare = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-          width: 14,
-          height: 14,
-          decoration: BoxDecoration(
-            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
-            color: color,
-          ),
-        ),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-            overflow: TextOverflow.visible,
-          ),
-        ),
-      ],
-    );
   }
 }

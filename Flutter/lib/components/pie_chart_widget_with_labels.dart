@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:gender_fair_2024/components/pie_chart_widget.dart';
 
 class PieChartWidgetWithLabels extends StatefulWidget {
   final Map<String, double> dataset;
 	final String title;
+	final bool showTitle;
   final double size;
   final double pieChartShowPercentageSliceSizeCutoff;
   final List<Color> colors;
+	final TextAlign titleTextAlign;
+	final double textSizeRatio;
 
   const PieChartWidgetWithLabels({
     super.key,
-    required this.dataset,
 		required this.title,
+    required this.dataset,
     required this.colors,
+		this.showTitle = true,
     this.size = 200,
     this.pieChartShowPercentageSliceSizeCutoff = 0.1,
+		this.titleTextAlign = TextAlign.center,
+		this.textSizeRatio = 0.10,
   });
-
   @override
   State<PieChartWidgetWithLabels> createState() => _PieChartWidgetWithLabelsState();
 }
@@ -32,7 +38,6 @@ class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
 		}
 
     final labels = widget.dataset.keys.toList();
-    final values = widget.dataset.values.toList();
     final colors = widget.colors;
 
 		// There are edge cases in the data which this does not handle well (see for example St. John's College, UID 163976).
@@ -52,34 +57,20 @@ class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: widget.size,
-              height: widget.size*1.3,
-              child: PieChart(
-                PieChartData(
-                  pieTouchData: PieTouchData(
-                    touchCallback: (event, response) {
-                      setState(() {
-                        if (!event.isInterestedForInteractions || response?.touchedSection == null) {
-                          touchedIndex = -1;
-                        } else {
-                          touchedIndex = response!.touchedSection!.touchedSectionIndex;
-                        }
-                      });
-                    },
-                  ),
-                  sections: showingSections(labels, values, colors),
-                  borderData: FlBorderData(show: false),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: widget.size*0.15,
-                ),
-              ),
-            ),
+						PieChartWidget(
+							dataset: widget.dataset,
+							title: widget.title,
+							showTitle: widget.showTitle,
+							colors: colors,
+							size: widget.size,
+							pieChartShowPercentageSliceSizeCutoff: widget.pieChartShowPercentageSliceSizeCutoff,
+						),
             SizedBox(width: widget.size*0.4),
             SizedBox(
               width: 120, 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+          			mainAxisSize: MainAxisSize.min,
                 children: List.generate(labels.length, (index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -87,6 +78,9 @@ class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
                       color: colors[index],
                       text: labels[index],
                       isSquare: true,
+											size: widget.size,
+											colorBoxSizeRatio: 0.07,
+											textSizeRatio: widget.textSizeRatio,
                     ),
                   );
                 }),
@@ -123,13 +117,19 @@ class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
 class Indicator extends StatelessWidget {
   final Color color;
   final String text;
+  final double size;
   final bool isSquare;
+	final double colorBoxSizeRatio;
+	final double textSizeRatio;
 
   const Indicator({
     super.key,
     required this.color,
     required this.text,
     this.isSquare = false,
+		required this.size,
+		required this.colorBoxSizeRatio,
+		required this.textSizeRatio,
   });
 
   @override
@@ -137,8 +137,8 @@ class Indicator extends StatelessWidget {
     return Row(
       children: <Widget>[
         Container(
-          width: 14,
-          height: 14,
+          width: size*colorBoxSizeRatio,
+          height: size*colorBoxSizeRatio,
           decoration: BoxDecoration(
             shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
             color: color,
@@ -148,7 +148,7 @@ class Indicator extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: size*textSizeRatio, fontWeight: FontWeight.w500),
             overflow: TextOverflow.visible,
           ),
         ),
