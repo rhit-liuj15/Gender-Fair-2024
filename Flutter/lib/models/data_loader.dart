@@ -106,12 +106,12 @@ class DataLoader {
 
 
   void addSchoolData(SchoolData data) {
-    if (allSchoolData.containsKey(data.uid)) {
+    if (allSchoolData.containsKey(data.getUID())) {
 			// This is informational. It does not impact the user.
       print(
-          "UID ${data.uid} is shared by '${data.schoolName}' and '${allSchoolScores[data.uid]!.schoolName}'. The former is not added to allSchoolData.");
+          "UID ${data.getUID()} is shared by '${data.getName()}' and '${allSchoolScores[data.getUID()]!.schoolName}'. The former is not added to allSchoolData.");
     } else {
-      allSchoolData[data.uid] = data;
+      allSchoolData[data.getUID()] = data;
     }
   }
 

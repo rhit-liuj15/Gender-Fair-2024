@@ -47,7 +47,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(schoolData.schoolName),
+        title: Text(schoolData.getName()),
       ),
       body: schoolData.data.isEmpty
           ? const Center(child: Text("No data available for this school."))

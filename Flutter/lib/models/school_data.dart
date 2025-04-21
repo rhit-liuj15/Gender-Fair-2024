@@ -1,28 +1,30 @@
 class SchoolData {
-  int uid = 0;
-  String schoolName = '';
   late Map<String, dynamic> data;
 
   SchoolData({
-    required this.uid,
-    required this.schoolName,
     required this.data,
   });
 
   SchoolData.fromJSON(dynamic json) {
-    uid = json["UNITID"];
-    schoolName = json["INSTNM"];
     data = json;
   }
 
   SchoolData.unknownUID(int uid) {
-    uid = uid;
-    schoolName = "Unknown School $uid!";
-    data = {};
+    data = {
+			"UNITID" : uid,
+			"INSTNM" : "Unknown School $uid!",
+		};
   }
 
   @override
   String toString() {
-    return "\n$schoolName\nUID $uid\nData: $data";
+    return "\n${getName()}}\nUID ${getUID()}\nData: $data";
+  }
+
+  String getName() {
+    return data["INSTNM"];
+  }
+  int getUID() {
+    return data["UNITID"];
   }
 }
