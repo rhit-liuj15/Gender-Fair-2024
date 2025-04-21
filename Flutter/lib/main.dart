@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'School Ranking App',
+      title: 'Gender Fair College Ranking',
       theme: ThemeData(
         colorScheme: const ColorScheme(
           brightness: Brightness.light,
