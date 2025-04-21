@@ -42,7 +42,9 @@ In this demo, we will investigate the contents of S2022_IS (table 95)
 If you instead want to find a specific table, you will instead browse examine the Tables22 table.
 */
 
-select TableName, Tablenumber, TableTitle, `Description` from Tables22 where Tablenumber=95;
+select TableName, Tablenumber, TableTitle, `Description` from Tables22;
+
+select TableName, Tablenumber, TableTitle, `Description` from Tables22 where Tablenumber = 95;
 
 /*
 Observe the title for the table:
