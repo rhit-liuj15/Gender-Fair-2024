@@ -2,92 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:gender_fair_2024/components/pie_chart_widget.dart';
 
-class PieChartWidgetWithLabels extends StatefulWidget {
-  final Map<String, double> dataset;
-	final String title;
+class PieChartRowWidget extends StatefulWidget {
+	final String rowTitle;
 	final bool showTitle;
+  final List<String> chartTitles;
+  final List<String> dataLabels;
+  final List<List<double>> datasets;
+  final List<Color> colors;
   final double size;
   final double pieChartShowPercentageSliceSizeCutoff;
-  final List<Color> colors;
 	final TextAlign titleTextAlign;
 	final double textSizeRatio;
 
-  const PieChartWidgetWithLabels({
+  const PieChartRowWidget({
     super.key,
-		required this.title,
-    required this.dataset,
+		required this.rowTitle,
+    required this.chartTitles,
+    required this.dataLabels,
+    required this.datasets,
     required this.colors,
-		this.showTitle = true,
     this.size = 200,
+		this.showTitle = true,
     this.pieChartShowPercentageSliceSizeCutoff = 0.1,
 		this.titleTextAlign = TextAlign.center,
 		this.textSizeRatio = 0.10,
   });
   @override
-  State<PieChartWidgetWithLabels> createState() => _PieChartWidgetWithLabelsState();
+  State<PieChartRowWidget> createState() => _PieChartRowWidgetState();
 }
 
-class _PieChartWidgetWithLabelsState extends State<PieChartWidgetWithLabels> {
+class _PieChartRowWidgetState extends State<PieChartRowWidget> {
   int touchedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
 
-		if (widget.dataset.length != widget.colors.length) {
-			throw Exception("Pie chart '${widget.title}' has ${widget.dataset.length} data entries and ${widget.colors.length} color entries supplied, which does not match up");
+		if (widget.chartTitles.length != widget.datasets.length) {
+			throw Exception("Pie chart row '${widget.rowTitle}' oobserved a length mismatch between the number of chart titles and chart datasets supplied.\n\fNumber of chart titles: ${widget.chartTitles.length}\n\fNumber of chart datasets: ${widget.datasets.length}");
+		}
+		
+		List<Widget> pieCharts = [];
+
+		for (int i = 0; i < widget.chartTitles.length; i++) {
+			pieCharts.add(
+				PieChartWidget(
+					title: widget.chartTitles[i],
+					labels: widget.dataLabels,
+					values: widget.datasets[i],
+					colors: widget.colors,
+					size: widget.size,
+				)
+			);
 		}
 
-    final labels = widget.dataset.keys.toList();
-    final colors = widget.colors;
-
-		// There are edge cases in the data which this does not handle well (see for example St. John's College, UID 163976).
-		// In principal this is a nice feature, but until the data is properly formed this is not usable.
-
-    // double sumValues = values.fold(0, (prev, val) => prev + val);
-    // if (sumValues < 1.0) {
-    //   labels.add("Other");
-    //   values.add(1.0 - sumValues);
-    //   colors.add(Colors.grey);
-    //   percentages.add("");
-    // }
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-						PieChartWidget(
-							dataset: widget.dataset,
-							title: widget.title,
-							showTitle: widget.showTitle,
-							colors: colors,
-							size: widget.size,
-							pieChartShowPercentageSliceSizeCutoff: widget.pieChartShowPercentageSliceSizeCutoff,
-						),
-            SizedBox(width: widget.size*0.4),
-            SizedBox(
-              width: 120, 
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-          			mainAxisSize: MainAxisSize.min,
-                children: List.generate(labels.length, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: Indicator(
-                      color: colors[index],
-                      text: labels[index],
-                      isSquare: true,
-											size: widget.size,
-											colorBoxSizeRatio: 0.07,
-											textSizeRatio: widget.textSizeRatio,
-                    ),
-                  );
-                }),
-              ),
-            ),
-          ],
+        return Wrap(
+					spacing: 20,
+					runSpacing: 20,
+					alignment: WrapAlignment.center,
+          children: pieCharts,
         );
+        // return Row(
+        //   mainAxisSize: MainAxisSize.min,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: pieCharts,
+        // );
       },
     );
   }

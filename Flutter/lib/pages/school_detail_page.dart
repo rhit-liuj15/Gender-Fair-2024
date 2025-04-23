@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/components/pie_chart_row_widget.dart';
 import 'package:gender_fair_2024/components/pie_chart_widget.dart';
-import 'package:gender_fair_2024/components/pie_chart_widget_with_labels.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/components/bar_chart_widget.dart';
@@ -73,26 +73,35 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 									runSpacing: 20,
 									alignment: WrapAlignment.center,
 									children: [
-										PieChartWidgetWithLabels(
+										PieChartWidget(
 											title: "Academic Staff Gender Ratio",
-											dataset: {
-												"Women": schoolData.data["ACDWOMENPCT"] ?? 0.0,
-												"Men":
-														1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Men",
+												"Women",
+											],
+											values: [
+												schoolData.data["ACDWOMENPCT"] ?? 0.0,
+												1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+											],
 											colors: const [Colors.pink, Colors.blue],
 										),
-										PieChartWidgetWithLabels(
+										PieChartWidget(
 											title: "Academic Staff Race Ratio",
-											dataset: {
-												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
-												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
-												"Asian": schoolData.data["ACDASIAPCT"] ?? 0.0,
-												"White": 1.0 -
-														(schoolData.data["ACDBLKPCT"] ?? 0.0) -
-														(schoolData.data["ACDHSPPCT"] ?? 0.0) -
-														(schoolData.data["ACDASIAPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Black",
+												"Hispanic",
+												"Asian",
+												"Other",
+											],
+											values: [
+												schoolData.data["ACDBLKPCT"] ?? 0.0,
+												schoolData.data["ACDHSPPCT"] ?? 0.0,
+												schoolData.data["ACDASIAPCT"] ?? 0.0,
+												1.0 -
+												(schoolData.data["ACDBLKPCT"] ?? 0.0) -
+												(schoolData.data["ACDHSPPCT"] ?? 0.0) -
+												(schoolData.data["ACDASIAPCT"] ?? 0.0),
+											],
 											colors: const [
 												Colors.brown,
 												Colors.orange,
@@ -105,63 +114,116 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 							),
 							const SizedBox(height: 10),
 							Center(
-								child: Wrap(
-									spacing: 20,
-									runSpacing: 20,
-									alignment: WrapAlignment.center,
-									children: [
-										PieChartWidget(
-											title: "Professors",
-											dataset: {
-												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
-												"Men": 1.0 -
-														(schoolData.data["NONACDWOMENPCT"] ?? 0.0),
-											},
-											size: 120,
-											colors: const [Colors.pink, Colors.blue],
-										),
-										PieChartWidget(
-											title: "Associate Professors",
-											dataset: {
-												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
-												"Men": 1.0 -
-														(schoolData.data["NONACDWOMENPCT"] ?? 0.0),
-											},
-											size: 120,
-											colors: const [Colors.pink, Colors.blue],
-										),
-										PieChartWidget(
-											title: "Assistant Professors",
-											dataset: {
-												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
-												"Men": 1.0 -
-														(schoolData.data["NONACDWOMENPCT"] ?? 0.0),
-											},
-											size: 120,
-											colors: const [Colors.pink, Colors.blue],
-										),
-										PieChartWidget(
-											title: "Instructors",
-											dataset: {
-												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
-												"Men": 1.0 -
-														(schoolData.data["NONACDWOMENPCT"] ?? 0.0),
-											},
-											size: 120,
-											colors: const [Colors.pink, Colors.blue],
-										),
-										PieChartWidgetWithLabels(
-											title: "Lecturers",
-											dataset: {
-												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
-												"Men": 1.0 -
-														(schoolData.data["NONACDWOMENPCT"] ?? 0.0),
-											},
-											size: 120, 	
-											colors: const [Colors.pink, Colors.blue],
-										),
+								child: PieChartRowWidget(
+									rowTitle: "iuahmtchoktiejofwpoeifiwelia",
+									chartTitles: const [
+										"Professors",
+										"Associate Professors",
+										"Assistant Professors",
+										"Instructors",
+										"Lecturers",
 									],
-								),
+									dataLabels: const [
+										"Men",
+										"Women",
+									],
+									datasets: [
+										[
+											schoolData.data["ACDWOMENPCT"] ?? 0.0,
+											1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+										],
+										[
+											schoolData.data["ACDWOMENPCT"] ?? 0.0,
+											1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+										],
+										[
+											schoolData.data["ACDWOMENPCT"] ?? 0.0,
+											1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+										],
+										[
+											schoolData.data["ACDWOMENPCT"] ?? 0.0,
+											1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+										],
+										[
+											schoolData.data["ACDWOMENPCT"] ?? 0.0,
+											1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+										],
+									],
+									size: 120,
+									colors: const [Colors.pink, Colors.blue],
+								)
+								// child: Wrap(
+								// 	spacing: 20,
+								// 	runSpacing: 20,
+								// 	alignment: WrapAlignment.center,
+								// 	children: [
+								// 		PieChartWidget(
+								// 			title: "Professors",
+								// 			labels: const [
+								// 				"Men",
+								// 				"Women",
+								// 			],
+								// 			values: [
+								// 				schoolData.data["ACDWOMENPCT"] ?? 0.0,
+								// 				1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+								// 			],
+								// 			size: 120,
+								// 			colors: const [Colors.pink, Colors.blue],
+								// 		),
+								// 		PieChartWidget(
+								// 			title: "Associate Professors",
+								// 			labels: const [
+								// 				"Men",
+								// 				"Women",
+								// 			],
+								// 			values: [
+								// 				schoolData.data["ACDWOMENPCT"] ?? 0.0,
+								// 				1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+								// 			],
+								// 			size: 120,
+								// 			colors: const [Colors.pink, Colors.blue],
+								// 		),
+								// 		PieChartWidget(
+								// 			title: "Assistant Professors",
+								// 			labels: const [
+								// 				"Men",
+								// 				"Women",
+								// 			],
+								// 			values: [
+								// 				schoolData.data["ACDWOMENPCT"] ?? 0.0,
+								// 				1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+								// 			],
+								// 			size: 120,
+								// 			colors: const [Colors.pink, Colors.blue],
+								// 		),
+								// 		PieChartWidget(
+								// 			title: "Instructors",
+								// 			labels: const [
+								// 				"Men",
+								// 				"Women",
+								// 			],
+								// 			values: [
+								// 				schoolData.data["ACDWOMENPCT"] ?? 0.0,
+								// 				1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+								// 			],
+								// 			size: 120,
+								// 			colors: const [Colors.pink, Colors.blue],
+								// 		),
+								// 		PieChartWidget(
+								// 			title: "Lecturers",
+								// 			labels: const [
+								// 				"Men",
+								// 				"Women",
+								// 			],
+								// 			values: [
+								// 				schoolData.data["ACDWOMENPCT"] ?? 0.0,
+								// 				1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+								// 			],
+								// 			size: 120, 	
+								// 			colors: const [Colors.pink, Colors.blue],
+								// 		),
+								// 	],
+								// ),
 							),
 							const SizedBox(height: 10),
 							Center(
@@ -172,15 +234,21 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 									children: [
 										PieChartWidget(
 											title: "Professors",
-											dataset: {
-												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
-												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
-												"Asian": schoolData.data["ACDASIAPCT"] ?? 0.0,
-												"White": 1.0 -
-														(schoolData.data["ACDBLKPCT"] ?? 0.0) -
-														(schoolData.data["ACDHSPPCT"] ?? 0.0) -
-														(schoolData.data["ACDASIAPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Black",
+												"Hispanic",
+												"Asian",
+												"Other",
+											],
+											values: [
+												schoolData.data["ACDBLKPCT"] ?? 0.0,
+												schoolData.data["ACDHSPPCT"] ?? 0.0,
+												schoolData.data["ACDASIAPCT"] ?? 0.0,
+												1.0 -
+												(schoolData.data["ACDBLKPCT"] ?? 0.0) -
+												(schoolData.data["ACDHSPPCT"] ?? 0.0) -
+												(schoolData.data["ACDASIAPCT"] ?? 0.0),
+											],
 											size: 120,
 											showTitle: false,
 											colors: const [
@@ -192,15 +260,21 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 										),
 										PieChartWidget(
 											title: "Associate Professors",
-											dataset: {
-												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
-												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
-												"Asian": schoolData.data["ACDASIAPCT"] ?? 0.0,
-												"White": 1.0 -
-														(schoolData.data["ACDBLKPCT"] ?? 0.0) -
-														(schoolData.data["ACDHSPPCT"] ?? 0.0) -
-														(schoolData.data["ACDASIAPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Black",
+												"Hispanic",
+												"Asian",
+												"Other",
+											],
+											values: [
+												schoolData.data["ACDBLKPCT"] ?? 0.0,
+												schoolData.data["ACDHSPPCT"] ?? 0.0,
+												schoolData.data["ACDASIAPCT"] ?? 0.0,
+												1.0 -
+												(schoolData.data["ACDBLKPCT"] ?? 0.0) -
+												(schoolData.data["ACDHSPPCT"] ?? 0.0) -
+												(schoolData.data["ACDASIAPCT"] ?? 0.0),
+											],
 											size: 120,
 											showTitle: false,
 											colors: const [
@@ -212,15 +286,21 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 										),
 										PieChartWidget(
 											title: "Assistant Professors",
-											dataset: {
-												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
-												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
-												"Asian": schoolData.data["ACDASIAPCT"] ?? 0.0,
-												"White": 1.0 -
-														(schoolData.data["ACDBLKPCT"] ?? 0.0) -
-														(schoolData.data["ACDHSPPCT"] ?? 0.0) -
-														(schoolData.data["ACDASIAPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Black",
+												"Hispanic",
+												"Asian",
+												"Other",
+											],
+											values: [
+												schoolData.data["ACDBLKPCT"] ?? 0.0,
+												schoolData.data["ACDHSPPCT"] ?? 0.0,
+												schoolData.data["ACDASIAPCT"] ?? 0.0,
+												1.0 -
+												(schoolData.data["ACDBLKPCT"] ?? 0.0) -
+												(schoolData.data["ACDHSPPCT"] ?? 0.0) -
+												(schoolData.data["ACDASIAPCT"] ?? 0.0),
+											],
 											size: 120,
 											showTitle: false,
 											colors: const [
@@ -232,15 +312,21 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 										),
 										PieChartWidget(
 											title: "Instructors",
-											dataset: {
-												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
-												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
-												"Asian": schoolData.data["ACDASIAPCT"] ?? 0.0,
-												"White": 1.0 -
-														(schoolData.data["ACDBLKPCT"] ?? 0.0) -
-														(schoolData.data["ACDHSPPCT"] ?? 0.0) -
-														(schoolData.data["ACDASIAPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Black",
+												"Hispanic",
+												"Asian",
+												"Other",
+											],
+											values: [
+												schoolData.data["ACDBLKPCT"] ?? 0.0,
+												schoolData.data["ACDHSPPCT"] ?? 0.0,
+												schoolData.data["ACDASIAPCT"] ?? 0.0,
+												1.0 -
+												(schoolData.data["ACDBLKPCT"] ?? 0.0) -
+												(schoolData.data["ACDHSPPCT"] ?? 0.0) -
+												(schoolData.data["ACDASIAPCT"] ?? 0.0),
+											],
 											size: 120,
 											showTitle: false,
 											colors: const [
@@ -250,17 +336,23 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 												Colors.blue
 											],
 										),
-										PieChartWidgetWithLabels(
+										PieChartWidget(
 											title: "Lecturers",
-											dataset: {
-												"Black": schoolData.data["ACDBLKPCT"] ?? 0.0,
-												"Hispanic": schoolData.data["ACDHSPPCT"] ?? 0.0,
-												"Asian": schoolData.data["ACDASIAPCT"] ?? 0.0,
-												"White": 1.0 -
-														(schoolData.data["ACDBLKPCT"] ?? 0.0) -
-														(schoolData.data["ACDHSPPCT"] ?? 0.0) -
-														(schoolData.data["ACDASIAPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Black",
+												"Hispanic",
+												"Asian",
+												"Other",
+											],
+											values: [
+												schoolData.data["ACDBLKPCT"] ?? 0.0,
+												schoolData.data["ACDHSPPCT"] ?? 0.0,
+												schoolData.data["ACDASIAPCT"] ?? 0.0,
+												1.0 -
+												(schoolData.data["ACDBLKPCT"] ?? 0.0) -
+												(schoolData.data["ACDHSPPCT"] ?? 0.0) -
+												(schoolData.data["ACDASIAPCT"] ?? 0.0),
+											],
 											size: 120,
 											showTitle: false,
 											colors: const [
@@ -288,27 +380,35 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 									runSpacing: 20,
 									alignment: WrapAlignment.center,
 									children: [
-										PieChartWidgetWithLabels(
+										PieChartWidget(
 											title: "Non-academic Staff Gender Ratio",
-											dataset: {
-												"Women": schoolData.data["NONACDWOMENPCT"] ?? 0.0,
-												"Men": 1.0 -
-														(schoolData.data["NONACDWOMENPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Men",
+												"Women",
+											],
+											values: [
+												schoolData.data["ACDWOMENPCT"] ?? 0.0,
+												1.0 - (schoolData.data["ACDWOMENPCT"] ?? 0.0),
+											],
 											colors: const [Colors.pink, Colors.blue],
 										),
-										PieChartWidgetWithLabels(
+										PieChartWidget(
 											title: "Non-academic Staff Race Ratio",
-											dataset: {
-												"Black": schoolData.data["NONACDBLKPCT"] ?? 0.0,
-												"Hispanic":
-														schoolData.data["NONACDHSPPCT"] ?? 0.0,
-												"Asian": schoolData.data["NONACDASIAPCT"] ?? 0.0,
-												"White": 1.0 -
-														(schoolData.data["NONACDBLKPCT"] ?? 0.0) -
-														(schoolData.data["NONACDHSPPCT"] ?? 0.0) -
-														(schoolData.data["NONACDASIAPCT"] ?? 0.0),
-											},
+											labels: const [
+												"Black",
+												"Hispanic",
+												"Asian",
+												"Other",
+											],
+											values: [
+												schoolData.data["ACDBLKPCT"] ?? 0.0,
+												schoolData.data["ACDHSPPCT"] ?? 0.0,
+												schoolData.data["ACDASIAPCT"] ?? 0.0,
+												1.0 -
+												(schoolData.data["ACDBLKPCT"] ?? 0.0) -
+												(schoolData.data["ACDHSPPCT"] ?? 0.0) -
+												(schoolData.data["ACDASIAPCT"] ?? 0.0),
+											],
 											colors: const [
 												Colors.brown,
 												Colors.orange,
