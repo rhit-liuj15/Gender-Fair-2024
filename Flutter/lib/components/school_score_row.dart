@@ -15,7 +15,6 @@ class SchoolScoreRow extends StatefulWidget {
     }
     return flexValues.length;
   }
-  static Set<int> selectedSchools = <int>{};
   final SchoolScore school;
   const SchoolScoreRow({super.key, required this.school, required this.onUpdateSelected});
 
@@ -40,13 +39,13 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 			switch(item) {
 				case ListPageColumnAttributes.addToList:
 					return Checkbox(
-						value: SchoolScoreRow.selectedSchools.contains(widget.school.uid),
+						value: SchoolScore.selectedSchools.contains(widget.school.uid),
 						onChanged: (bool? newValue) {
 							setState(() {
 								if (newValue!) {
-									SchoolScoreRow.selectedSchools.add(widget.school.uid);
+									SchoolScore.selectedSchools.add(widget.school.uid);
 								} else {
-									SchoolScoreRow.selectedSchools.remove(widget.school.uid);
+									SchoolScore.selectedSchools.remove(widget.school.uid);
 								}
 								widget.onUpdateSelected(); 
 							});

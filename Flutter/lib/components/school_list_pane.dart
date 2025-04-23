@@ -28,47 +28,59 @@ class SchoolListPane extends StatefulWidget {
 }
 
 class _SchoolListPaneState extends State<SchoolListPane> {
-
-	int currentPage = 1;
-	int get numSchoolsOnPage => max<int>(min<int>(widget.schoolsFilteredFor.length - widget.schoolsPerPage*(currentPage-1), widget.schoolsPerPage),0);
-	int get totalPages =>
-			(widget.schoolsFilteredFor.length - 1) ~/ widget.schoolsPerPage	+ 1;
-			// ((widget.schoolsFilteredFor.length + widget.schoolsPerPage - 1) / widget.schoolsPerPage)
-			// 		.ceil();
+  int currentPage = 1;
+  int get numSchoolsOnPage => max<int>(
+      min<int>(
+          widget.schoolsFilteredFor.length -
+              widget.schoolsPerPage * (currentPage - 1),
+          widget.schoolsPerPage),
+      0);
+  int get totalPages =>
+      (widget.schoolsFilteredFor.length - 1) ~/ widget.schoolsPerPage + 1;
+  // ((widget.schoolsFilteredFor.length + widget.schoolsPerPage - 1) / widget.schoolsPerPage)
+  // 		.ceil();
 
   List<SchoolScore> get schoolOnCurrentPage {
     if (widget.schoolsFilteredFor.isEmpty) {
       return [];
     }
 
-    if (currentPage > totalPages) {
-      currentPage = totalPages;
-    } else if (currentPage < 1) {
-      currentPage = 1;
-    }
+    currentPage = currentPage.clamp(1, totalPages);
+
 
     final startIndex = (currentPage - 1) * widget.schoolsPerPage;
-    final endIndex =
-        (startIndex + widget.schoolsPerPage).clamp(0, widget.schoolsFilteredFor.length);
+    final endIndex = (startIndex + widget.schoolsPerPage)
+        .clamp(0, widget.schoolsFilteredFor.length);
 
     return startIndex < widget.schoolsFilteredFor.length
         ? widget.schoolsFilteredFor.sublist(startIndex, endIndex)
         : [];
   }
 
-	void onPageChange(int newPage) {
-		setState(() {
-			currentPage = newPage;
-		});
-	}
+  void onPageChange(int newPage) {
+    setState(() {
+      currentPage = newPage;
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant SchoolListPane oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final newTotalPages =
+        (widget.schoolsFilteredFor.length - 1) ~/ widget.schoolsPerPage + 1;
+    if (currentPage > newTotalPages) {
+      setState(() {
+        currentPage = newTotalPages;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 255, 255),
-        border: Border.all(color: Color(0xFFFF4713), width: 2),
+        border: Border.all(color: const Color(0xFFFF4713), width: 2),
       ),
       child: Column(
         children: [
@@ -89,20 +101,20 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                       widget.updateSortingMetricCallback(newValue);
                     }
                   },
-									// Generate dropdown entry for all sortable columns
-                  items: ListPageColumnAttributes.values.where((item) => item.sortable).map(
-										(item) => 
-										DropdownMenuItem<ListPageColumnAttributes>(
-											value: item,
-											child: Text(
-												item.name,
-												style: const TextStyle(
-													fontSize: 16,
-													fontWeight: FontWeight.bold,
-												),
-											),
-										)
-									).toList(),
+                  // Generate dropdown entry for all sortable columns
+                  items: ListPageColumnAttributes.values
+                      .where((item) => item.sortable)
+                      .map((item) => DropdownMenuItem<ListPageColumnAttributes>(
+                            value: item,
+                            child: Text(
+                              item.name,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ))
+                      .toList(),
                   isExpanded: false,
                   hint: const Text("Select column"),
                 ),
@@ -142,33 +154,30 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                 // The scrolling list of schools
                 Expanded(
                   child: ClipRRect(
-										borderRadius: BorderRadius.circular(15),
-										child: ListView.builder(
-											itemCount: numSchoolsOnPage,
-											itemBuilder: (context, index) {
-												return Container(
-													decoration: const BoxDecoration(
-														border: Border(
-															bottom: BorderSide(
-																color:
-																		Color.fromARGB(255, 185, 182, 174),
-																width: 1.0,
-															),
-														),
-													),
-													child: Padding(
-														padding:
-																const EdgeInsets.symmetric(vertical: 4.0),
-														child: SchoolScoreRow(
-															school: schoolOnCurrentPage[index],
-															onUpdateSelected:
-																	widget.onUpdateSelected, 
-														),
-													),
-												);
-											},
-										),
-									),
+                    borderRadius: BorderRadius.circular(15),
+                    child: ListView.builder(
+                      itemCount: numSchoolsOnPage,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: Color.fromARGB(255, 185, 182, 174),
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: SchoolScoreRow(
+                              school: schoolOnCurrentPage[index],
+                              onUpdateSelected: widget.onUpdateSelected,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
 
                 Padding(
@@ -178,7 +187,9 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                     children: [
                       ElevatedButton(
                         onPressed: currentPage > 1
-                            ? () {onPageChange(1);}
+                            ? () {
+                                onPageChange(1);
+                              }
                             : null,
                         child: const Text("First"),
                       ),
@@ -226,7 +237,9 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                       const SizedBox(width: 20),
                       ElevatedButton(
                         onPressed: currentPage < totalPages
-                            ? () {onPageChange(totalPages);}
+                            ? () {
+                                onPageChange(totalPages);
+                              }
                             : null,
                         child: const Text("Last"),
                       ),

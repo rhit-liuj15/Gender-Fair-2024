@@ -1,20 +1,12 @@
 
 class SchoolScore {
-	
-	static final List<int> maximumValues = List.unmodifiable([20, 15, 30, 35]);
-  static final Map<SchoolScoreAttributes, int> maximumScores = Map.unmodifiable(
-		<SchoolScoreAttributes, int>{
-			SchoolScoreAttributes.leadership: 35,
-			SchoolScoreAttributes.polnpay: 35,
-			SchoolScoreAttributes.safety: 15,
-			SchoolScoreAttributes.diversity: 15,
-		}
-	);
+  static final Set<int> selectedSchools = <int>{};
 
   int rank = 0; 
 	int uid;
   String schoolName;
   String schoolState;
+  String schoolType;
   Map<SchoolScoreAttributes, int> subscores;
 	
 	int get score => subscores.values.toList().reduce((a,b)=>a+b);
@@ -23,6 +15,7 @@ class SchoolScore {
 		required this.uid,
     required this.schoolName,
     required this.schoolState,
+    required this.schoolType,
     required this.subscores,
     this.rank = 0,
   });

@@ -1,0 +1,98 @@
+UNITID,unitid
+INSTNM,institution name
+STATE,state abbreviation
+EIN,ein
+OPEID,opeid
+INSTFUNDINGTYPE,institution ownership and financial structure
+DEGREETOT,total number of people who receive a degree
+ENROLLTOT,total number of enrollment in fall 2023
+ACDPOPM,number of instructional staff men
+ACDPOPF,number of instructional staff women
+NONACDPOPM,number of non-instructional staff men
+NONACDPOPF,number of non-instructional staff women
+SALARYTOTACDM,total salary outlay instructional men
+SALARYTOTACDF,total salary outlay instructional women
+SALARYTOTNONACDM,total salary outlay non-instructional men
+SALARYTOTNONACDF,total salary outlay non-instructional women
+PROFMEN,number of full professor men
+PROFWOMEN,number of full professor women
+PROFWHIT,number of full professor white
+PROFBLAK,number of full professor black
+PROFASIA,number of full professor Asian
+PROFHISP,number of full professor hispanic
+PROFNHPI,number of full professor Native Hawaiian/Pacific Islander
+PROFNAMC,number of full professor Native American/Alaskan Native
+PROFNRES,number of full professor non-US resident
+PROFTWOP,number of full professor two or more races
+PROFUNKN,number of full professor unknown race
+ASSOCIATEPROFMEN,number of associate professor men
+ASSOCIATEPROFWOMEN,number of associate professor women
+ASSOCIATEPROFWHIT,number of associate professor white
+ASSOCIATEPROFBLAK,number of associate professor black
+ASSOCIATEPROFASIA,number of associate professor Asian
+ASSOCIATEPROFHISP,number of associate professor hispanic
+ASSOCIATEPROFNHPI,number of associate professor Native Hawaiian/Pacific Islander
+ASSOCIATEPROFNAMC,number of associate professor Native American/Alaskan Native
+ASSOCIATEPROFNRES,number of associate professor non-US resident
+ASSOCIATEPROFTWOP,number of associate professor two or more races
+ASSOCIATEPROFUNKN,number of associate professor unknown race
+ASSISTANTPROFMEN,number of assistant professor men
+ASSISTANTPROFWOMEN,number of assistant professor women
+ASSISTANTPROFWHIT,number of assistant professor white
+ASSISTANTPROFBLAK,number of assistant professor black
+ASSISTANTPROFASIA,number of assistant professor Asian
+ASSISTANTPROFHISP,number of assistant professor hispanic
+ASSISTANTPROFNHPI,number of assistant professor Native Hawaiian/Pacific Islander
+ASSISTANTPROFNAMC,number of assistant professor Native American/Alaskan Native
+ASSISTANTPROFNRES,number of assistant professor non-US resident
+ASSISTANTPROFTWOP,number of assistant professor two or more races
+ASSISTANTPROFUNKN,number of assistant professor unknown race
+INSTRUCTORMEN,number of instructor men
+INSTRUCTORWOMEN,number of instructor women
+INSTRUCTORWHIT,number of instructor white
+INSTRUCTORBLAK,number of instructor black
+INSTRUCTORASIA,number of instructor Asian
+INSTRUCTORHISP,number of instructor hispanic
+INSTRUCTORNHPI,number of instructor Native Hawaiian/Pacific Islander
+INSTRUCTORNAMC,number of instructor Native American/Alaskan Native
+INSTRUCTORNRES,number of instructor non-US resident
+INSTRUCTORTWOP,number of instructor two or more races
+INSTRUCTORUNKN,number of instructor unknown race
+LECTURERMEN,number of lecturer men
+LECTURERWOMEN,number of lecturer women
+LECTURERWHIT,number of lecturer white
+LECTURERBLAK,number of lecturer black
+LECTURERASIA,number of lecturer Asian
+LECTURERHISP,number of lecturer hispanic
+LECTURERNHPI,number of lecturer Native Hawaiian/Pacific Islander
+LECTURERNAMC,number of lecturer Native American/Alaskan Native
+LECTURERNRES,number of lecturer non-US resident
+LECTURERTWOP,number of lecturer two or more races
+LECTURERUNKN,number of lecturer unknown race
+NORANKMEN,number of no rank academic staff men
+NORANKWOMEN,number of no rank academic staff women
+NORANKWHIT,number of no rank academic staff white
+NORANKBLAK,number of no rank academic staff black
+NORANKASIA,number of no rank academic staff Asian
+NORANKHISP,number of no rank academic staff hispanic
+NORANKNHPI,number of no rank academic staff Native Hawaiian/Pacific Islander
+NORANKNAMC,number of no rank academic staff Native American/Alaskan Native
+NORANKNRES,number of no rank academic staff non-US resident
+NORANKTWOP,number of no rank academic staff two or more races
+NORANKUNKN,number of no rank academic staff unknown race
+NONACDMEN,number of non-academic staff men
+NONACDWOMEN,number of non-academic staff women
+NONACDWHIT,number of non-academic staff white
+NONACDBLAK,number of non-academic staff black
+NONACDASIA,number of non-academic staff Asian
+NONACDHISP,number of non-academic staff hispanic
+NONACDNHPI,number of non-academic staff Native Hawaiian/Pacific Islander
+NONACDNAMC,number of non-academic staff Native American/Alaskan Native
+NONACDNRES,number of non-academic staff non-US resident
+NONACDTWOP,number of non-academic staff two or more races
+NONACDUNKN,number of non-academic staff unknown race
+YEARLYHATECRIME,average number of hate crime per year (from 2020-2022)
+YEARLYHATECRIME1K,number of hate crimes for 1K student population per year
+YEARLYVAWA,average number of vawa crimes per year (from 2020-2022)
+YEARLYVAWA1K,number of vawa crimes for 1K student population per year
+HASDAYCARE,if school offer daycare
