@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS `ipeds_tables`.`gf2024_final`;
+DROP TABLE IF EXISTS `merged_ipeds_css_irs`.`gf2024_final`;
 
-CREATE TABLE `ipeds_tables`.`gf2024_final` AS
+CREATE TABLE `merged_ipeds_css_irs`.`gf2024_final` AS
 WITH cssYearly AS (
 	SELECT 
 		OPEID,
@@ -537,7 +537,7 @@ LEFT JOIN `irs990ByLatestDate` irs ON HD2022.EIN = irs.EIN
 WHERE C2022B.CSTOTLT >= 50 AND EF2022F.ENROLLTOT >= 200
 ORDER BY C2022B.`UNITID` ASC;
 
-ALTER TABLE `ipeds_tables`.`gf2024_final`
+ALTER TABLE `merged_ipeds_css_irs`.`gf2024_final`
 ADD PRIMARY KEY (`UNITID`);
 /*
 To get the final table of GenderFair2024, select the columns from the CTE's created/original table from IPEDS database.
