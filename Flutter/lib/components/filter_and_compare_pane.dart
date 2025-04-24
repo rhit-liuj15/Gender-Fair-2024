@@ -121,51 +121,53 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                 ),
                 const SizedBox(height: 4),
                 Center(
-                    child: SizedBox(
-                  height: 400,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: schoolCategories.length,
-                    itemBuilder: (context, index) {
-                      return Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Checkbox(
-                            value: showSchoolCategories[index],
-                            onChanged: (value) {
-                              if (value != null) {
-                                showSchoolCategories[index] = value;
-                                List<String> categoriesToMatch = [];
-                                if (showSchoolCategories
-                                    .any((value) => value)) {
-                                  for (var i = 0;
-                                      i < showSchoolCategories.length;
-                                      i++) {
-                                    if (showSchoolCategories[i]) {
-                                      categoriesToMatch
-                                          .add(schoolCategories[i].key);
+                  child: Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: schoolCategories.length,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Checkbox(
+                              value: showSchoolCategories[index],
+                              onChanged: (value) {
+                                if (value != null) {
+                                  setState(() {
+                                    showSchoolCategories[index] = value;
+                                    List<String> categoriesToMatch = [];
+                                    if (showSchoolCategories.any((v) => v)) {
+                                      for (var i = 0;
+                                          i < showSchoolCategories.length;
+                                          i++) {
+                                        if (showSchoolCategories[i]) {
+                                          categoriesToMatch
+                                              .add(schoolCategories[i].key);
+                                        }
+                                      }
+                                      widget.filterFunctions['School Type'] =
+                                          (List<SchoolScore> scores) {
+                                        return scores
+                                            .where((school) => categoriesToMatch
+                                                .contains(school.schoolType))
+                                            .toList();
+                                      };
+                                    } else {
+                                      widget.filterFunctions
+                                          .remove('School Type');
                                     }
-                                  }
-                                  widget.filterFunctions['School Type'] =
-                                      (List<SchoolScore> scores) {
-                                    return scores
-                                        .where((school) => categoriesToMatch
-                                            .contains(school.schoolType))
-                                        .toList();
-                                  };
-                                } else {
-                                  widget.filterFunctions.remove('School Type');
+                                    widget.updateShownSchools();
+                                  });
                                 }
-                                widget.updateShownSchools();
-                              }
-                            },
-                          ),
-                          Text(schoolCategories[index].value),
-                        ],
-                      );
-                    },
+                              },
+                            ),
+                            Text(schoolCategories[index].value),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                )),
+                ),
                 const SizedBox(height: 4),
                 Center(
                   child: Row(

@@ -51,7 +51,7 @@ class _PieChartRowWidgetState extends State<PieChartRowWidget> {
         values: widget.datasets[i],
         colors: widget.colors,
         size: widget.size,
-				showLabels: widget.chartTitles.length-i == 1,
+				showLabels: !widget.showTitleOnBottom,
       ));
     }
 

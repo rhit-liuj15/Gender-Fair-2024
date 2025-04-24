@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -35,7 +37,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   int touchedIndex = -1;
 
   @override
-  Widget build(BuildContext context) {		
+  Widget build(BuildContext context) {
     if (widget.labels.length != widget.colors.length) {
       throw Exception(
           "Pie chart '${widget.title}' observed a length mismatch between the number of labels, values, and colors supplied.\n\fNumber of labels: ${widget.labels.length}\n\fNumber of values: ${widget.values.length}\n\fNumber of colors: ${widget.colors.length}");
@@ -44,8 +46,27 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     final labels = widget.labels;
     final values = widget.values;
     final colors = widget.colors;
-		
-		final num chartSliceCutoff = widget.values.reduce((a, b) => a + b) * widget.pieChartShowPercentageSliceSizeCutoff;
+
+    final num chartSliceCutoff = widget.values.reduce((a, b) => a + b) *
+        widget.pieChartShowPercentageSliceSizeCutoff;
+    final bool isAllZero = values.every((v) => v == 0);
+    final bool isEmpty = values.isEmpty;
+
+    if (isEmpty || isAllZero) {
+      return SizedBox(
+        width: widget.size,
+        height: widget.size * 1.3,
+        child: Center(
+          child: Text(
+            "N/A",
+            style: TextStyle(
+              fontSize: widget.size * 0.2,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -91,7 +112,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                             });
                           },
                         ),
-                        sections: showingSections(labels, values, colors, chartSliceCutoff),
+                        sections: showingSections(
+                            labels, values, colors, chartSliceCutoff),
                         borderData: FlBorderData(show: false),
                         sectionsSpace: 0,
                         centerSpaceRadius: widget.size * 0.15,
@@ -105,24 +127,27 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               SizedBox(width: widget.size * 0.4),
               SizedBox(
                 width: 120,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(labels.length, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Indicator(
-                        color: colors[index],
-                        text: labels[index],
-                        isSquare: true,
-                        size: widget.size,
-                        colorBoxSizeRatio: 0.07,
-                        textSizeRatio: widget.textSizeRatio,
-                      ),
-                    );
-                  }),
+                height: widget.size * 1.3,
+                child: Scrollbar(
+                  thumbVisibility: true,
+                  child: ListView.builder(
+                    itemCount: labels.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0),
+                        child: Indicator(
+                          color: colors[index],
+                          text: labels[index],
+                          isSquare: true,
+                          size: widget.size,
+                          colorBoxSizeRatio: 0.07,
+                          textSizeRatio: widget.textSizeRatio,
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
+              )
             ],
           ],
         );
@@ -130,8 +155,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
     );
   }
 
-  List<PieChartSectionData> showingSections(
-      List<String> labels, List<num> values, List<Color> colors, num chartSliceCutoff) {
+  List<PieChartSectionData> showingSections(List<String> labels,
+      List<num> values, List<Color> colors, num chartSliceCutoff) {
     return List.generate(values.length, (index) {
       final isTouched = index == touchedIndex;
       final fontSize = isTouched ? widget.size * 0.099 : widget.size * 0.09;
@@ -139,39 +164,32 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       return PieChartSectionData(
         color: colors[index],
         value: values[index].toDouble(),
-        title:
-            // "${(values[index] * 100).toStringAsFixed(1)}%", // ✅ Percentage inside chart
-            "${values[index]}", // ✅ Percentage inside chart
+        title: "${values[index]}",
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.w600,
-          color: (values[index] >= chartSliceCutoff)
-              ? Colors.white
-              : Colors.black,
+          color:
+              (values[index] >= chartSliceCutoff) ? Colors.white : Colors.black,
         ),
-        showTitle:
-            (values[index] >= chartSliceCutoff)
-                ? true
-                : (index == touchedIndex),
+        showTitle: (values[index] >= chartSliceCutoff)
+            ? true
+            : (index == touchedIndex),
         titlePositionPercentageOffset:
-            (values[index] >= chartSliceCutoff)
-                ? 0.5
-                : 1.4,
+            (values[index] >= chartSliceCutoff) ? 0.5 : 1.4,
       );
     });
   }
 }
 
-
-
-class Indicator extends StatelessWidget {
+class Indicator extends StatefulWidget {
   final Color color;
   final String text;
   final double size;
   final bool isSquare;
   final double colorBoxSizeRatio;
   final double textSizeRatio;
+  final ScrollController? scrollController;
 
   const Indicator({
     super.key,
@@ -181,27 +199,83 @@ class Indicator extends StatelessWidget {
     required this.size,
     required this.colorBoxSizeRatio,
     required this.textSizeRatio,
+    this.scrollController,
   });
+
+  @override
+  State<Indicator> createState() => _IndicatorState();
+}
+
+class _IndicatorState extends State<Indicator> {
+  late final ScrollController _controller;
+  Timer? _hoverScrollTimer;
+  bool _usingExternalController = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _usingExternalController = widget.scrollController != null;
+    _controller = widget.scrollController ?? ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _hoverScrollTimer?.cancel();
+    if (!_usingExternalController) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _startScroll() {
+    _hoverScrollTimer = Timer.periodic(const Duration(milliseconds: 30), (_) {
+      if (_controller.hasClients) {
+        final max = _controller.position.maxScrollExtent;
+        final current = _controller.offset;
+        final next = (current + 1).clamp(0, max);
+        _controller.jumpTo((next >= max ? 0 : next).toDouble());
+      }
+    });
+  }
+
+  void _stopScroll() {
+    _hoverScrollTimer?.cancel();
+    _hoverScrollTimer = null;
+    if (_controller.hasClients) {
+    _controller.jumpTo(0.0);
+  }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
         Container(
-          width: size * colorBoxSizeRatio,
-          height: size * colorBoxSizeRatio,
+          width: widget.size * widget.colorBoxSizeRatio,
+          height: widget.size * widget.colorBoxSizeRatio,
           decoration: BoxDecoration(
-            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
-            color: color,
+            shape: widget.isSquare ? BoxShape.rectangle : BoxShape.circle,
+            color: widget.color,
           ),
         ),
         const SizedBox(width: 6),
         Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-                fontSize: size * textSizeRatio, fontWeight: FontWeight.w500),
-            overflow: TextOverflow.visible,
+          child: MouseRegion(
+            onEnter: (_) => _startScroll(),
+            onExit: (_) => _stopScroll(),
+            child: SingleChildScrollView(
+              controller: _controller,
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                widget.text,
+                style: TextStyle(
+                  fontSize: widget.size * widget.textSizeRatio,
+                  fontWeight: FontWeight.w500,
+                ),
+                softWrap: false,
+                overflow: TextOverflow.visible,
+              ),
+            ),
           ),
         ),
       ],
