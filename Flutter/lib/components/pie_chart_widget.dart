@@ -129,8 +129,6 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               SizedBox(
                 width: 170,
                 height: widget.size * 1.3,
-                child: Scrollbar(
-                  thumbVisibility: true,
                   child: ListView.builder(
                     itemCount: labels.length,
                     itemBuilder: (context, index) {
@@ -148,7 +146,6 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                       );
                     },
                   ),
-                ),
               ),
             ],
           ],
