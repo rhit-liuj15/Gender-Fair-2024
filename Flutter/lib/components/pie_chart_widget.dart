@@ -127,7 +127,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
             if (widget.showLabels) ...[
               SizedBox(width: widget.size * 0.4),
               SizedBox(
-                width: 120,
+                width: 170,
                 height: widget.size * 1.3,
                 child: Scrollbar(
                   thumbVisibility: true,
