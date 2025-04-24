@@ -126,7 +126,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                     const SizedBox(height: 10),
                     Center(
                         child: PieChartRowWidget(
-                      rowTitle: "iuahmtchoktiejofwpoeifiwelia",
+                      rowTitle: "Staff Gender Distrubution",
                       chartTitles: academicRankLabels,
                       dataLabels: genderLabels,
                       datasets: [
@@ -152,6 +152,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                         ],
                       ],
                       size: 120,
+                      showTitleOnBottom: true,
                       colors: genderColors
                     )),
                     const SizedBox(height: 10),
@@ -219,6 +220,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                         ],
                         size: 120,
                         showTitle: false,
+                        
                         colors: raceColors
                       ),
                     ),

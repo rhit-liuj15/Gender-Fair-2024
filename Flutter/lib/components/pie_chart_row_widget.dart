@@ -28,42 +28,104 @@ class PieChartRowWidget extends StatefulWidget {
     this.titleTextAlign = TextAlign.center,
     this.textSizeRatio = 0.10,
   });
+
   @override
   State<PieChartRowWidget> createState() => _PieChartRowWidgetState();
 }
 
 class _PieChartRowWidgetState extends State<PieChartRowWidget> {
-  int touchedIndex = -1;
-
   @override
   Widget build(BuildContext context) {
     if (widget.chartTitles.length != widget.datasets.length) {
       throw Exception(
-          "Pie chart row '${widget.rowTitle}' observed a length mismatch between the number of chart titles and chart datasets supplied.\n\fNumber of chart titles: ${widget.chartTitles.length}\n\fNumber of chart datasets: ${widget.datasets.length}");
+        "Pie chart row '${widget.rowTitle}' observed a length mismatch between "
+      );
     }
 
-    List<Widget> pieCharts = [];
-
-    for (int i = 0; i < widget.chartTitles.length; i++) {
-      pieCharts.add(PieChartWidget(
+    final pieCharts = List<Widget>.generate(widget.chartTitles.length, (i) {
+      return PieChartWidget(
         title: widget.chartTitles[i],
         labels: widget.dataLabels,
         values: widget.datasets[i],
         colors: widget.colors,
         size: widget.size,
-				showLabels: !widget.showTitleOnBottom,
-      ));
-    }
+        showLabels: !widget.showTitleOnBottom && (i == widget.chartTitles.length - 1),
+        pieChartShowPercentageSliceSizeCutoff: widget.pieChartShowPercentageSliceSizeCutoff,
+        titleTextAlign: widget.titleTextAlign,
+        textSizeRatio: widget.textSizeRatio,
+      );
+    });
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Wrap(
+    final legend = Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 12,
+      runSpacing: 8,
+      children: List<Widget>.generate(widget.dataLabels.length, (j) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: widget.size * 0.07,
+              height: widget.size * 0.07,
+              color: widget.colors[j],
+            ),
+            const SizedBox(width: 4),
+            Text(
+              widget.dataLabels[j],
+              style: TextStyle(
+                fontSize: widget.size * widget.textSizeRatio,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        );
+      }),
+    );
+
+    final header = widget.showTitle && !widget.showTitleOnBottom
+        ? Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              widget.rowTitle,
+              style: TextStyle(
+                fontSize: widget.size * 0.12,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )
+        : const SizedBox.shrink();
+
+    final footer = widget.showTitle && widget.showTitleOnBottom
+        ? Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              widget.rowTitle,
+              style: TextStyle(
+                fontSize: widget.size * 0.12,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )
+        : const SizedBox.shrink();
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        header,
+        Wrap(
           spacing: 20,
           runSpacing: 20,
           alignment: WrapAlignment.center,
           children: pieCharts,
-        );
-      },
+        ),
+        if (widget.showTitleOnBottom) ...[
+          const SizedBox(height: 12),
+          legend,
+          footer,
+        ],
+      ],
     );
   }
 }

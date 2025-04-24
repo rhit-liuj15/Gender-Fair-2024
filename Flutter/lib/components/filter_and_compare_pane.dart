@@ -23,14 +23,14 @@ class FilterAndComparePane extends StatefulWidget {
 class _FilterAndComparePaneState extends State<FilterAndComparePane> {
   final TextEditingController filterTextEditingController =
       TextEditingController();
-
   bool showOnlySelected = false;
 
   List<MapEntry<String, String>> schoolCategories =
       Metadata.instance.getMetadataCategory(2).metadataPairs.entries.toList();
   List<bool> showSchoolCategories = List.generate(
-      Metadata.instance.getMetadataCategory(2).metadataPairs.length,
-      (index) => false);
+    Metadata.instance.getMetadataCategory(2).metadataPairs.length,
+    (index) => false,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -64,41 +64,42 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
                   child: TextField(
-                      controller: filterTextEditingController,
-                      decoration: InputDecoration(
-                        labelText: 'Search Schools',
-                        hintText: 'Type School Name Here',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        prefixIcon: const Icon(Icons.search),
+                    controller: filterTextEditingController,
+                    decoration: InputDecoration(
+                      labelText: 'Search Schools',
+                      hintText: 'Type School Name Here',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      onChanged: (value) {
-                        if (value.isEmpty) {
-                          widget.filterFunctions.remove('School Name');
-                        } else {
-                          widget.filterFunctions['School Name'] =
-                              (List<SchoolScore> scores) {
-                            return scores
-                                .where((school) => school.schoolName
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase()))
-                                .toList();
-                          };
-                        }
-                        widget.updateShownSchools();
-                      }),
+                      prefixIcon: const Icon(Icons.search),
+                    ),
+                    onChanged: (value) {
+                      if (value.isEmpty) {
+                        widget.filterFunctions.remove('School Name');
+                      } else {
+                        widget.filterFunctions['School Name'] =
+                            (List<SchoolScore> scores) {
+                          return scores
+                              .where((school) => school.schoolName
+                                  .toLowerCase()
+                                  .contains(value.toLowerCase()))
+                              .toList();
+                        };
+                      }
+                      widget.updateShownSchools();
+                    },
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
                     color: widget.selectedSchoolsCount >= 2
                         ? const Color(0xFFFF4713)
-                        : const Color.fromARGB(255, 255, 255, 255),
+                        : Colors.white,
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: widget.selectedSchoolsCount >= 2
                         ? const [
@@ -111,7 +112,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                         : [],
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
                   child: StateFilter(
@@ -119,15 +120,15 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                     updateShownSchools: widget.updateShownSchools,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Center(
-                  child: Flexible(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: schoolCategories.length,
-                      itemBuilder: (context, index) {
-                        return Row(
-                          mainAxisSize: MainAxisSize.min,
+                const SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: schoolCategories.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 18.0),
+                        child: Row(
                           children: [
                             Checkbox(
                               value: showSchoolCategories[index],
@@ -135,23 +136,19 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                                 if (value != null) {
                                   setState(() {
                                     showSchoolCategories[index] = value;
-                                    List<String> categoriesToMatch = [];
                                     if (showSchoolCategories.any((v) => v)) {
-                                      for (var i = 0;
-                                          i < showSchoolCategories.length;
-                                          i++) {
-                                        if (showSchoolCategories[i]) {
-                                          categoriesToMatch
-                                              .add(schoolCategories[i].key);
-                                        }
-                                      }
+                                      final selectedKeys = [
+                                        for (int i = 0;
+                                            i < showSchoolCategories.length;
+                                            i++)
+                                          if (showSchoolCategories[i])
+                                            schoolCategories[i].key
+                                      ];
                                       widget.filterFunctions['School Type'] =
-                                          (List<SchoolScore> scores) {
-                                        return scores
-                                            .where((school) => categoriesToMatch
-                                                .contains(school.schoolType))
-                                            .toList();
-                                      };
+                                          (scores) => scores
+                                              .where((s) => selectedKeys
+                                                  .contains(s.schoolType))
+                                              .toList();
                                     } else {
                                       widget.filterFunctions
                                           .remove('School Type');
@@ -161,48 +158,63 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                                 }
                               },
                             ),
-                            Text(schoolCategories[index].value),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                schoolCategories[index].value,
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                           ],
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 10),
                 Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Checkbox(
                         value: showOnlySelected,
-                        onChanged: (bool? newValue) {
+                        onChanged: (newValue) {
                           if (newValue != null) {
-                            showOnlySelected = newValue;
-                            if (newValue) {
-                              widget.filterFunctions['Only Selected'] =
-                                  (List<SchoolScore> scores) {
-                                return scores
-                                    .where((school) => SchoolScore
-                                        .selectedSchools
-                                        .contains(school.uid))
-                                    .toList();
-                              };
-                            } else {
-                              widget.filterFunctions.remove('Only Selected');
-                            }
-                            widget.updateShownSchools();
+                            setState(() {
+                              showOnlySelected = newValue;
+                              if (newValue) {
+                                widget.filterFunctions['Only Selected'] =
+                                    (scores) => scores
+                                        .where((s) => SchoolScore
+                                            .selectedSchools
+                                            .contains(s.uid))
+                                        .toList();
+                              } else {
+                                widget.filterFunctions.remove('Only Selected');
+                              }
+                              widget.updateShownSchools();
+                            });
                           }
                         },
                       ),
-                      const Text("Show Only Selected"),
+                      const Text(
+                        "Show Only Selected",
+                        style: TextStyle(
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 10),
                 Text(
                   "Compare ${widget.selectedSchoolsCount} Selected Schools",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                     color: widget.selectedSchoolsCount >= 2
                         ? Colors.green

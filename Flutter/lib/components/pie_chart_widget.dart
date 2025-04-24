@@ -40,33 +40,19 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   Widget build(BuildContext context) {
     if (widget.labels.length != widget.colors.length) {
       throw Exception(
-          "Pie chart '${widget.title}' observed a length mismatch between the number of labels, values, and colors supplied.\n\fNumber of labels: ${widget.labels.length}\n\fNumber of values: ${widget.values.length}\n\fNumber of colors: ${widget.colors.length}");
+          "Pie chart '${widget.title}' observed a length mismatch between the number of labels, values, and colors supplied.\n"
+          "Number of labels: ${widget.labels.length}\n"
+          "Number of values: ${widget.values.length}\n"
+          "Number of colors: ${widget.colors.length}");
     }
 
     final labels = widget.labels;
     final values = widget.values;
     final colors = widget.colors;
-
-    final num chartSliceCutoff = widget.values.reduce((a, b) => a + b) *
+    final num chartSliceCutoff = values.reduce((a, b) => a + b) *
         widget.pieChartShowPercentageSliceSizeCutoff;
     final bool isAllZero = values.every((v) => v == 0);
     final bool isEmpty = values.isEmpty;
-
-    if (isEmpty || isAllZero) {
-      return SizedBox(
-        width: widget.size,
-        height: widget.size * 1.3,
-        child: Center(
-          child: Text(
-            "N/A",
-            style: TextStyle(
-              fontSize: widget.size * 0.2,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      );
-    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -79,7 +65,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (widget.showTitle) ...[
+                  if (widget.showTitle)
                     SizedBox(
                       width: widget.size,
                       height: widget.size * 0.4,
@@ -88,38 +74,53 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                           widget.title,
                           textAlign: widget.titleTextAlign,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: widget.textSizeRatio * widget.size),
+                            fontWeight: FontWeight.bold,
+                            fontSize: widget.textSizeRatio * widget.size,
+                          ),
                         ),
                       ),
                     ),
-                  ],
-                  SizedBox(
-                    width: widget.size,
-                    height: widget.size * 1.3,
-                    child: PieChart(
-                      PieChartData(
-                        pieTouchData: PieTouchData(
-                          touchCallback: (event, response) {
-                            setState(() {
-                              if (!event.isInterestedForInteractions ||
-                                  response?.touchedSection == null) {
-                                touchedIndex = -1;
-                              } else {
-                                touchedIndex = response!
-                                    .touchedSection!.touchedSectionIndex;
-                              }
-                            });
-                          },
+                  if (isEmpty || isAllZero)
+                    SizedBox(
+                      width: widget.size,
+                      height: widget.size * 1.3,
+                      child: Center(
+                        child: Text(
+                          "N/A",
+                          style: TextStyle(
+                            fontSize: widget.size * 0.2,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        sections: showingSections(
-                            labels, values, colors, chartSliceCutoff),
-                        borderData: FlBorderData(show: false),
-                        sectionsSpace: 0,
-                        centerSpaceRadius: widget.size * 0.15,
+                      ),
+                    )
+                  else
+                    SizedBox(
+                      width: widget.size,
+                      height: widget.size * 1.3,
+                      child: PieChart(
+                        PieChartData(
+                          pieTouchData: PieTouchData(
+                            touchCallback: (event, response) {
+                              setState(() {
+                                if (!event.isInterestedForInteractions ||
+                                    response?.touchedSection == null) {
+                                  touchedIndex = -1;
+                                } else {
+                                  touchedIndex = response!
+                                      .touchedSection!.touchedSectionIndex;
+                                }
+                              });
+                            },
+                          ),
+                          sections: showingSections(
+                              labels, values, colors, chartSliceCutoff),
+                          borderData: FlBorderData(show: false),
+                          sectionsSpace: 0,
+                          centerSpaceRadius: widget.size * 0.15,
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -142,12 +143,13 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                           size: widget.size,
                           colorBoxSizeRatio: 0.07,
                           textSizeRatio: widget.textSizeRatio,
+                          scrollController: null,
                         ),
                       );
                     },
                   ),
                 ),
-              )
+              ),
             ],
           ],
         );
@@ -242,8 +244,8 @@ class _IndicatorState extends State<Indicator> {
     _hoverScrollTimer?.cancel();
     _hoverScrollTimer = null;
     if (_controller.hasClients) {
-    _controller.jumpTo(0.0);
-  }
+      _controller.jumpTo(0.0);
+    }
   }
 
   @override
