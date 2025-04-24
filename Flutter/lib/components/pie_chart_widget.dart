@@ -128,24 +128,38 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               SizedBox(width: widget.size * 0.4),
               SizedBox(
                 width: 170,
-                height: widget.size * 1.3,
-                  child: ListView.builder(
-                    itemCount: labels.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Indicator(
-                          color: colors[index],
-                          text: labels[index],
-                          isSquare: true,
-                          size: widget.size,
-                          colorBoxSizeRatio: 0.07,
-                          textSizeRatio: widget.textSizeRatio,
-                          scrollController: null,
-                        ),
+                height: widget.size * 1.3, // Matches pie chart height exactly
+                child: Center(
+                  // ⬅️ center aligns the whole column
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final labelCount = labels.length;
+                      final labelAreaHeight = constraints.maxHeight;
+                      final labelHeight = (labelAreaHeight / labelCount)
+                          .clamp(0.0, widget.size * 0.2);
+
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(labelCount, (index) {
+                          return SizedBox(
+                            height: labelHeight,
+                            child: Center(
+                              child: Indicator(
+                                color: colors[index],
+                                text: labels[index],
+                                isSquare: true,
+                                size: widget.size,
+                                colorBoxSizeRatio: 0.07,
+                                textSizeRatio: widget.textSizeRatio,
+                                scrollController: null,
+                              ),
+                            ),
+                          );
+                        }),
                       );
                     },
                   ),
+                ),
               ),
             ],
           ],
@@ -231,8 +245,11 @@ class _IndicatorState extends State<Indicator> {
       if (_controller.hasClients) {
         final max = _controller.position.maxScrollExtent;
         final current = _controller.offset;
-        final next = (current + 1).clamp(0, max);
-        _controller.jumpTo((next >= max ? 0 : next).toDouble());
+        if (current >= max) {
+          _hoverScrollTimer?.cancel();
+        } else {
+          _controller.jumpTo((current + 1).clamp(0, max));
+        }
       }
     });
   }
@@ -259,25 +276,100 @@ class _IndicatorState extends State<Indicator> {
         ),
         const SizedBox(width: 6),
         Expanded(
-          child: MouseRegion(
-            onEnter: (_) => _startScroll(),
-            onExit: (_) => _stopScroll(),
-            child: SingleChildScrollView(
-              controller: _controller,
-              scrollDirection: Axis.horizontal,
+          child: _HoverSlideText(
+            text: widget.text,
+            fontSize: widget.size * widget.textSizeRatio,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _HoverSlideText extends StatefulWidget {
+  final String text;
+  final double fontSize;
+  final Duration duration;
+
+  const _HoverSlideText({
+    required this.text,
+    required this.fontSize,
+    this.duration = const Duration(seconds: 4),
+  });
+
+  @override
+  State<_HoverSlideText> createState() => _HoverSlideTextState();
+}
+
+class _HoverSlideTextState extends State<_HoverSlideText>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: widget.duration,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  double _textWidth(String text, TextStyle style) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return painter.width;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      fontSize: widget.fontSize,
+      fontWeight: FontWeight.w500,
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final textWidth = _textWidth(widget.text, textStyle);
+        final containerWidth = constraints.maxWidth;
+        final shouldSlide = textWidth > containerWidth;
+        final slideFraction =
+            shouldSlide ? (textWidth - containerWidth) / textWidth : 0.0;
+
+        final animation = Tween<Offset>(
+          begin: Offset.zero,
+          end: Offset(-slideFraction - 0.55, 0),
+        ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+        return MouseRegion(
+          onEnter: (_) {
+            if (shouldSlide) _controller.forward(from: 0);
+          },
+          onExit: (_) {
+            _controller.reset();
+          },
+          child: ClipRect(
+            child: SlideTransition(
+              position:
+                  shouldSlide ? animation : AlwaysStoppedAnimation(Offset.zero),
               child: Text(
                 widget.text,
-                style: TextStyle(
-                  fontSize: widget.size * widget.textSizeRatio,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: textStyle,
                 softWrap: false,
                 overflow: TextOverflow.visible,
               ),
             ),
           ),
-        ),
-      ],
+        );
+      },
     );
   }
 }

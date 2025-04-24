@@ -152,7 +152,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                         ],
                       ],
                       size: 120,
-                      showTitleOnBottom: true,
+                      //showTitleOnBottom: true,
                       colors: genderColors
                     )),
                     const SizedBox(height: 10),
