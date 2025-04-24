@@ -34,11 +34,12 @@ class _StateFilterState extends State<StateFilter> {
       if (inputString.isEmpty) {
         autocompleteStates = [];
       } else {
-				String inputStringLower = inputString.toLowerCase();
-        autocompleteStates = states.entries.where(
-					(entry) => (entry.key.toLowerCase().contains(inputStringLower) ||
-              entry.value.toLowerCase().contains(inputStringLower))
-        ).toList();
+        String inputStringLower = inputString.toLowerCase();
+        autocompleteStates = states.entries
+            .where((entry) =>
+                (entry.key.toLowerCase().contains(inputStringLower) ||
+                    entry.value.toLowerCase().contains(inputStringLower)))
+            .toList();
       }
     });
   }

@@ -47,7 +47,6 @@ class _SchoolListPaneState extends State<SchoolListPane> {
 
     currentPage = currentPage.clamp(1, totalPages);
 
-
     final startIndex = (currentPage - 1) * widget.schoolsPerPage;
     final endIndex = (startIndex + widget.schoolsPerPage)
         .clamp(0, widget.schoolsFilteredFor.length);

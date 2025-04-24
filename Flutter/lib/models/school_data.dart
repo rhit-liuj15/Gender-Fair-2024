@@ -11,9 +11,9 @@ class SchoolData {
 
   SchoolData.unknownUID(int uid) {
     data = {
-			"UNITID" : uid,
-			"INSTNM" : "Unknown School $uid!",
-		};
+      "UNITID": uid,
+      "INSTNM": "Unknown School $uid!",
+    };
   }
 
   @override
@@ -24,6 +24,7 @@ class SchoolData {
   String getName() {
     return data["INSTNM"];
   }
+
   int getUID() {
     return data["UNITID"];
   }

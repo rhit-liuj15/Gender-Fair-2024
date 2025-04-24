@@ -18,7 +18,11 @@ class BarChartWidget extends StatelessWidget {
     final labels = data.keys.toList();
     final values = data.values.toList();
     // Calculate the maxY value, ensuring it's at least 10
-    final maxY = values.isEmpty ? 10.0 : (values.reduce((a, b) => a > b ? a : b) < 10 ? 10.0 : values.reduce((a, b) => a > b ? a : b));
+    final maxY = values.isEmpty
+        ? 10.0
+        : (values.reduce((a, b) => a > b ? a : b) < 10
+            ? 10.0
+            : values.reduce((a, b) => a > b ? a : b));
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,7 +118,7 @@ class BarChartWidget extends StatelessWidget {
                 border: Border.all(color: Colors.black, width: 1),
               ),
               alignment: BarChartAlignment.center,
-              maxY: maxY, 
+              maxY: maxY,
             ),
           ),
         ),
