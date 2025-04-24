@@ -7,7 +7,7 @@ import 'package:gender_fair_2024/models/school_score.dart';
 class DataLoader {
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
-  Map<String, double> allAverages = <String, double>{};
+  Map<String, String> allAverages = <String, String>{};
   // The reason allSchoolData and allSchoolScores are separate is that allSchoolScores are loaded up front, but allSchoolData is requested as necessary.
   bool initialDataLoadComplete = false;
   static final DataLoader instance = DataLoader._privateConstructor();
@@ -121,13 +121,13 @@ class DataLoader {
   Future<void> requestSchoolData(Set<int> uids) async {
     // This is to be expanded later with an actual request
     Set<int> notPresentData = uids.difference(allSchoolData.keys.toSet());
-    // print("UIDS ${allSchoolData.keys.toSet().intersection(uids)} already exist in data");
+    print("UIDS ${allSchoolData.keys.toSet().intersection(uids)} already exist in data");
     if (notPresentData.isNotEmpty) {
       String fetchUIDs = notPresentData.join(',');
       var dataUrl = Uri.https(
           'genderfair2024.csse.rose-hulman.edu', 'data', {'uids': fetchUIDs});
-      // print("Making a request for UIDs $fetchUIDs");
-      // print(dataUrl);
+      print("Making a request for UIDs $fetchUIDs");
+      print(dataUrl);
       try {
         final https.Response response = await https.get(dataUrl);
         if (response.statusCode == 200) {
@@ -140,7 +140,7 @@ class DataLoader {
               'Failed to load school data. HTTP Status Code: ${response.statusCode}');
         }
       } catch (e) {
-        print('Error occurred: $e');
+        print('Error occurred while loading school data: $e');
       }
     }
   }

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:gender_fair_2024/components/pie_chart_row_widget.dart';
 
 class PieChartWidget extends StatefulWidget {
   final String title;
   final bool showTitle;
   final bool showLabels;
   final List<String> labels;
-  final List<double> values;
+  final List<num> values;
   final List<Color> colors;
   final double size;
   final double pieChartShowPercentageSliceSizeCutoff;
@@ -36,15 +35,17 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   int touchedIndex = -1;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {		
     if (widget.labels.length != widget.colors.length) {
       throw Exception(
-          "Pie chart '${widget.title}' has ${widget.labels.length} data entries and ${widget.colors.length} color entries supplied, which does not match up");
+          "Pie chart '${widget.title}' observed a length mismatch between the number of labels, values, and colors supplied.\n\fNumber of labels: ${widget.labels.length}\n\fNumber of values: ${widget.values.length}\n\fNumber of colors: ${widget.colors.length}");
     }
 
     final labels = widget.labels;
     final values = widget.values;
     final colors = widget.colors;
+		
+		final num chartSliceCutoff = widget.values.reduce((a, b) => a + b) * widget.pieChartShowPercentageSliceSizeCutoff;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -90,7 +91,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
                             });
                           },
                         ),
-                        sections: showingSections(labels, values, colors),
+                        sections: showingSections(labels, values, colors, chartSliceCutoff),
                         borderData: FlBorderData(show: false),
                         sectionsSpace: 0,
                         centerSpaceRadius: widget.size * 0.15,
@@ -130,34 +131,80 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   }
 
   List<PieChartSectionData> showingSections(
-      List<String> labels, List<double> values, List<Color> colors) {
+      List<String> labels, List<num> values, List<Color> colors, num chartSliceCutoff) {
     return List.generate(values.length, (index) {
       final isTouched = index == touchedIndex;
       final fontSize = isTouched ? widget.size * 0.099 : widget.size * 0.09;
       final radius = isTouched ? widget.size * 0.33 : widget.size * 0.3;
       return PieChartSectionData(
         color: colors[index],
-        value: values[index],
+        value: values[index].toDouble(),
         title:
-            "${(values[index] * 100).toStringAsFixed(1)}%", // ✅ Percentage inside chart
+            // "${(values[index] * 100).toStringAsFixed(1)}%", // ✅ Percentage inside chart
+            "${values[index]}", // ✅ Percentage inside chart
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.w600,
-          color: (values[index] >= widget.pieChartShowPercentageSliceSizeCutoff)
+          color: (values[index] >= chartSliceCutoff)
               ? Colors.white
               : Colors.black,
         ),
         showTitle:
-            (values[index] >= widget.pieChartShowPercentageSliceSizeCutoff)
+            (values[index] >= chartSliceCutoff)
                 ? true
                 : (index == touchedIndex),
         titlePositionPercentageOffset:
-            (values[index] >= widget.pieChartShowPercentageSliceSizeCutoff)
+            (values[index] >= chartSliceCutoff)
                 ? 0.5
                 : 1.4,
-        // titlePositionPercentageOffset: (values[index] >= widget.pieChartShowPercentageSliceSizeCutoff) ? 0.5 : 1.4,
       );
     });
+  }
+}
+
+
+
+class Indicator extends StatelessWidget {
+  final Color color;
+  final String text;
+  final double size;
+  final bool isSquare;
+  final double colorBoxSizeRatio;
+  final double textSizeRatio;
+
+  const Indicator({
+    super.key,
+    required this.color,
+    required this.text,
+    this.isSquare = false,
+    required this.size,
+    required this.colorBoxSizeRatio,
+    required this.textSizeRatio,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Container(
+          width: size * colorBoxSizeRatio,
+          height: size * colorBoxSizeRatio,
+          decoration: BoxDecoration(
+            shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
+            color: color,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+                fontSize: size * textSizeRatio, fontWeight: FontWeight.w500),
+            overflow: TextOverflow.visible,
+          ),
+        ),
+      ],
+    );
   }
 }
