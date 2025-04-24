@@ -28,13 +28,13 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 		"Native American/Alaskan Native",
 		"Other"
 	];
-	List<Color> raceColors = const [
-		Colors.cyan,
+	List<Color> raceColors = [
+		Colors.yellow[800]!,
 		Colors.brown,
 		Colors.blue,
 		Colors.green,
 		Colors.red,
-		Colors.yellow,
+		Colors.cyan,
 		Colors.purple,
 	];
 	List<String> academicRankLabels = const [
