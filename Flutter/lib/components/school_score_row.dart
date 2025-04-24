@@ -62,7 +62,12 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
                 context: context,
                 builder: (BuildContext context) {
                   return Dialog(
-                    child: SchoolDetailPage(uid: widget.school.uid),
+										child: ConstrainedBox(
+											constraints: const BoxConstraints(
+												maxWidth: 1600,
+											),
+                    	child: SchoolDetailPage(uid: widget.school.uid),
+										),
                   );
                 },
               );
