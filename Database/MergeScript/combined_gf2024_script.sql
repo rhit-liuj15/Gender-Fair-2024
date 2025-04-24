@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS `merged_ipeds_css_irs`.`gf2024_final`;
+DROP TABLE IF EXISTS `merged_ipeds_css_irs`.`GenderFair2024`;
 
-CREATE TABLE `merged_ipeds_css_irs`.`gf2024_final` AS
+CREATE TABLE `merged_ipeds_css_irs`.`GenderFair2024` AS
 WITH cssYearly AS (
 	SELECT 
 		OPEID,
@@ -64,88 +64,10 @@ WITH cssYearly AS (
 	JOIN `css`.`css_vawa` cssv
 	USING (OPEID)
 	GROUP BY OPEID
-	/*
-	For CSS_ONCAMPUSHATE, different crime columns in each year consist of multiple sub-columns to produce a finer granularity of the population that commit the specfic crime.
-	For example, MURD20 is the sum of:
-		MURD_RAC20 (Murder 2020 by Bias Race), 
-		MURD_REL20 (Murder 2020 by Bias Religion),
-		MURD_SEX20 (Murder 2020 by Bias Sexual Orientation),
-		MURD_GEN20 (Murder 2020 by Bias Gender),
-		MURD_GID20 (Murder 2020 by Bias Gender Identity),
-		MURD_DIS20 (Murder 2020 by Bias Disability),
-		MURD_ET20 (Murder 2020 by Bias Ethnicity),
-		MURD_NAT20 (Murder 2020 by Bias National Origin)
-	The same can be apply to any other crime columns (RAPE20, FOND20, etc..), and are consistent throughout the entire CSS_ONCAMPUSHATE table.
-	Therefore we are only summing up all the main crime columns (MURD20, MURD21, MURD22, etc..) to get the total number of crimes within 2020, 2021, and 2022. We then divide by 3 to get the yearly number.
-
-	For CSS_ONCAMPUSVAWA, no such granularity is provided for any of the three crimes (Domestic Violence, Dating Violence, and Stalking).
-	Therefore we simply sums up all the crime columns to get the total number of crimes within 2020, 2021, and 2022. We then divide by 3 to get the yearly number.
-
-	Metadata (CSS_ONCAMPUSHATE):
-
-	NAME     DESCRIPTION
-	MURD20   Murder 2020
-	RAPE20   Rape 2020
-	FOND20   Fondling 2020
-	INCE20   Incest 2020
-	STAT20   Statutory Rape 2020
-	ROBBE20  Robbery 2020
-	AGG_A20  Aggravated Assault 2020
-	BURGLA20 Burglary 2020
-	VEHIC20  Motor Vehicle Theft 2020
-	ARSON20  Arson 2020
-	SIM_A20  Simple Assault 2020
-	LAR_T20  Simple Assault 2020
-	INTIM20  Intimidation 2020
-	VANDAL20 Destruction/Damage/Vandalism 2020
-	MURD21   Murder 2021
-	RAPE21   Rape 2021
-	FOND21   Fondling 2021
-	INCE21   Incest 2021
-	STAT21   Statutory Rape 2021
-	ROBBE21  Robbery 2021
-	AGG_A21  Aggravated Assault 2021
-	BURGLA21 Burglary 2021
-	VEHIC21  Motor Vehicle Theft 2021
-	ARSON21  Arson 2021
-	SIM_A21  Simple Assault 2021
-	LAR_T21  Simple Assault 2021
-	INTIM21  Intimidation 2021
-	VANDAL21 Destruction/Damage/Vandalism 2021 
-	MURD22   Murder 2022
-	RAPE22   Rape 2022
-	FOND22   Fondling 2022
-	INCE22   Incest 2022
-	STAT22   Statutory Rape 2022
-	ROBBE22  Robbery 2022
-	AGG_A22  Aggravated Assault 2022
-	BURGLA22 Burglary 2022
-	VEHIC22  Motor Vehicle Theft 2022
-	ARSON22  Arson 2022
-	SIM_A22  Simple Assault 2022
-	LAR_T22  Simple Assault 2022
-	INTIM22  Intimidation 2022
-	VANDAL22 Destruction/Damage/Vandalism 2022
-
-	Metadata (CSS_ONCAMPUSVAWA):
-
-	NAME     DESCRIPTION
-	DOMEST20 Domestic Violence 2020
-	DATING20 Dating Violence 2020
-	STALK20  Stalking 2020
-	DOMEST21 Domestic Violence 2021
-	DATING21 Dating Violence 2021
-	STALK21  Stalking 2021
-	DOMEST22 Domestic Violence 2022
-	DATING22 Dating Violence 2022
-	STALK22  Stalking 2022
-	*/
-
 ),
 ipedsS2022ISByAcademicRank AS (
 	SELECT
 		UNITID,
-		
 		SUM(CASE WHEN SISCAT = 101 THEN HRTOTLM ELSE 0 END) AS PROFMEN,
 		SUM(CASE WHEN SISCAT = 101 THEN HRTOTLW ELSE 0 END) AS PROFWOMEN,
 		SUM(CASE WHEN SISCAT = 101 THEN HRWHITT ELSE 0 END) AS PROFWHIT,
@@ -157,7 +79,6 @@ ipedsS2022ISByAcademicRank AS (
 		SUM(CASE WHEN SISCAT = 101 THEN HRNRALT ELSE 0 END) AS PROFNRES,
 		SUM(CASE WHEN SISCAT = 101 THEN HR2MORT ELSE 0 END) AS PROFTWOP,
 		SUM(CASE WHEN SISCAT = 101 THEN HRUNKNT ELSE 0 END) AS PROFUNKN,
-		
 		SUM(CASE WHEN SISCAT = 102 THEN HRTOTLM ELSE 0 END) AS ASSOCIATEPROFMEN,
 		SUM(CASE WHEN SISCAT = 102 THEN HRTOTLW ELSE 0 END) AS ASSOCIATEPROFWOMEN,
 		SUM(CASE WHEN SISCAT = 102 THEN HRWHITT ELSE 0 END) AS ASSOCIATEPROFWHIT,
@@ -169,7 +90,6 @@ ipedsS2022ISByAcademicRank AS (
 		SUM(CASE WHEN SISCAT = 102 THEN HRNRALT ELSE 0 END) AS ASSOCIATEPROFNRES,
 		SUM(CASE WHEN SISCAT = 102 THEN HR2MORT ELSE 0 END) AS ASSOCIATEPROFTWOP,
 		SUM(CASE WHEN SISCAT = 102 THEN HRUNKNT ELSE 0 END) AS ASSOCIATEPROFUNKN,
-		
 		SUM(CASE WHEN SISCAT = 103 THEN HRTOTLM ELSE 0 END) AS ASSISTANTPROFMEN,
 		SUM(CASE WHEN SISCAT = 103 THEN HRTOTLW ELSE 0 END) AS ASSISTANTPROFWOMEN,
 		SUM(CASE WHEN SISCAT = 103 THEN HRWHITT ELSE 0 END) AS ASSISTANTPROFWHIT,
@@ -181,7 +101,6 @@ ipedsS2022ISByAcademicRank AS (
 		SUM(CASE WHEN SISCAT = 103 THEN HRNRALT ELSE 0 END) AS ASSISTANTPROFNRES,
 		SUM(CASE WHEN SISCAT = 103 THEN HR2MORT ELSE 0 END) AS ASSISTANTPROFTWOP,
 		SUM(CASE WHEN SISCAT = 103 THEN HRUNKNT ELSE 0 END) AS ASSISTANTPROFUNKN,
-		
 		SUM(CASE WHEN SISCAT = 104 THEN HRTOTLM ELSE 0 END) AS INSTRUCTORMEN,
 		SUM(CASE WHEN SISCAT = 104 THEN HRTOTLW ELSE 0 END) AS INSTRUCTORWOMEN,
 		SUM(CASE WHEN SISCAT = 104 THEN HRWHITT ELSE 0 END) AS INSTRUCTORWHIT,
@@ -193,7 +112,6 @@ ipedsS2022ISByAcademicRank AS (
 		SUM(CASE WHEN SISCAT = 104 THEN HRNRALT ELSE 0 END) AS INSTRUCTORNRES,
 		SUM(CASE WHEN SISCAT = 104 THEN HR2MORT ELSE 0 END) AS INSTRUCTORTWOP,
 		SUM(CASE WHEN SISCAT = 104 THEN HRUNKNT ELSE 0 END) AS INSTRUCTORUNKN,
-		
 		SUM(CASE WHEN SISCAT = 105 THEN HRTOTLM ELSE 0 END) AS LECTURERMEN,
 		SUM(CASE WHEN SISCAT = 105 THEN HRTOTLW ELSE 0 END) AS LECTURERWOMEN,
 		SUM(CASE WHEN SISCAT = 105 THEN HRWHITT ELSE 0 END) AS LECTURERWHIT,
@@ -205,7 +123,6 @@ ipedsS2022ISByAcademicRank AS (
 		SUM(CASE WHEN SISCAT = 105 THEN HRNRALT ELSE 0 END) AS LECTURERNRES,
 		SUM(CASE WHEN SISCAT = 105 THEN HR2MORT ELSE 0 END) AS LECTURERTWOP,
 		SUM(CASE WHEN SISCAT = 105 THEN HRUNKNT ELSE 0 END) AS LECTURERUNKN,
-		
 		SUM(CASE WHEN SISCAT = 106 THEN HRTOTLM ELSE 0 END) AS NORANKMEN,
 		SUM(CASE WHEN SISCAT = 106 THEN HRTOTLW ELSE 0 END) AS NORANKWOMEN,
 		SUM(CASE WHEN SISCAT = 106 THEN HRWHITT ELSE 0 END) AS NORANKWHIT,
@@ -217,58 +134,9 @@ ipedsS2022ISByAcademicRank AS (
 		SUM(CASE WHEN SISCAT = 106 THEN HRNRALT ELSE 0 END) AS NORANKNRES,
 		SUM(CASE WHEN SISCAT = 106 THEN HR2MORT ELSE 0 END) AS NORANKTWOP,
 		SUM(CASE WHEN SISCAT = 106 THEN HRUNKNT ELSE 0 END) AS NORANKUNKN
-	
 	FROM `ipeds_2024_db`.`S2022_IS`
 	WHERE `SISCAT` IN (101, 102, 103, 104, 105, 106)
 	GROUP BY `UNITID`
-	/*
-	Though SISCAT is a concatenation of FACSTAT and ARANK (by the formula FACSTAT*10+ARANK), not every pairing of FACSTAT and ARANK is valid.
-	Notably exceptions:
-		SISCAT 1 is the entry for all full-time staff, and does not correspond to a FACSTAT category (The FACSTAT and ARANK values in that row are both 0). It is the sum of FACSTAT 100 and 500.
-		FACSTAT 50 only matchers up with ARANK 0.
-	To get the total number of academic staff in each category, use SISCAT 101,102...106
-
-	Metadata:
-
-	TYPE	VAL	DESCRIPTION
-	FACSTAT	10	With faculty status, total
-	FACSTAT	20	With faculty status, tenured
-	FACSTAT	30	With faculty status, on tenure track
-	FACSTAT	40	With faculty status not on tenure track/No tenure system, total
-	FACSTAT	41	With faculty status not on tenure track/No tenure system, multi-year and indefinite contract
-	FACSTAT	42	With faculty status not on tenure track/No tenure system, annual contract
-	FACSTAT	43	With faculty status not on tenure track/No tenure system, less-than-annual contract
-	FACSTAT	44	With faculty status not on tenure track/No tenure system, multi-year contract
-	FACSTAT	45	With faculty status not on tenure track/No tenure system, indefinite contract
-	FACSTAT	50	Without faculty status
-	ARANK	0	All ranks
-	ARANK	1	Professors
-	ARANK	2	Associate professors
-	ARANK	3	Assistant professors
-	ARANK	4	Instructors
-	ARANK	5	Lecturers
-	ARANK	6	No academic rank
-	SISCAT	100	Full-time instructional with faculty status
-	SISCAT	101	Full-time instructional professors
-	SISCAT	102	Full-time instructional associate professors
-	SISCAT	103	Full-time instructional assistant professors
-	SISCAT	104	Full-time instructional instructors
-	SISCAT	105	Full-time instructional lecturers
-	SISCAT	106	Full-time instructional no academic rank
-
-	NAME	DESCRIPTION
-	HRTOTLM	Grand total men
-	HRTOTLW	Grand total women
-	HRWHITT	White total
-	HRBKAAT	Black or African American total
-	HRASIAT	Asian total
-	HRHISPT	Hispanic or Latino total
-	HRNHPIT	Native Hawaiian or Other Pacific Islander total
-	HRAIANT	American Indian or Alaska Native total
-	HRNRALT	U.S. Nonresident total
-	HR2MORT	Two or more races total
-	HRUNKNT	Race/ethnicity unknown total
-	*/
 ),
 ipedsS2022OCByOccupation AS (
 	SELECT 
@@ -287,39 +155,6 @@ ipedsS2022OCByOccupation AS (
 	FROM `ipeds_2024_db`.`S2022_OC`
 	WHERE `OCCUPCAT` IN (230, 250, 300, 310, 320, 330, 340, 350, 360, 370, 380, 390)
 	GROUP BY UNITID
-	/*
-	Note that for OCCUPCAT 260..270, the numbers are included within OCCUPCAT 250, therefore no need to use them.
-	To get the total number of non-academic staff with respective race, use OCCUPCAT 230, 250, 300, 310, 320 .. 390. This effectively exclude all academic-related occupations.
-
-	Metadata:
-
-	TYPE     VAL  DESCRIPTION
-	OCCUPCAT 230  Public service
-	OCCUPCAT 250  Librarians/Library Technicians/Archivists and Curators, and Museum technicians/Student and Academic Affairs and Other Education Services
-	OCCUPCAT 300  Management
-	OCCUPCAT 310  Business and Financial Operations
-	OCCUPCAT 320  Computer, Engineering, and Science
-	OCCUPCAT 330  Community, Social Service, Legal, Arts,Design, Entertainment, Sports and Media
-	OCCUPCAT 340  Healthcare Practioners and Technical
-	OCCUPCAT 350  Service Occupations
-	OCCUPCAT 360  Sales and Related Occupations
-	OCCUPCAT 370  Office and Administrative Support
-	OCCUPCAT 380  Natural Resources, Construction, and Maintenance
-	OCCUPCAT 390  Production, Transportation, and Material Moving
-
-	NAME	DESCRIPTION
-	HRTOTLM	Grand total men
-	HRTOTLW	Grand total women
-	HRWHITT	White total
-	HRBKAAT	Black or African American total
-	HRASIAT	Asian total
-	HRHISPT	Hispanic or Latino total
-	HRNHPIT	Native Hawaiian or Other Pacific Islander total
-	HRAIANT	American Indian or Alaska Native total
-	HRNRALT	U.S. Nonresident total
-	HR2MORT	Two or more races total
-	HRUNKNT	Race/ethnicity unknown total
-	*/
 ),
 ipedsSAL2022ISBYAcademicRank AS (
 	SELECT 
@@ -330,20 +165,6 @@ ipedsSAL2022ISBYAcademicRank AS (
 		SAOUTLW AS SALARYTOTACDF
 	FROM `ipeds_2024_db`.`SAL2022_IS`
 	WHERE `ARANK` = 7
-	/*
-	To get the total salary outlay for both instructional staff man and women, use ARANK 7 to filter all instructional staff total.
-
-	Metadata:
-
-	TYPE  VAL  DESCRIPTION
-	ARANK 7    All instructional staff total
-	ARANK 1    Professor
-	ARANK 2    Associate Professor
-	ARANK 3    Assistant Professor
-	ARANK 4    Instructor
-	ARANK 5    Lecturer
-	ARANK 6    No academic rank
-	*/
 ),
 ipedsIC2022AssociateAndAbove AS (
 	SELECT *
@@ -359,25 +180,6 @@ ipedsIC2022AssociateAndAbove AS (
 			LEVEL18 = 1 OR
 			LEVEL19 = 1
 	) AND `CNTLAFFI` IN (1, 3, 4)
-	/*
-	To filter the schools we want to include, we choose to filter based on the following metadata. See Database Documentation for more detail.
-
-	Metadata:
-
-	TYPE     VAL  DESCRIPTION
-	LEVEL3   1    Associate's degree (Yes)
-	LEVEL4   1    Certificate of at least 2 years, but less than 4 years (Yes)
-	LEVEL5   1    Bachelor's degree (Yes)
-	LEVEL6   1    Postbaccalaureate certificate (Yes)
-	LEVEL7   1    Master's degree (Yes)
-	LEVEL8   1    Post-master's certificate (Yes)
-	LEVEL17  1    Doctor's degree - research/scholarship (Yes)
-	LEVEL18  1    Doctor's degree - professional practice (Yes)
-	LEVEL19  1    Doctor's degree - other (Yes)
-    CNTLAFFI 1    Public
-	CNTLAFFI 3    Private not-for-profit (no religious affiliation)
-	CNTLAFFI 4    Private not-for-profit (religious affiliation)
-	*/
 ),
 ipedsEF2022ByLevelOfStudent AS (
 	SELECT 
@@ -385,18 +187,6 @@ ipedsEF2022ByLevelOfStudent AS (
 		EFTOTAL AS ENROLLTOT
 	FROM `ipeds_2024_db`.`EF2022`
 	WHERE `EFLEVEL` IN (10)
-	/*
-	To get the total number of enrollment, use EFLEVEL 10 to select all students total
-
-	Metadata:
-
-	TYPE    VAL  DESCRIPTION
-	EFLEVEL 10   All Students Total
-
-	NAME    DESCRIPTION
-	EFTOTAL Grand total
-	EFLEVEL Level of Students
-	*/
 ),
 irs990ByLatestDate AS (
 SELECT *
@@ -409,12 +199,6 @@ FROM (
 	FROM `irs990`.`Organizations`
 ) AS ranked
 WHERE rn = 1)
-/*
-To remove duplicate records from the IRS990 database, we choose to filter by the latest date where an Institute has a record. 
-See Database Documentation for more detail.
-*/
-
--- Selecting columns --
 SELECT
 	C2022B.UNITID AS UNITID,
 	HD2022.INSTNM AS INSTNM,
@@ -429,7 +213,6 @@ SELECT
 	SAL2022ISRANK.ACDPOPF AS ACDPOPF,
 	SAL2022ISRANK.SALARYTOTACDM AS SALARYTOTACDM,
 	SAL2022ISRANK.SALARYTOTACDF AS SALARYTOTACDF,
-
 	S2022ISRank.PROFMEN AS PROFMEN,
 	S2022ISRank.PROFWOMEN AS PROFWOMEN,
 	S2022ISRank.PROFWHIT AS PROFWHIT,
@@ -441,7 +224,6 @@ SELECT
 	S2022ISRank.PROFNRES AS PROFNRES,
 	S2022ISRank.PROFTWOP AS PROFTWOP,
 	S2022ISRank.PROFUNKN AS PROFUNKN,
-
 	S2022ISRank.ASSOCIATEPROFMEN AS ASSOCIATEPROFMEN,
 	S2022ISRank.ASSOCIATEPROFWOMEN AS ASSOCIATEPROFWOMEN,
 	S2022ISRank.ASSOCIATEPROFWHIT AS ASSOCIATEPROFWHIT,
@@ -453,7 +235,6 @@ SELECT
 	S2022ISRank.ASSOCIATEPROFNRES AS ASSOCIATEPROFNRES,
 	S2022ISRank.ASSOCIATEPROFTWOP AS ASSOCIATEPROFTWOP,
 	S2022ISRank.ASSOCIATEPROFUNKN AS ASSOCIATEPROFUNKN,
-
 	S2022ISRank.ASSISTANTPROFMEN AS ASSISTANTPROFMEN,
 	S2022ISRank.ASSISTANTPROFWOMEN AS ASSISTANTPROFWOMEN,
 	S2022ISRank.ASSISTANTPROFWHIT AS ASSISTANTPROFWHIT,
@@ -465,7 +246,6 @@ SELECT
 	S2022ISRank.ASSISTANTPROFNRES AS ASSISTANTPROFNRES,
 	S2022ISRank.ASSISTANTPROFTWOP AS ASSISTANTPROFTWOP,
 	S2022ISRank.ASSISTANTPROFUNKN AS ASSISTANTPROFUNKN,
-
 	S2022ISRank.INSTRUCTORMEN AS INSTRUCTORMEN,
 	S2022ISRank.INSTRUCTORWOMEN AS INSTRUCTORWOMEN,
 	S2022ISRank.INSTRUCTORWHIT AS INSTRUCTORWHIT,
@@ -477,7 +257,6 @@ SELECT
 	S2022ISRank.INSTRUCTORNRES AS INSTRUCTORNRES,
 	S2022ISRank.INSTRUCTORTWOP AS INSTRUCTORTWOP,
 	S2022ISRank.INSTRUCTORUNKN AS INSTRUCTORUNKN,
-
 	S2022ISRank.LECTURERMEN AS LECTURERMEN,
 	S2022ISRank.LECTURERWOMEN AS LECTURERWOMEN,
 	S2022ISRank.LECTURERWHIT AS LECTURERWHIT,
@@ -489,7 +268,6 @@ SELECT
 	S2022ISRank.LECTURERNRES AS LECTURERNRES,
 	S2022ISRank.LECTURERTWOP AS LECTURERTWOP,
 	S2022ISRank.LECTURERUNKN AS LECTURERUNKN,
-
 	S2022ISRank.NORANKMEN AS NORANKMEN,
 	S2022ISRank.NORANKWOMEN AS NORANKWOMEN,
 	S2022ISRank.NORANKWHIT AS NORANKWHIT,
@@ -501,7 +279,6 @@ SELECT
 	S2022ISRank.NORANKNRES AS NORANKNRES,
 	S2022ISRank.NORANKTWOP AS NORANKTWOP,
 	S2022ISRank.NORANKUNKN AS NORANKUNKN,
-
 	S2022OCOCCUPATION.NONACDMEN AS NONACDMEN,
 	S2022OCOCCUPATION.NONACDWOMEN AS NONACDWOMEN,
 	S2022OCOCCUPATION.NONACDWHIT AS NONACDWHIT,
@@ -513,7 +290,6 @@ SELECT
 	S2022OCOCCUPATION.NONACDNRES AS NONACDNRES,
 	S2022OCOCCUPATION.NONACDTWOP AS NONACDTWOP,
 	S2022OCOCCUPATION.NONACDUNKN AS NONACDUNKN,
-
 	css.YEARLYHATECRIME AS YEARLYHATECRIME,
 	css.YEARLYHATECRIME * 1000 / NULLIF(css.SchoolPopulation, 0) AS YEARLYHATECRIME1K,
 	css.YEARLYVAWA AS YEARLYVAWA,
@@ -537,9 +313,5 @@ LEFT JOIN `irs990ByLatestDate` irs ON HD2022.EIN = irs.EIN
 WHERE C2022B.CSTOTLT >= 50 AND EF2022F.ENROLLTOT >= 200
 ORDER BY C2022B.`UNITID` ASC;
 
-ALTER TABLE `merged_ipeds_css_irs`.`gf2024_final`
+ALTER TABLE `merged_ipeds_css_irs`.`GenderFair2024`
 ADD PRIMARY KEY (`UNITID`);
-/*
-To get the final table of GenderFair2024, select the columns from the CTE's created/original table from IPEDS database.
-UNITID is assigned to be the Primary Key for the gf2024_final table.
-*/
