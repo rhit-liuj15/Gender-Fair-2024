@@ -5,14 +5,23 @@ EIN,ein
 OPEID,opeid
 DEGREETOT,total number of people who receive a degree
 ENROLLTOT,total number of enrollment in fall 2023
+INSTFUNDINGTYPE,institution funding type
+HASDAYCARE,if school offer daycare
 ACDPOPM,number of instructional staff men
 ACDPOPF,number of instructional staff women
-NONACDPOPM,number of non-instructional staff men
-NONACDPOPF,number of non-instructional staff women
 SALARYTOTACDM,total salary outlay instructional men
 SALARYTOTACDF,total salary outlay instructional women
-SALARYTOTNONACDM,total salary outlay non-instructional men
-SALARYTOTNONACDF,total salary outlay non-instructional women
+ACDTOTMEN,total number of academic staff men
+ACDTOTWOMEN,total number of academic staff women
+ACDTOTWHIT,total number of academic staff white
+ACDTOTBLAK,total number of academic staff black
+ACDTOTASIA,total number of academic staff Asian
+ACDTOTHISP,total number of academic staff hispanic
+ACDTOTNHPI,total number of academic staff Native Hawaiian/Pacific Islander
+ACDTOTNAMC,total number of academic staff Native American/Alaskan Native
+ACDTOTNRES,total number of academic staff non-US resident
+ACDTOTTWOP,total number of academic staff two or more races
+ACDTOTUNKN,total number of academic staff unknown race
 PROFMEN,number of full professor men
 PROFWOMEN,number of full professor women
 PROFWHIT,number of full professor white
@@ -94,4 +103,3 @@ YEARLYHATECRIME,average number of hate crime per year (from 2020-2022)
 YEARLYHATECRIME1K,number of hate crimes for 1K student population per year
 YEARLYVAWA,average number of vawa crimes per year (from 2020-2022)
 YEARLYVAWA1K,number of vawa crimes for 1K student population per year
-HASDAYCARE,if school offer daycare
