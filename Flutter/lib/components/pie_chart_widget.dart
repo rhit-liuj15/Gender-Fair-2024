@@ -128,9 +128,8 @@ class _PieChartWidgetState extends State<PieChartWidget> {
               SizedBox(width: widget.size * 0.4),
               SizedBox(
                 width: 170,
-                height: widget.size * 1.3, // Matches pie chart height exactly
+                height: widget.size * 1.4,
                 child: Center(
-                  // ⬅️ center aligns the whole column
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       final labelCount = labels.length;

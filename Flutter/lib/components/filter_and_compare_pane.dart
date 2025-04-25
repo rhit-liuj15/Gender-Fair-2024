@@ -127,9 +127,10 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                     itemCount: schoolCategories.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 18.0),
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Row(
                           children: [
+                            const SizedBox(width: 15),
                             Checkbox(
                               value: showSchoolCategories[index],
                               onChanged: (value) {
@@ -158,7 +159,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                                 }
                               },
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 15),
                             Expanded(
                               child: Text(
                                 schoolCategories[index].value,
@@ -203,7 +204,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                       const Text(
                         "Show Only Selected",
                         style: TextStyle(
-                          fontSize: 28.0,
+                          fontSize: 20.0,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -214,7 +215,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                 Text(
                   "Compare ${widget.selectedSchoolsCount} Selected Schools",
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: widget.selectedSchoolsCount >= 2
                         ? Colors.green
