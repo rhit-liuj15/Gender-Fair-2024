@@ -24,12 +24,8 @@ const port = 443
 /**
  * @api {get} Hello
  * @apiDescription Responds to the '/hello' suffix with the webserver's and the system's uptime.
- * @apiName Hello
- * @apiGroup API
- *
  */
-
-app.get('/hello', (req, res) => {
+app.get('/hello', (res) => {
   res.json([
     "Hello! The database is live.",
     "The server has been up for " + process.uptime() + " seconds",
@@ -37,7 +33,11 @@ app.get('/hello', (req, res) => {
   ])
 })
 
-app.get('/score', (req, res) => {
+/**
+ * @api {get} Score
+ * @apiDescription Retrieve each subcategory's score and overall score for each institution
+ */
+app.get('/score', (res) => {
   connection.query('CALL GetSchoolScores', (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'CALL GetSchoolScore failed' })
@@ -47,7 +47,11 @@ app.get('/score', (req, res) => {
   })
 })
 
-app.get('/averages', (req, res) => {
+/**
+ * @api {get} Averages
+ * @apiDescription Retrieve average male and female executive pay for each institution
+ */
+app.get('/averages', (res) => {
   connection.query('CALL GetAverages', (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'CALL GetAverages failed' })
@@ -57,7 +61,12 @@ app.get('/averages', (req, res) => {
   })
 })
 
-app.get('/metadata', (req, res) => {
+/**
+ * @api {get} Metadata
+ * @apiDescription Retrieve state (location), institution ownership,
+ * and financial structure metadata for each institution
+ */
+app.get('/metadata', (res) => {
   connection.query('CALL GetMetadata', (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'CALL GetMetadata failed' })
@@ -67,6 +76,10 @@ app.get('/metadata', (req, res) => {
   })
 })
 
+/**
+ * @api {get} Data
+ * @apiDescription Retrieve data of an institution by its UID
+ */
 app.get('/data', (req, res) => {
   if (req.query.uids.match('^[0-9, ]*$')) {
     connection.query('CALL GetSchoolData(?)', [req.query.uids], (err, rows) => {
