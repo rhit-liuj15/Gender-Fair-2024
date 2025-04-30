@@ -19,7 +19,8 @@ class _SchoolListPageState extends State<SchoolListPage> {
   final int schoolsPerPage = 20;
   int selectedSchoolsCount = SchoolScore.selectedSchools.length;
 
-	final Map<String, List<SchoolScore> Function(List<SchoolScore>)> filterFunctions = {};
+  final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
+      filterFunctions = {};
 
   List<SchoolScore> scoreList = <SchoolScore>[];
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
@@ -55,10 +56,11 @@ class _SchoolListPageState extends State<SchoolListPage> {
 
   void updateShownSchools() {
     setState(() {
-			schoolsFilteredFor = scoreList;
-			for (List<SchoolScore> Function(List<SchoolScore>) func in filterFunctions.values) {
-				schoolsFilteredFor = func(schoolsFilteredFor);
-			}
+      schoolsFilteredFor = scoreList;
+      for (List<SchoolScore> Function(List<SchoolScore>) func
+          in filterFunctions.values) {
+        schoolsFilteredFor = func(schoolsFilteredFor);
+      }
       // schoolsFilteredFor = showOnlySelectedSchools
       //     ? scoreList
       //         .where(
@@ -175,8 +177,8 @@ class _SchoolListPageState extends State<SchoolListPage> {
                       child: FilterAndComparePane(
                         selectedSchoolsCount:
                             SchoolScore.selectedSchools.length,
-												filterFunctions: filterFunctions,
-												updateShownSchools: updateShownSchools,
+                        filterFunctions: filterFunctions,
+                        updateShownSchools: updateShownSchools,
                       ),
                     ),
 

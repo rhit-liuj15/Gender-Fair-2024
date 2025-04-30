@@ -2,26 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class BarChartWidget extends StatelessWidget {
-  final Map<String, double> data;
-  final List<String> labels;
+  final Map<String, num> data;
   final List<Color> colors;
-  final String unit;
   final String yAxisDescription;
 
   const BarChartWidget({
     super.key,
     required this.data,
-    required this.labels,
     required this.colors,
     required this.yAxisDescription,
-    this.unit = "",
   });
 
   @override
   Widget build(BuildContext context) {
-    final values = data.values.toList();
+    final List<String> labels = data.keys.toList();
+    final List<num> values = data.values.toList();
     // Calculate the maxY value, ensuring it's at least 10
-    final maxY = values.isEmpty ? 10.0 : (values.reduce((a, b) => a > b ? a : b) < 10 ? 10.0 : values.reduce((a, b) => a > b ? a : b));
+    final double maxY = values.isEmpty
+        ? 10.0
+        : (values.reduce((a, b) => a > b ? a : b) < 10
+            ? 10.0
+            : values.reduce((a, b) => a > b ? a : b)).toDouble();
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,7 +45,7 @@ class BarChartWidget extends StatelessWidget {
                   barsSpace: 8,
                   barRods: [
                     BarChartRodData(
-                      toY: values[index],
+                      toY: values[index].toDouble(),
                       color: colors[index % colors.length],
                       width: 20,
                       borderRadius: BorderRadius.circular(4),
@@ -117,7 +118,7 @@ class BarChartWidget extends StatelessWidget {
                 border: Border.all(color: Colors.black, width: 1),
               ),
               alignment: BarChartAlignment.center,
-              maxY: maxY, 
+              maxY: maxY,
             ),
           ),
         ),
