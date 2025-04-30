@@ -46,5 +46,8 @@ Flutter/android/app/release
 Scoring/*.csv
 Scoring/*.txt
 
+# Ignore the credentials json file
+API/.procedure_runner_config.json
+
 # Ignore cache
 *.cache
