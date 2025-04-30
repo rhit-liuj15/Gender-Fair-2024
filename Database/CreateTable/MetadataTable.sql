@@ -38,7 +38,7 @@ SELECT 1, Codevalue, LEFT(valueLabel, 100) FROM ipeds_2024_db.valuesets22
     
 INSERT INTO `PublicFacingData`.`Metadata` (`GROUP`, `ABBR`, `DESC`) 
 SELECT 2, Codevalue, LEFT(valueLabel, 100) FROM ipeds_2024_db.valuesets22
-	where varName = "CNTLAFFI"
+	where varName = "CNTLAFFI" and CodeValue in ("1","3","4")
 	order by Codevalue;
 
 
