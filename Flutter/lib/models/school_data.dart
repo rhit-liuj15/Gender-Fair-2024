@@ -1,68 +1,89 @@
 class SchoolData {
-  int uid = 0;
-  String schoolName = '';
-  Set<SchoolDataCategory> categories = {};
-
-  SchoolData({
-    required this.uid,
-    required this.schoolName,
-    required this.categories,
-  });
+  late Map<String, dynamic> _data;
+	int uid = -4826;
+	late String name;
+	bool get isInvalid {
+		return _data.isEmpty;
+	}
 
   SchoolData.fromJSON(dynamic json) {
-    uid = json["UNITID"];
-    schoolName = json["INSTNM"];
-    categories = {
-      SchoolDataCategory(categoryName: "Basic Information", data: {
-        "2023 Graduation Headcount": json["DEGREETOT"],
-        "Fall 2023 Enrollment": json["ENROLLTOT"],
-      }),
-      SchoolDataCategory(categoryName: "Financials", data: {
-        "Average Salary For Men": json["SALARYPPM"],
-        "Average Salary For Women": json["SALARYPPF"],
-      }),
-      SchoolDataCategory(categoryName: "Academic Staff Composition", data: {
-        "Women Professors": json["PROFWOMENPCT"],
-        "Women Associate Professors": json["ASSOCPROFWOMENPCT"],
-        "Tenured Women Academic Staff": json["TENUREWOMENPCT"],
-      }),
-      SchoolDataCategory(categoryName: "Non-Academic Staff Composition", data: {
-        "Black": json["NONACD_BLKPCT"],
-        "Hispanic": json["NONACD_HSPPCT"],
-        "Asian": json["NONACD_ASIAPCT"],
-      }),
-      SchoolDataCategory(categoryName: "Safety", data: {
-        "Hate Crimes Per Year 2020-2022": json["YEARLYHATECRIME"],
-        "Hate Crimes Per Year 2020-2022 Per 1K Students": json["YEARLYHATECRIME1K"],
-        "VAWA Per Year 2020-2022": json["YEARLYVAWA"],
-        "VAWA Per Year 2020-2022 Per 1K Students": json["YEARLYVAWA1K"],
-      }),
-    };
+    _data = json;
+		uid = getUID();
+		name = getName();
   }
 
   SchoolData.unknownUID(int uid) {
-    uid = uid;
-    schoolName = "Unknown School $uid!";
-    categories = {};
+		uid = uid;
+		name = "Unknown School $uid!";
+    _data = {};
   }
 
   @override
   String toString() {
-    return "\n$schoolName\nUID $uid\n$categories";
+    return "\n${getName()}}\nUID ${getUID()}\nData: $_data";
   }
-}
 
-class SchoolDataCategory {
-  final String categoryName;
-  Map<String, dynamic> data;
+  String getName() {
+    return _data["INSTNM"];
+  }
 
-  SchoolDataCategory({
-    required this.categoryName,
-    required this.data,
-  });
+  int getUID() {
+    return _data["UNITID"];
+  }
 
-  @override
-  String toString() {
-    return "$categoryName: $data\n";
+  int getInt(String name, {bool convert = true}) {
+		if (_data.containsKey(name)) {
+			if (_data[name] == null) {
+				throw Exception("The SchoolData for UID ${_data["UNITID"]} has attribute \"$name\", but the value is null (expected: int)");
+			} else if ((_data[name] is! int) & !convert) {
+				throw Exception("The SchoolData for UID ${_data["UNITID"]} has attribute \"$name\", but the type is ${_data[name].runtimeType} (expected: int)\nActual data: ${_data[name]}");
+			} else if (_data[name] is int) {
+				return _data[name];
+			} else {
+				int? parseResult = int.tryParse(_data[name]);
+				if (parseResult == null) {
+					throw Exception("Parsing \"${_data[name]}\" as int failed.");
+				} else {
+					return parseResult;
+				}
+			}
+		} else {
+			throw Exception("The SchoolData for UID ${_data["UNITID"]} does not have attribute \"$name\"");
+		}
+  }
+
+  num getNum(String name, {bool convert = true}) {
+		if (_data.containsKey(name)) {
+			if (_data[name] == null) {
+				throw Exception("The SchoolData for UID ${_data["UNITID"]} has attribute \"$name\", but the value is null (expected: num)");
+			} else if ((_data[name] is! num) & !convert) {
+				throw Exception("The SchoolData for UID ${_data["UNITID"]} has attribute \"$name\", but the type is ${_data[name].runtimeType} (expected: num)\nActual data: ${_data[name]}");
+			} else if (_data[name] is num) {
+				return _data[name];
+			} else {
+				num? parseResult = num.tryParse(_data[name]);
+				if (parseResult == null) {
+					throw Exception("Parsing \"${_data[name]}\" as num failed.");
+				} else {
+					return parseResult;
+				}
+			}
+		} else {
+			throw Exception("The SchoolData for UID ${_data["UNITID"]} does not have attribute \"$name\"");
+		}
+  }
+
+  String getString(String name, {bool convert = true}) {
+		if (_data.containsKey(name)) {
+			if (_data[name] == null) {
+				throw Exception("The SchoolData for UID ${_data["UNITID"]} has attribute \"$name\", but the value is null (expected: String)");
+			}
+			if ((_data[name] is! String) & !convert) {
+				throw Exception("The SchoolData for UID ${_data["UNITID"]} has attribute \"$name\", but the type is ${_data[name].runtimeType} (expected: String)");
+			}
+			return _data[name].toString();
+		} else {
+			throw Exception("The SchoolData for UID ${_data["UNITID"]} does not have attribute \"$name\"");
+		}
   }
 }
