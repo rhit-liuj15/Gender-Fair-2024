@@ -45,3 +45,9 @@ Flutter/android/app/release
 # Scoring folder may have CSVs and TXTs in them for the script to use. Ignore any such csv, instead obtain a copy from the database
 Scoring/*.csv
 Scoring/*.txt
+
+# Ignore the credentials json file
+API/.procedure_runner_config.json
+
+# Ignore cache
+*.cache

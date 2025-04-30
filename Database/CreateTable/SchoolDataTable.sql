@@ -4,8 +4,11 @@ USE PublicFacingData;
 
 DROP TABLE IF EXISTS SchoolData;
 
+SELECT * FROM merged_ipeds_css_irs.GenderFair2024;
+
 CREATE TABLE SchoolData AS
-SELECT * FROM merged_ipeds_css_irs.ipeds_css_irs;
+SELECT *
+FROM merged_ipeds_css_irs.GenderFair2024;
 
 SELECT * FROM SchoolData;
 

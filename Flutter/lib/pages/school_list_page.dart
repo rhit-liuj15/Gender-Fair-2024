@@ -17,21 +17,17 @@ class SchoolListPage extends StatefulWidget {
 class _SchoolListPageState extends State<SchoolListPage> {
   // int _hoveredColumnIndex = -1;
   final int schoolsPerPage = 20;
-  int selectedSchoolsCount = SchoolScoreRow.selectedSchools.length;
+  int selectedSchoolsCount = SchoolScore.selectedSchools.length;
 
-	bool showOnlySelectedSchools= false;
+  final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
+      filterFunctions = {};
+
   List<SchoolScore> scoreList = <SchoolScore>[];
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
 
-  Map<String, String> stateNameToAbbreviations = <String, String>{};
   ListPageColumnAttributes sortingBy = ListPageColumnAttributes.total;
   bool sortDescending = ListPageColumnAttributes.total.sortDescending;
 
-  Set<String> statesFilteredFor = <String>{};
-
-  final TextStyle textStyle = const TextStyle(fontSize: 18.0);
-  final TextEditingController filterTextEditingController =
-      TextEditingController();
   final FocusNode filterTextFocusNode = FocusNode();
 
   @override
@@ -41,24 +37,39 @@ class _SchoolListPageState extends State<SchoolListPage> {
   }
 
   Future<void> loadData() async {
-    await DataLoader.instance.loadData();
     setState(() {
       scoreList = DataLoader.instance.allSchoolScores.values.toList();
-      stateNameToAbbreviations = DataLoader.instance.stateNameToAbbreviations;
       schoolsFilteredFor = List.from(scoreList);
       sortData();
     });
   }
 
   void updateSortMetric(ListPageColumnAttributes column) {
-		if (sortingBy == column) {
-			sortDescending = !sortDescending;
-		} else {
-			sortingBy = column;
-			sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
-		}
-		sortData();
-	}
+    if (sortingBy == column) {
+      sortDescending = !sortDescending;
+    } else {
+      sortingBy = column;
+      sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
+    }
+    sortData();
+  }
+
+  void updateShownSchools() {
+    setState(() {
+      schoolsFilteredFor = scoreList;
+      for (List<SchoolScore> Function(List<SchoolScore>) func
+          in filterFunctions.values) {
+        schoolsFilteredFor = func(schoolsFilteredFor);
+      }
+      // schoolsFilteredFor = showOnlySelectedSchools
+      //     ? scoreList
+      //         .where(
+      //             (item) => SchoolScoreRow.selectedSchools.contains(item.uid))
+      //         .toList()
+      //     : scoreList;
+    });
+    sortData();
+  }
 
   void sortData() {
     setState(() {
@@ -72,13 +83,15 @@ class _SchoolListPageState extends State<SchoolListPage> {
         case ListPageColumnAttributes.total:
           comparator = (a, b) => a.score.compareTo(b.score);
           break;
-					
-				case ListPageColumnAttributes.leadership:
-				case ListPageColumnAttributes.polnpay:
-				case ListPageColumnAttributes.safety:
-				case ListPageColumnAttributes.diversity:
-          comparator = (a, b) => a.subscores[ListPageColumnAttributes.listPageToSchoolScoreMapping[sortingBy]]!
-							.compareTo(b.subscores[ListPageColumnAttributes.listPageToSchoolScoreMapping[sortingBy]]!);
+
+        case ListPageColumnAttributes.leadership:
+        case ListPageColumnAttributes.polnpay:
+        case ListPageColumnAttributes.safety:
+        case ListPageColumnAttributes.diversity:
+          comparator = (a, b) => a.subscores[ListPageColumnAttributes
+                  .listPageToSchoolScoreMapping[sortingBy]]!
+              .compareTo(b.subscores[ListPageColumnAttributes
+                  .listPageToSchoolScoreMapping[sortingBy]]!);
           break;
         default:
           if (sortingBy.sortable) {
@@ -95,13 +108,6 @@ class _SchoolListPageState extends State<SchoolListPage> {
         return sortDescending ? -compareResult : compareResult;
       });
     });
-  }
-
-  void updateSelected() {
-    setState(() {
-			schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
-    });
-		sortData();
   }
 
   @override
@@ -169,32 +175,10 @@ class _SchoolListPageState extends State<SchoolListPage> {
                     Expanded(
                       flex: 2,
                       child: FilterAndComparePane(
-                        filterTextEditingController:
-                            filterTextEditingController,
-                        statesFilteredFor: statesFilteredFor,
                         selectedSchoolsCount:
-                            SchoolScoreRow.selectedSchools.length,
-                        onSearchChange: (value) {
-                          setState(() {
-														schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
-                            if (value.isNotEmpty) {
-                              schoolsFilteredFor = schoolsFilteredFor
-                                  .where((school) => school.schoolName
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()))
-                                  .toList();
-                            }
-                            sortData();
-                          });
-                        },
-												showOnlySelected: showOnlySelectedSchools,
-												onShowOnlySelectedToggle: (bool? newValue) {
-													setState(() {
-														showOnlySelectedSchools = newValue!;
-														schoolsFilteredFor = showOnlySelectedSchools ? scoreList.where((item) => SchoolScoreRow.selectedSchools.contains(item.uid)).toList() : scoreList;
-                            sortData();
-													});
-												},
+                            SchoolScore.selectedSchools.length,
+                        filterFunctions: filterFunctions,
+                        updateShownSchools: updateShownSchools,
                       ),
                     ),
 
@@ -204,11 +188,11 @@ class _SchoolListPageState extends State<SchoolListPage> {
                       flex: 5,
                       child: SchoolListPane(
                         updateSortingMetricCallback: updateSortMetric,
-												sortingMetric: sortingBy,
+                        sortingMetric: sortingBy,
                         updateSortCallback: sortData,
                         schoolsFilteredFor: schoolsFilteredFor,
                         schoolsPerPage: schoolsPerPage,
-                        onUpdateSelected: updateSelected,
+                        onUpdateSelected: updateShownSchools,
                       ),
                     ),
                   ],
