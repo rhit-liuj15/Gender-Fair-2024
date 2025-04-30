@@ -14,9 +14,9 @@ equality-focused metrics using reputable data sources.
 
 # Tech Stack
 
-Backend/data processing: Python & MySQL
-Database: MySQL
-Frontend: Dart/Flutter
+Backend/data processing: Python & MySQL\
+Database: MySQL\
+Frontend: Dart/Flutter\
 API: JavaScript
 
 # Data Sources
