@@ -1,6 +1,5 @@
 import zipfile
 import pandas as pd
-from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -11,10 +10,10 @@ import time
 
 class CSSDownloader:
     ## Download CSS database automatically online and extract needed files ##
-    def __init__(self):
-        self.download_path = Path.home() / "Downloads" / "CSS_autodownload"
-        self.download_path.mkdir(parents=True, exist_ok=True)
-        self.extract_path = self.download_path / "unzipped"
+    def __init__(self, temp_dir, download_path, extract_path):
+        self.temp_dir = temp_dir
+        self.download_path = download_path
+        self.extract_path = extract_path
 
     ## Wait for the zip file to be downloaded within 100 seconds ##
     def wait_for_download(self, timeout=300):  # adjust accordingly if needed
@@ -49,7 +48,7 @@ class CSSDownloader:
             raise Exception(f"Failed to read/convert Excel file: {e}")
 
     ## Perform the auto-download and convert ##
-    def download_and_convert(self):
+    def download_and_convert(self):  
         chrome_options = Options()
         chrome_options.add_experimental_option("prefs", {
             "download.default_directory": str(self.download_path),
@@ -77,6 +76,11 @@ class CSSDownloader:
             zip_ref.extractall(self.extract_path)
         print(f"Extracted to: {self.extract_path}")
 
-        base_dir = Path(__file__).parent
-        self.convert_excel("Oncampushate202122.xlsx", base_dir / "Oncampushate202122.csv")
-        self.convert_excel("Oncampusvawa202122.xls", base_dir / "Oncampusvawa202122.csv")
+        hate_path = self.extract_path / "Oncampushate202122.csv"
+        vawa_path = self.extract_path / "Oncampusvawa202122.csv"
+
+        self.convert_excel("Oncampushate202122.xlsx", hate_path)
+        self.convert_excel("Oncampusvawa202122.xls", vawa_path)
+
+        return hate_path, vawa_path
+

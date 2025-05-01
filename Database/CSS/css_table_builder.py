@@ -30,6 +30,7 @@ class CSSTableBuilder:
         return query
 
     def insert_into_database(self, cursor):
+        print("Creating table...")
         create_table_query = self.generate_create_table_query()
 
         # Drop table if exists
