@@ -4,12 +4,15 @@ SET @numEntries = (SELECT COUNT(*) FROM GenderFair2024);
 
 DROP FUNCTION IF EXISTS percentileToScore;
 
+/*
+This function is not used in the calculation of all scored items. Notably, the on campus daycare is scored on a yes-no basis, and has its separate line.
+*/
 DELIMITER $$
 CREATE FUNCTION percentileToScore(`rank` INT, entries INT, max INT)
 RETURNS DOUBLE
 DETERMINISTIC
 BEGIN
-    RETURN ROUND(max*(0.5-0.5*COS(PI()*`rank`/entries)));
+	RETURN ROUND(max*(0.5-0.5*COS(PI()*`rank`/entries)));
 END$$
 DELIMITER ;
 
@@ -76,7 +79,15 @@ INSERT INTO `PublicFacingData`.`SchoolScores` (`UNITID`,`INSTNM`,`STATE`,`INSTFU
 				30
 			) as AcdStaffGenderScore,
 			percentileToScore(
-				rank() OVER (order by SALARYTOTACDM/NULLIF(ACDTOTMEN,0)+3*SALARYTOTACDF/NULLIF(ACDTOTWOMEN,0)),
+				rank() OVER (
+					order by
+                    -- The metric aims to capture 2 things:
+                    -- 1. The actual pay to the women
+                    -- 2. The pay to the women relative to their men coworkers
+                    -- The formula is constructed as such:
+                    -- WP * (1 + WP / (WP + MP))
+                    SALARYTOTACDF/NULLIF(ACDTOTWOMEN,0) * (1 + (SALARYTOTACDF/NULLIF(ACDTOTWOMEN,0))/NULLIF(SALARYTOTACDF/NULLIF(ACDTOTWOMEN,0)+IFNULL(SALARYTOTACDM/NULLIF(ACDTOTMEN,0),0),0))
+				),
 				@numEntries,
 				15
 			) as AcdStaffPayScore,
