@@ -6,29 +6,28 @@ class CSSTableBuilder:
     ##         table_name: name of the table to create
     ##         database_name: name of the database to create table in
     ##         primary_key: columns that serve as PK
-    ##         str_cols: columns that has a dtype of VARCHAR
-    def __init__(self, csv_path, table_name, database_name, primary_key, str_cols):
+    ##         colum_dtype: dict mapping column names to SQL data types
+    def __init__(self, csv_path, table_name, database_name, primary_key, column_dtype):
         self.csv_path = csv_path
         self.table_name = table_name
         self.database_name = database_name
         self.primary_key = primary_key
-        self.str_cols = str_cols
+        self.column_dtype = column_dtype
         self.df = pd.read_csv(csv_path)
 
+    ## Create table query
     def generate_create_table_query(self):
         columns = []
         for col in self.df.columns:
-            if col == self.primary_key:
-                columns.append(f"`{col}` INT PRIMARY KEY")
-            elif col in self.str_cols:
-                columns.append(f"`{col}` VARCHAR(128)")
-            else:
-                columns.append(f"`{col}` INT")
+            dtype = self.column_dtype.get(col, 'INT') 
+            pk = ' PRIMARY KEY' if col == self.primary_key else ''
+            columns.append(f"`{col}` {dtype}{pk}")
 
         query = f"CREATE TABLE IF NOT EXISTS `{self.database_name}`.`{self.table_name}` (\n    "
         query += ",\n    ".join(columns) + "\n);"
         return query
 
+    ## Insert data into table created
     def insert_into_database(self, cursor):
         print("Creating table...")
         create_table_query = self.generate_create_table_query()

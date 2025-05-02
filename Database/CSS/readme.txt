@@ -1,13 +1,5 @@
 CSS import script README
 
-In the CSS folder you will find the following files:
-- css_data_downloader.py
-- css_db_connector.py
-- css_table_builder.py
-- main.py
-- requirement.txt
-- readme.txt
-
 *The python version used during development is 3.10.11
 
 **The requirement.txt include all libraries and their current version installed for the scripts.
