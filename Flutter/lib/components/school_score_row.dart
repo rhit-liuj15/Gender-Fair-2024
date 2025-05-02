@@ -7,6 +7,7 @@ class SchoolScoreRow extends StatefulWidget {
   final void Function() onUpdateSelected;
   static List<int> flexValues = ListPageColumnAttributes.flexValues;
   static List<String> columnNames = ListPageColumnAttributes.colNames;
+
   static Map<ListPageColumnAttributes, bool> defaultSortOrder =
       ListPageColumnAttributes.sortOrder;
 
@@ -55,24 +56,40 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
           );
         case ListPageColumnAttributes.instName:
           return InkWell(
-            child: Text(widget.school.schoolName,
-                style: const TextStyle(fontSize: 18)),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: widget.school.schoolName,
+                    style: const TextStyle(fontSize: 18, color: Colors.black),
+                  ),
+                  const TextSpan(text: "  "),
+                  TextSpan(
+                    text: getSchoolTypeShort(widget.school.schoolType),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: getSchoolTypeColor(widget.school.schoolType),
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
                   return Dialog(
-										child: ConstrainedBox(
-											constraints: const BoxConstraints(
-												maxWidth: 1600,
-											),
-                    	child: SchoolDetailPage(uid: widget.school.uid),
-										),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1600),
+                      child: SchoolDetailPage(uid: widget.school.uid),
+                    ),
                   );
                 },
               );
             },
           );
+
         case ListPageColumnAttributes.leadership:
         case ListPageColumnAttributes.polnpay:
         case ListPageColumnAttributes.safety:
@@ -114,4 +131,30 @@ class ColumnContentSpec {
     required this.flex,
     required this.content,
   });
+}
+
+String getSchoolTypeShort(String type) {
+  switch (type) {
+    case '1':
+      return '• Public';
+    case '3':
+      return '• Private Wout rel';
+    case '4':
+      return '• Private W/ Rel';
+    default:
+      return '';
+  }
+}
+
+Color getSchoolTypeColor(String type) {
+  switch (type) {
+    case '1':
+      return Colors.blue;
+    case '3':
+      return Colors.deepPurple;
+    case '4':
+      return Colors.orange;
+    default:
+      return Colors.grey;
+  }
 }
