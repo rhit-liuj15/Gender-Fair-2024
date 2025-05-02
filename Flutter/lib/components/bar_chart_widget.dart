@@ -17,12 +17,45 @@ class BarChartWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<String> labels = data.keys.toList();
     final List<num> values = data.values.toList();
-    // Calculate the maxY value, ensuring it's at least 10
-    final double maxY = values.isEmpty
-        ? 10.0
-        : (values.reduce((a, b) => a > b ? a : b) < 10
-            ? 10.0
-            : values.reduce((a, b) => a > b ? a : b)).toDouble();
+
+    final bool hasValidData =
+        values.isNotEmpty && values.any((v) => v > 0 && v.isFinite);
+
+    if (!hasValidData) {
+      return Expanded(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            RotatedBox(
+              quarterTurns: 3,
+              child: Text(
+                yAxisDescription,
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(width: 16),
+            const Expanded(
+              child: Center(
+                child: Text(
+                  "N/A",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // fixed crash by forcing maxY to be >= 1.0 mentioned in PR
+    final double maxY = values.where((v) => v.isFinite && v >= 0).fold<double>(
+        1.0, (prev, curr) => curr.toDouble() > prev ? curr.toDouble() : prev);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,12 +73,16 @@ class BarChartWidget extends StatelessWidget {
           child: BarChart(
             BarChartData(
               barGroups: List.generate(labels.length, (index) {
+                final double safeY =
+                    values[index].isFinite && values[index] >= 0
+                        ? values[index].toDouble()
+                        : 0.0;
                 return BarChartGroupData(
                   x: index,
                   barsSpace: 8,
                   barRods: [
                     BarChartRodData(
-                      toY: values[index].toDouble(),
+                      toY: safeY,
                       color: colors[index % colors.length],
                       width: 20,
                       borderRadius: BorderRadius.circular(4),

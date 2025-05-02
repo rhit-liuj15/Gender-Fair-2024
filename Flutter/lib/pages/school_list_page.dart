@@ -138,19 +138,11 @@ class _SchoolListPageState extends State<SchoolListPage> {
                         ),
                       ),
                       SizedBox(height: 8.0),
-                      Flexible(
-                        child: Text(
-                          "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, It empower prospective students to make informed decisions aligned with their values. Currently, schools with identical rank and score are treated as having equal standing.",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.grey,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
+                      AboutButton(), 
                     ],
                   ),
                 ),
+                const SizedBox(width: 30.0),
                 const SizedBox(width: 30.0),
               ],
             ),
@@ -196,6 +188,51 @@ class _SchoolListPageState extends State<SchoolListPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+
+class AboutButton extends StatelessWidget {
+  const AboutButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("About GenderFair Ranking"),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, it empowers prospective students to make informed decisions aligned with their values. Schools with identical rank and score are treated as having equal standing.",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      "Data Sources:\n- IPEDS\n- Campus Safety and Security\n- IRS Form 990\n\nWeights:\nLeadership 30%\nPolicies & Pay 25%\nSafety 20%\nDiversity 25%",
+                      style: TextStyle(fontSize: 13, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("Close"),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      icon: const Icon(Icons.info_outline),
+      label: const Text("About", style: TextStyle(fontSize: 16)),
     );
   }
 }

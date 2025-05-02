@@ -17,33 +17,33 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   late SchoolData schoolData;
   bool isLoading = true;
 
-	List<String> genderLabels = const ["Women", "Men"];
-	List<Color> genderColors = const [Colors.pink, Colors.blue];
-	List<String> raceLabels = const [
-		"White",
-		"Black",
-		"Asian",
-		"Hispanic",
-		"Native Hawaiian/Pacific Islander",
-		"Native American/Alaskan Native",
-		"Other"
-	];
-	List<Color> raceColors = [
-		Colors.yellow[800]!,
-		Colors.brown,
-		Colors.blue,
-		Colors.green,
-		Colors.red,
-		Colors.cyan,
-		Colors.purple,
-	];
-	List<String> academicRankLabels = const [
-		"Professors",
-		"Associate Professors",
-		"Assistant Professors",
-		"Instructors",
-		"Lecturers",
-	];
+  List<String> genderLabels = const ["Women", "Men"];
+  List<Color> genderColors = const [Colors.pink, Colors.blue];
+  List<String> raceLabels = const [
+    "White",
+    "Black",
+    "Asian",
+    "Hispanic",
+    "Native Hawaiian/Pacific Islander",
+    "Native American/Alaskan Native",
+    "Other"
+  ];
+  List<Color> raceColors = [
+    Colors.yellow[800]!,
+    Colors.brown,
+    Colors.blue,
+    Colors.green,
+    Colors.red,
+    Colors.cyan,
+    Colors.purple,
+  ];
+  List<String> academicRankLabels = const [
+    "Professors",
+    "Associate Professors",
+    "Assistant Professors",
+    "Instructors",
+    "Lecturers",
+  ];
 
   @override
   void initState() {
@@ -59,7 +59,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
       isLoading = false;
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -96,7 +96,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                         alignment: WrapAlignment.center,
                         children: [
                           PieChartWidget(
-                            title: "Academic Staff Gender Ratio",
+                            title: "Academic Staff Gender Composition",
                             labels: genderLabels,
                             values: [
                               schoolData.getInt("ACDTOTWOMEN"),
@@ -105,7 +105,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                             colors: genderColors,
                           ),
                           PieChartWidget(
-                            title: "Academic Staff Race Ratio",
+                            title: "Academic Staff Race Composition",
                             labels: raceLabels,
                             values: [
                               schoolData.getInt("ACDTOTWHIT"),
@@ -114,9 +114,9 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               schoolData.getInt("ACDTOTHISP"),
                               schoolData.getInt("ACDTOTNHPI"),
                               schoolData.getInt("ACDTOTNAMC"),
-                              schoolData.getInt("ACDTOTNRES") + 
-                              schoolData.getInt("ACDTOTTWOP") + 
-                              schoolData.getInt("ACDTOTUNKN"),
+                              schoolData.getInt("ACDTOTNRES") +
+                                  schoolData.getInt("ACDTOTTWOP") +
+                                  schoolData.getInt("ACDTOTUNKN"),
                             ],
                             colors: raceColors,
                           ),
@@ -126,103 +126,101 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                     const SizedBox(height: 10),
                     Center(
                         child: PieChartRowWidget(
-                      rowTitle: "Staff Gender Distrubution",
-                      chartTitles: academicRankLabels,
-                      dataLabels: genderLabels,
-                      datasets: [
-                        [
-                          schoolData.getInt("PROFWOMEN"),
-                          schoolData.getInt("PROFMEN"),
-                        ],
-                        [
-                          schoolData.getInt("ASSOCIATEPROFWOMEN"),
-                          schoolData.getInt("ASSOCIATEPROFMEN"),
-                        ],
-                        [
-                          schoolData.getInt("ASSISTANTPROFWOMEN"),
-                          schoolData.getInt("ASSISTANTPROFMEN"),
-                        ],
-                        [
-                          schoolData.getInt("INSTRUCTORWOMEN"),
-                          schoolData.getInt("INSTRUCTORMEN"),
-                        ],
-                        [
-                          schoolData.getInt("LECTURERWOMEN"),
-                          schoolData.getInt("LECTURERMEN"),
-                        ],
-                      ],
-                      size: 120,
-                      //showTitleOnBottom: true,
-                      colors: genderColors
-                    )),
+                            rowTitle: "Staff Gender Composition",
+                            chartTitles: academicRankLabels,
+                            dataLabels: genderLabels,
+                            datasets: [
+                              [
+                                schoolData.getInt("PROFWOMEN"),
+                                schoolData.getInt("PROFMEN"),
+                              ],
+                              [
+                                schoolData.getInt("ASSOCIATEPROFWOMEN"),
+                                schoolData.getInt("ASSOCIATEPROFMEN"),
+                              ],
+                              [
+                                schoolData.getInt("ASSISTANTPROFWOMEN"),
+                                schoolData.getInt("ASSISTANTPROFMEN"),
+                              ],
+                              [
+                                schoolData.getInt("INSTRUCTORWOMEN"),
+                                schoolData.getInt("INSTRUCTORMEN"),
+                              ],
+                              [
+                                schoolData.getInt("LECTURERWOMEN"),
+                                schoolData.getInt("LECTURERMEN"),
+                              ],
+                            ],
+                            size: 120,
+                            //showTitleOnBottom: true,
+                            colors: genderColors)),
                     const SizedBox(height: 10),
                     Center(
                       child: PieChartRowWidget(
-                        rowTitle: "nawoeujtnlkuhdfoiauhdw;otihlkjwhaeliuthoiul",
-												chartTitles: academicRankLabels,
-												dataLabels: raceLabels,
-                        datasets: [
-                          [
-														schoolData.getInt("PROFWHIT"),
-														schoolData.getInt("PROFBLAK"),
-														schoolData.getInt("PROFASIA"),
-														schoolData.getInt("PROFHISP"),
-														schoolData.getInt("PROFNHPI"),
-														schoolData.getInt("PROFNAMC"),
-														schoolData.getInt("PROFNRES") + 
-														schoolData.getInt("PROFTWOP") + 
-														schoolData.getInt("PROFUNKN"),
+                          rowTitle:
+                              "nawoeujtnlkuhdfoiauhdw;otihlkjwhaeliuthoiul",
+                          chartTitles: academicRankLabels,
+                          dataLabels: raceLabels,
+                          datasets: [
+                            [
+                              schoolData.getInt("PROFWHIT"),
+                              schoolData.getInt("PROFBLAK"),
+                              schoolData.getInt("PROFASIA"),
+                              schoolData.getInt("PROFHISP"),
+                              schoolData.getInt("PROFNHPI"),
+                              schoolData.getInt("PROFNAMC"),
+                              schoolData.getInt("PROFNRES") +
+                                  schoolData.getInt("PROFTWOP") +
+                                  schoolData.getInt("PROFUNKN"),
+                            ],
+                            [
+                              schoolData.getInt("ASSOCIATEPROFWHIT"),
+                              schoolData.getInt("ASSOCIATEPROFBLAK"),
+                              schoolData.getInt("ASSOCIATEPROFASIA"),
+                              schoolData.getInt("ASSOCIATEPROFHISP"),
+                              schoolData.getInt("ASSOCIATEPROFNHPI"),
+                              schoolData.getInt("ASSOCIATEPROFNAMC"),
+                              schoolData.getInt("ASSOCIATEPROFNRES") +
+                                  schoolData.getInt("ASSOCIATEPROFTWOP") +
+                                  schoolData.getInt("ASSOCIATEPROFUNKN"),
+                            ],
+                            [
+                              schoolData.getInt("ASSISTANTPROFWHIT"),
+                              schoolData.getInt("ASSISTANTPROFBLAK"),
+                              schoolData.getInt("ASSISTANTPROFASIA"),
+                              schoolData.getInt("ASSISTANTPROFHISP"),
+                              schoolData.getInt("ASSISTANTPROFNHPI"),
+                              schoolData.getInt("ASSISTANTPROFNAMC"),
+                              schoolData.getInt("ASSISTANTPROFNRES") +
+                                  schoolData.getInt("ASSISTANTPROFTWOP") +
+                                  schoolData.getInt("ASSISTANTPROFUNKN"),
+                            ],
+                            [
+                              schoolData.getInt("INSTRUCTORWHIT"),
+                              schoolData.getInt("INSTRUCTORBLAK"),
+                              schoolData.getInt("INSTRUCTORASIA"),
+                              schoolData.getInt("INSTRUCTORHISP"),
+                              schoolData.getInt("INSTRUCTORNHPI"),
+                              schoolData.getInt("INSTRUCTORNAMC"),
+                              schoolData.getInt("INSTRUCTORNRES") +
+                                  schoolData.getInt("INSTRUCTORTWOP") +
+                                  schoolData.getInt("INSTRUCTORUNKN"),
+                            ],
+                            [
+                              schoolData.getInt("LECTURERWHIT"),
+                              schoolData.getInt("LECTURERBLAK"),
+                              schoolData.getInt("LECTURERASIA"),
+                              schoolData.getInt("LECTURERHISP"),
+                              schoolData.getInt("LECTURERNHPI"),
+                              schoolData.getInt("LECTURERNAMC"),
+                              schoolData.getInt("LECTURERNRES") +
+                                  schoolData.getInt("LECTURERTWOP") +
+                                  schoolData.getInt("LECTURERUNKN"),
+                            ],
                           ],
-                          [
-														schoolData.getInt("ASSOCIATEPROFWHIT"),
-														schoolData.getInt("ASSOCIATEPROFBLAK"),
-														schoolData.getInt("ASSOCIATEPROFASIA"),
-														schoolData.getInt("ASSOCIATEPROFHISP"),
-														schoolData.getInt("ASSOCIATEPROFNHPI"),
-														schoolData.getInt("ASSOCIATEPROFNAMC"),
-														schoolData.getInt("ASSOCIATEPROFNRES") + 
-														schoolData.getInt("ASSOCIATEPROFTWOP") + 
-														schoolData.getInt("ASSOCIATEPROFUNKN"),
-                          ],
-                          [
-														schoolData.getInt("ASSISTANTPROFWHIT"),
-														schoolData.getInt("ASSISTANTPROFBLAK"),
-														schoolData.getInt("ASSISTANTPROFASIA"),
-														schoolData.getInt("ASSISTANTPROFHISP"),
-														schoolData.getInt("ASSISTANTPROFNHPI"),
-														schoolData.getInt("ASSISTANTPROFNAMC"),
-														schoolData.getInt("ASSISTANTPROFNRES") + 
-														schoolData.getInt("ASSISTANTPROFTWOP") + 
-														schoolData.getInt("ASSISTANTPROFUNKN"),
-                          ],
-                          [
-														schoolData.getInt("INSTRUCTORWHIT"),
-														schoolData.getInt("INSTRUCTORBLAK"),
-														schoolData.getInt("INSTRUCTORASIA"),
-														schoolData.getInt("INSTRUCTORHISP"),
-														schoolData.getInt("INSTRUCTORNHPI"),
-														schoolData.getInt("INSTRUCTORNAMC"),
-														schoolData.getInt("INSTRUCTORNRES") + 
-														schoolData.getInt("INSTRUCTORTWOP") + 
-														schoolData.getInt("INSTRUCTORUNKN"),
-                          ],
-                          [
-														schoolData.getInt("LECTURERWHIT"),
-														schoolData.getInt("LECTURERBLAK"),
-														schoolData.getInt("LECTURERASIA"),
-														schoolData.getInt("LECTURERHISP"),
-														schoolData.getInt("LECTURERNHPI"),
-														schoolData.getInt("LECTURERNAMC"),
-														schoolData.getInt("LECTURERNRES") + 
-														schoolData.getInt("LECTURERTWOP") + 
-														schoolData.getInt("LECTURERUNKN"),
-                          ],
-                        ],
-                        size: 120,
-                        showTitle: false,
-                        
-                        colors: raceColors
-                      ),
+                          size: 120,
+                          showTitle: false,
+                          colors: raceColors),
                     ),
                     const SizedBox(height: 30),
                     // Non-Academic Pie Chart
@@ -240,7 +238,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                         alignment: WrapAlignment.center,
                         children: [
                           PieChartWidget(
-                            title: "Non-academic Staff Gender Ratio",
+                            title: "Non-academic Staff Gender Composition",
                             labels: genderLabels,
                             values: [
                               schoolData.getInt("NONACDWOMEN"),
@@ -249,7 +247,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                             colors: genderColors,
                           ),
                           PieChartWidget(
-                            title: "Non-academic Staff Race Ratio",
+                            title: "Non-academic Staff Race Composition",
                             labels: raceLabels,
                             values: [
                               schoolData.getInt("NONACDWHIT"),
@@ -258,9 +256,9 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               schoolData.getInt("NONACDHISP"),
                               schoolData.getInt("NONACDNHPI"),
                               schoolData.getInt("NONACDNAMC"),
-                              schoolData.getInt("NONACDNRES") + 
-                              schoolData.getInt("NONACDTWOP") + 
-                              schoolData.getInt("NONACDUNKN"),
+                              schoolData.getInt("NONACDNRES") +
+                                  schoolData.getInt("NONACDTWOP") +
+                                  schoolData.getInt("NONACDUNKN"),
                             ],
                             colors: raceColors,
                           ),
@@ -268,96 +266,100 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment
-                          .start, // Align the charts to the top
+                    Wrap(
+                      spacing: 30,
+                      runSpacing: 30,
+                      alignment: WrapAlignment.center,
                       children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(left: 0.0),
-                              child: Text(
+                        SizedBox(
+                          width: 400,
+                          child: Column(
+                            children: [
+                              const Text(
                                 "Average Annual Salary by Gender (USD)",
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              height: 300,
-                              width: 400,
-                              child: BarChartWidget(
-                                data: {
-                                  "Men": schoolData.getInt("SALARYTOTACDM")/schoolData.getInt("ACDPOPM"),
-                                  "Women": schoolData.getInt("SALARYTOTACDF")/schoolData.getInt("ACDPOPF"),
-                                },
-                                colors: const [Colors.blue, Colors.pink],
-                                yAxisDescription: "Academic Staff Average Salary (USD)",
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: 300,
+                                child: BarChartWidget(
+                                  data: {
+                                    "Men": schoolData.getInt("SALARYTOTACDM") /
+                                        schoolData.getInt("ACDPOPM"),
+                                    "Women":
+                                        schoolData.getInt("SALARYTOTACDF") /
+                                            schoolData.getInt("ACDPOPF"),
+                                  },
+                                  colors: const [Colors.blue, Colors.pink],
+                                  yAxisDescription:
+                                      "Academic Staff Average Salary (USD)",
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                        const SizedBox(
-                            width:
-                                30), // Space between Financials and the next two charts
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Hate Crimes per Year",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              height: 300,
-                              width: 400,
-                              child: BarChartWidget(
-                                data: {
-                                  "Hate Crimes Per Year Per 1000 Students":
-                                      schoolData.getNum("YEARLYHATECRIME1K"),
-                                },
-                                colors: const [Colors.red],
-                                yAxisDescription: "Cases per Year",
+                        SizedBox(
+                          width: 400,
+                          child: Column(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(right: 30),
+                                child: Text(
+                                  "Hate Crimes Per Year",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: 300,
+                                child: BarChartWidget(
+                                  data: {
+                                    "Hate":
+                                        schoolData.getNum("YEARLYHATECRIME1K"),
+                                  },
+                                  colors: const [Colors.red],
+                                  yAxisDescription: "Cases per Year",
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        const SizedBox(
-                            width: 30), // Space between the two new charts
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "VAWA(Violence Against Women Act) Incidents per Year",
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                              height: 300,
-                              width: 400,
-                              child: BarChartWidget(
-                                data: {
-                                  "VAWA Cases Per Year Per 1000 Students":
-                                      schoolData.getNum("YEARLYVAWA1K"),
-                                },
-                                colors: const [Colors.orange],
-                                yAxisDescription: "Cases per Year",
+                        SizedBox(
+                          width: 400,
+                          child: Column(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(right: 30),
+                                child: Text(
+                                  "VAWA Incidents per Year",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: 300,
+                                child: BarChartWidget(
+                                  data: {
+                                    "Violence Against Women Act":
+                                        schoolData.getNum("YEARLYVAWA1K"),
+                                  },
+                                  colors: const [Colors.orange],
+                                  yAxisDescription: "Cases per Year",
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
-                    ),
+                    )
                   ],
                 ),
               ),
