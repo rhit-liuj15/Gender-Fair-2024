@@ -61,12 +61,6 @@ class _SchoolListPageState extends State<SchoolListPage> {
           in filterFunctions.values) {
         schoolsFilteredFor = func(schoolsFilteredFor);
       }
-      // schoolsFilteredFor = showOnlySelectedSchools
-      //     ? scoreList
-      //         .where(
-      //             (item) => SchoolScoreRow.selectedSchools.contains(item.uid))
-      //         .toList()
-      //     : scoreList;
     });
     sortData();
   }
