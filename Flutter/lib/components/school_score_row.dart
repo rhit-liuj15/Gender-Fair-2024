@@ -138,7 +138,7 @@ String getSchoolTypeShort(String type) {
     case '1':
       return '• Public';
     case '3':
-      return '• Private Wout rel';
+      return '• Private W/out rel';
     case '4':
       return '• Private W/ Rel';
     default:
