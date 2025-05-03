@@ -318,14 +318,17 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               SizedBox(
                                 height: 300,
                                 child: BarChartWidget(
-                                    data: {
-                                      "Avg": DataLoader.instance.getAverageByChartLabel("AverageHateCrime"),
-                                      "Hate": schoolData
-                                          .getNum("YEARLYHATECRIME1K"),
-                                    },
-                                    colors: const [Colors.red],
-                                    yAxisDescription: "Cases Per Year Per 1000 Students",
-                                    ),
+                                  data: {
+                                    "Avg": DataLoader.instance
+                                        .getAverageByChartLabel(
+                                            "AverageHateCrime"),
+                                    "Hate":
+                                        schoolData.getNum("YEARLYHATECRIME1K"),
+                                  },
+                                  colors: const [Colors.red],
+                                  yAxisDescription:
+                                      "Cases Per Year Per 1000 Students",
+                                ),
                               ),
                             ],
                           ),
@@ -345,17 +348,31 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              SizedBox(
-                                height: 300,
-                                child: BarChartWidget(
-                                  data: {
-                                    "Avg": DataLoader.instance.getAverageByChartLabel("violence against women"),
-                                    "VAWA":
-                                        schoolData.getNum("YEARLYVAWA1K"),
-                                  },
-                                  colors: const [Colors.orange],
-                                  yAxisDescription: "Cases Per Year Per 1000 Students",
-                                ),
+                              Column(
+                                children: [
+                                  SizedBox(
+                                    height: 300,
+                                    child: BarChartWidget(
+                                      data: {
+                                        "Avg": DataLoader.instance
+                                            .getAverageByChartLabel(
+                                                "violence against women"),
+                                        "VAWA":
+                                            schoolData.getNum("YEARLYVAWA1K"),
+                                      },
+                                      colors: const [Colors.orange],
+                                      yAxisDescription:
+                                          "Cases Per Year Per 1000 Students",
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  const Text(
+                                    "VAWA = Violence Against Women Act",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

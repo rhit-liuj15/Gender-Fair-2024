@@ -34,7 +34,7 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
   static TextStyle rankingStyle = const TextStyle(
       fontSize: 26,
       fontWeight: FontWeight.bold,
-      color: Color.fromARGB(255, 221, 174, 47));
+      color: Color.fromARGB(255, 255, 71, 19));
 
   @override
   Widget build(BuildContext context) {

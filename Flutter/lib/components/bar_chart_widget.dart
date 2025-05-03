@@ -98,7 +98,10 @@ class BarChartWidget extends StatelessWidget {
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final value = rod.toY.toStringAsFixed(2);
+                    final value = rod.toY > 100
+                        ? rod.toY.toStringAsFixed(0)
+                        : rod.toY.toStringAsFixed(2);
+
                     final isAverage = rodIndex == 0 && averageValues != null;
                     final label =
                         isAverage ? 'National Average: $value' : '$value';
