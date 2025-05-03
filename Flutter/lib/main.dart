@@ -18,11 +18,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-	final Map<int,Widget> pages = {
-		0:const SchoolListPage(),
-		1:const AboutUsPage(),
-	};
-	int currentPageIndex = 0;
+  final Map<int, Widget> pages = {
+    0: const SchoolListPage(),
+    1: const AboutUsPage(),
+  };
+  int currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -42,69 +42,79 @@ class _MyAppState extends State<MyApp> {
         ),
         useMaterial3: true,
       ),
-			home: Scaffold(
-				appBar: AppBar(
-					leading: SizedBox(
-						width: 85,
-						height: 100,
-						child: Image.asset(
-							'assets/logo.png',
-							fit: BoxFit.cover,
-						),
-					),
-					title: const Text("Gender Fair"),
-					actions: [
-						NavTile(
-							label: "Rankings",
-							isSelected: currentPageIndex == 0,
-							onTap: () {
-								setState(() {
-								  currentPageIndex = 0;
-								});
-							},
-						),
-						NavTile(
-							label: "About Us",
-							isSelected: currentPageIndex == 1,
-							onTap: () {
-								setState(() {
-								  currentPageIndex = 1;
-								});
-							},
-						),
-					],
-				),
-				body: Stack(
-					children: [
-						Container(
-							decoration: BoxDecoration(
-								gradient: LinearGradient(
-									colors: [
-										Colors.white.withOpacity(0.9),
-										const Color(0xFFFF4713).withOpacity(0.2),
-									],
-									stops: const [0.1, 1.0],
-									begin: Alignment.topLeft,
-									end: Alignment.bottomRight,
-								),
-							),
-						),
-						BackdropFilter(
-							filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-							child: Container(
-								decoration: BoxDecoration(
-									color: const Color.fromARGB(255, 160, 50, 50).withOpacity(0.2),
-									borderRadius: BorderRadius.circular(20),
-								),
-							),
-						),
-						SafeArea(
-							child: pages[currentPageIndex]!,
-						),
-					],
-				),
-			),
+      home: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(80),
+          child: AppBar(
+            titleSpacing: 0,
+            toolbarHeight: 80,
+            title: Row(
+              children: [
+                const SizedBox(width: 50),
+                SizedBox(
+                  width: 85,
+                  height: 70,
+                  child: Image.asset(
+                    'assets/logo.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(width: 20),
+                NavTile(
+                  label: "Rankings",
+                  isSelected: currentPageIndex == 0,
+                  onTap: () {
+                    setState(() {
+                      currentPageIndex = 0;
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                NavTile(
+                  label: "About Us",
+                  isSelected: currentPageIndex == 1,
+                  onTap: () {
+                    setState(() {
+                      currentPageIndex = 1;
+                    });
+                  },
+                ),
+                
+              ],
+            ),
+          ),
+        ),
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white.withOpacity(0.9),
+                    const Color(0xFFFF4713).withOpacity(0.2),
+                  ],
+                  stops: const [0.1, 1.0],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              child: Container(
+                decoration: BoxDecoration(
+                  color:
+                      const Color.fromARGB(255, 160, 50, 50).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+            SafeArea(
+              child: pages[currentPageIndex]!,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
-
