@@ -110,44 +110,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
       body: Column(
         children: [
           // Top header
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 50.0, vertical: 10.0),
-            child: Row(
-              children: [
-                const SizedBox(width: 30.0),
-                SizedBox(
-                  width: 85,
-                  height: 100,
-                  child: Image.asset(
-                    'assets/logo.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                const SizedBox(width: 50.0),
-                const Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "School Ranking System",
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8.0),
-                      AboutButton(), 
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 30.0),
-                const SizedBox(width: 30.0),
-              ],
-            ),
-          ),
-
+         
           Expanded(
             child: Center(
               child: Padding(
