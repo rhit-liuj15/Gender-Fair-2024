@@ -34,9 +34,9 @@ class _AboutUsPageState extends State<AboutUsPage> {
             "Pie Charts show gender and racial representation in both academic and non-academic staff.\n\n"
             "Bar Charts show numeric values such as average salaries and incident rates. For Hate Crimes and Violence Against Women Act (VAWA) cases, each bar chart shows both the selected school’s value and the national average to offer a clear baseline comparison.\n\n"
             "Missing Data Display:\n"
-            "If a school does not report data for a specific metric, the corresponding chart will either show “N/A” or remain empty. No missing values are estimated or filled in. All data comes directly from official government sources.\n\n"
+            "If a school does not report data for a specific metric, the corresponding chart will either show “N/A”. \n\n"
             "Raw Values, Not Percentiles:\n"
-            "All numbers shown in charts and scores reflect real, reported values such as salaries in USD or incidents per 1,000 students. This makes each data point easy to interpret and compare directly with national trends.",
+            "All numbers shown in charts and scores reflect real, reported values such as salaries in USD or incidents per 1,000 students. This makes each data point easy to interpret and compare directly with national average.",
           ),
           const SizedBox(height: 24),
           const Text(
