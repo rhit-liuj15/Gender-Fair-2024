@@ -90,7 +90,17 @@ class BarChartWidget extends StatelessWidget {
                   ],
                 );
               }),
-              barTouchData: BarTouchData(enabled: true),
+              barTouchData: BarTouchData(
+                enabled: true,
+                touchTooltipData: BarTouchTooltipData(
+                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                    final value =
+                        rod.toY.toStringAsFixed(2);
+                    return BarTooltipItem(
+                        '$value', const TextStyle(color: Color.fromARGB(255, 255, 255, 255)));
+                  },
+                ),
+              ),
               gridData: FlGridData(
                 show: true,
                 drawVerticalLine: true,
