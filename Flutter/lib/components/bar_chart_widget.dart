@@ -5,12 +5,14 @@ class BarChartWidget extends StatelessWidget {
   final Map<String, num> data;
   final List<Color> colors;
   final String yAxisDescription;
+  final Map<String, double>? averageValues;
 
   const BarChartWidget({
     super.key,
     required this.data,
     required this.colors,
     required this.yAxisDescription,
+    this.averageValues,
   });
 
   @override
@@ -18,44 +20,16 @@ class BarChartWidget extends StatelessWidget {
     final List<String> labels = data.keys.toList();
     final List<num> values = data.values.toList();
 
-    final bool hasValidData =
-        values.isNotEmpty && values.any((v) => v > 0 && v.isFinite);
-
-    if (!hasValidData) {
-      return Expanded(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            RotatedBox(
-              quarterTurns: 3,
-              child: Text(
-                yAxisDescription,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(width: 16),
-            const Expanded(
-              child: Center(
-                child: Text(
-                  "N/A",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
     // fixed crash by forcing maxY to be >= 1.0 mentioned in PR
-    final double maxY = values.where((v) => v.isFinite && v >= 0).fold<double>(
-        1.0, (prev, curr) => curr.toDouble() > prev ? curr.toDouble() : prev);
+    final List<double> allYValues = [
+      ...values.where((v) => v.isFinite && v >= 0).map((v) => v.toDouble()),
+      if (averageValues != null)
+        ...averageValues!.values.where((v) => v.isFinite && v >= 0),
+    ];
+
+    final double maxY = allYValues.isEmpty
+        ? 1.0
+        : allYValues.reduce((a, b) => a > b ? a : b) * 1.1;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,31 +47,66 @@ class BarChartWidget extends StatelessWidget {
           child: BarChart(
             BarChartData(
               barGroups: List.generate(labels.length, (index) {
-                final double safeY =
+                final String key = labels[index];
+                final double value =
                     values[index].isFinite && values[index] >= 0
                         ? values[index].toDouble()
                         : 0.0;
+
+                final bool showAverageBar =
+                    key.toUpperCase().contains("HATE") ||
+                        key.toUpperCase().contains("VAWA") ||
+                        key.toUpperCase().contains("VIOLENCE AGAINST WOMEN");
+
+                final double? avgValue = (showAverageBar &&
+                        averageValues != null &&
+                        averageValues!.containsKey(key))
+                    ? averageValues![key]!.toDouble()
+                    : null;
+
+                final List<BarChartRodData> rods = [];
+                print(
+                    '[$key] avgValue = $avgValue, showAverageBar = $showAverageBar');
+
+                if (avgValue != null) {
+                  rods.add(
+                    BarChartRodData(
+                      toY: avgValue,
+                      color: Colors.grey,
+                      width: 26,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  );
+                }
+
+                rods.add(
+                  BarChartRodData(
+                    toY: value,
+                    color: colors[index % colors.length],
+                    width: 26,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                );
+
                 return BarChartGroupData(
                   x: index,
                   barsSpace: 8,
-                  barRods: [
-                    BarChartRodData(
-                      toY: safeY,
-                      color: colors[index % colors.length],
-                      width: 20,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ],
+                  barRods: rods,
                 );
               }),
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final value =
-                        rod.toY.toStringAsFixed(2);
+                    final value = rod.toY.toStringAsFixed(2);
+                    final isAverage = rodIndex == 0 && averageValues != null;
+                    final label =
+                        isAverage ? 'National Average: $value' : '$value';
                     return BarTooltipItem(
-                        '$value', const TextStyle(color: Color.fromARGB(255, 255, 255, 255)));
+                      label,
+                      const TextStyle(
+                          color: Color.fromARGB(255, 255, 255, 255)),
+                    );
                   },
                 ),
               ),

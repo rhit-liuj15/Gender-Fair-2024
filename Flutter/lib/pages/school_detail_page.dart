@@ -318,13 +318,14 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               SizedBox(
                                 height: 300,
                                 child: BarChartWidget(
-                                  data: {
-                                    "Hate":
-                                        schoolData.getNum("YEARLYHATECRIME1K"),
-                                  },
-                                  colors: const [Colors.red],
-                                  yAxisDescription: "Cases per Year",
-                                ),
+                                    data: {
+                                      "Avg": DataLoader.instance.getAverageByChartLabel("AverageHateCrime"),
+                                      "Hate": schoolData
+                                          .getNum("YEARLYHATECRIME1K"),
+                                    },
+                                    colors: const [Colors.red],
+                                    yAxisDescription: "Cases Per Year Per 1000 Students",
+                                    ),
                               ),
                             ],
                           ),
@@ -348,11 +349,12 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                 height: 300,
                                 child: BarChartWidget(
                                   data: {
-                                    "Violence Against Women Act":
+                                    "Avg": DataLoader.instance.getAverageByChartLabel("violence against women"),
+                                    "VAWA":
                                         schoolData.getNum("YEARLYVAWA1K"),
                                   },
                                   colors: const [Colors.orange],
-                                  yAxisDescription: "Cases per Year",
+                                  yAxisDescription: "Cases Per Year Per 1000 Students",
                                 ),
                               ),
                             ],

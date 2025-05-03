@@ -97,6 +97,7 @@ class DataLoader {
           for (var item in data) {
             allAverages[item['Name']] = item['Value'];
           }
+          
         } else {
           print(
               'Failed to load averages data. HTTP Status Code: ${averagesResponse.statusCode}');
@@ -118,10 +119,24 @@ class DataLoader {
     }
   }
 
+  double getAverageByChartLabel(String label) {
+  if (label.toLowerCase().contains("hate")) {
+    return double.tryParse(allAverages["AverageHateCrime"] ?? "") ?? 0.0;
+  }
+  if (label.toLowerCase().contains("vawa") ||
+      label.toLowerCase().contains("violence against women")) {
+    return double.tryParse(allAverages["AverageVAWA"] ?? "") ?? 0.0;
+  }
+  return 1.14;
+}
+
+
+
   Future<void> requestSchoolData(Set<int> uids) async {
     // This is to be expanded later with an actual request
     Set<int> notPresentData = uids.difference(allSchoolData.keys.toSet());
-    print("UIDS ${allSchoolData.keys.toSet().intersection(uids)} already exist in data");
+    print(
+        "UIDS ${allSchoolData.keys.toSet().intersection(uids)} already exist in data");
     if (notPresentData.isNotEmpty) {
       String fetchUIDs = notPresentData.join(',');
       var dataUrl = Uri.https(
