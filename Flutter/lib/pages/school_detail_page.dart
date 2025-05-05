@@ -31,7 +31,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   List<Color> raceColors = [
     Colors.yellow[800]!,
     Colors.brown,
-    Colors.blue,
+    const Color.fromARGB(255, 66, 107, 241),
     Colors.green,
     Colors.red,
     Colors.cyan,
@@ -276,12 +276,12 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                           child: Column(
                             children: [
                               const Text(
-                                "Average Annual Salary by Gender (USD)",
+                                "Academic Staff Salary by Gender",
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 30),
                               SizedBox(
                                 height: 300,
                                 child: BarChartWidget(
@@ -294,7 +294,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                   },
                                   colors: const [Colors.blue, Colors.pink],
                                   yAxisDescription:
-                                      "Academic Staff Average Salary (USD)",
+                                      "Average Salary (USD)",
                                 ),
                               ),
                             ],
@@ -307,32 +307,32 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               const Padding(
                                 padding: EdgeInsets.only(right: 30),
                                 child: Text(
-                                  "Hate Crimes Per Year",
+                                  "Hate Crimes Statistics (2022)",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 30),
                               SizedBox(
                                 height: 300,
                                 child: BarChartWidget(
                                   data: {
-                                    "Avg": DataLoader.instance
-                                        .getAverageByChartLabel(
-                                            "AverageHateCrime"),
-                                    "Hate":
-                                        schoolData.getNum("YEARLYHATECRIME1K"),
+                                    "National\nAverage":
+																			DataLoader.instance.allAverages["AverageHateCrime"] ?? -170.0,
+                                    "This\nSchool":
+																			schoolData.getNum("YEARLYHATECRIME1K"),
                                   },
                                   colors: const [Colors.red],
                                   yAxisDescription:
-                                      "Cases Per Year Per 1000 Students",
+                                      "Cases Per 1000 Students",
                                 ),
                               ),
                             ],
                           ),
                         ),
+                        
                         SizedBox(
                           width: 400,
                           child: Column(
@@ -340,29 +340,29 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               const Padding(
                                 padding: EdgeInsets.only(right: 30),
                                 child: Text(
-                                  "VAWA Incidents per Year",
+                                  "VAWA Statistics (2022)",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 30),
                               Column(
                                 children: [
                                   SizedBox(
                                     height: 300,
+                                    
                                     child: BarChartWidget(
                                       data: {
-                                        "Avg": DataLoader.instance
-                                            .getAverageByChartLabel(
-                                                "violence against women"),
-                                        "VAWA":
-                                            schoolData.getNum("YEARLYVAWA1K"),
+                                        "National\nAverage":
+																					DataLoader.instance.allAverages["AverageVAWA"] ?? -170.0,
+                                        "This\nSchool":
+																					schoolData.getNum("YEARLYVAWA1K"),  
                                       },
                                       colors: const [Colors.orange],
                                       yAxisDescription:
-                                          "Cases Per Year Per 1000 Students",
+                                          "Cases Per 1000 Students",
                                     ),
                                   ),
                                   const SizedBox(height: 4),

@@ -127,7 +127,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
             if (widget.showLabels) ...[
               SizedBox(width: widget.size * 0.4),
               SizedBox(
-                width: 170,
+                width: widget.size * 1.3,
                 height: widget.size * 1.4,
                 child: Center(
                   child: LayoutBuilder(
@@ -239,27 +239,7 @@ class _IndicatorState extends State<Indicator> {
     super.dispose();
   }
 
-  void _startScroll() {
-    _hoverScrollTimer = Timer.periodic(const Duration(milliseconds: 30), (_) {
-      if (_controller.hasClients) {
-        final max = _controller.position.maxScrollExtent;
-        final current = _controller.offset;
-        if (current >= max) {
-          _hoverScrollTimer?.cancel();
-        } else {
-          _controller.jumpTo((current + 1).clamp(0, max));
-        }
-      }
-    });
-  }
 
-  void _stopScroll() {
-    _hoverScrollTimer?.cancel();
-    _hoverScrollTimer = null;
-    if (_controller.hasClients) {
-      _controller.jumpTo(0.0);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

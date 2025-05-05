@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'dart:math';
+
+extension CustomRounded on num {
+  String customRound() {
+    if (this == 0) return "0";
+
+    if (this < 1) {
+      final log10 = log(this.abs()) / ln10;
+      final factor = pow(10, 2 - 1 - log10.floor());
+      final rounded = (this * factor).round() / factor;
+      return rounded.toString();
+    } else if (this <= 1000) {
+      return this.toStringAsFixed(2);
+    } else {
+      return this.toStringAsFixed(0);
+    }
+  }
+}
 
 class BarChartWidget extends StatelessWidget {
   final Map<String, num> data;
   final List<Color> colors;
   final String yAxisDescription;
-  final Map<String, double>? averageValues;
 
   const BarChartWidget({
     super.key,
     required this.data,
     required this.colors,
     required this.yAxisDescription,
-    this.averageValues,
   });
 
   @override
@@ -20,16 +36,13 @@ class BarChartWidget extends StatelessWidget {
     final List<String> labels = data.keys.toList();
     final List<num> values = data.values.toList();
 
-    // fixed crash by forcing maxY to be >= 1.0 mentioned in PR
     final List<double> allYValues = [
       ...values.where((v) => v.isFinite && v >= 0).map((v) => v.toDouble()),
-      if (averageValues != null)
-        ...averageValues!.values.where((v) => v.isFinite && v >= 0),
     ];
 
     final double maxY = allYValues.isEmpty
         ? 1.0
-        : allYValues.reduce((a, b) => a > b ? a : b) * 1.1;
+        : allYValues.reduce((a, b) => a > b ? a : b) * 1.25;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,38 +59,14 @@ class BarChartWidget extends StatelessWidget {
           width: 250,
           child: BarChart(
             BarChartData(
+              groupsSpace: 40,
               barGroups: List.generate(labels.length, (index) {
-                final String key = labels[index];
                 final double value =
                     values[index].isFinite && values[index] >= 0
                         ? values[index].toDouble()
                         : 0.0;
 
-                final bool showAverageBar =
-                    key.toUpperCase().contains("HATE") ||
-                        key.toUpperCase().contains("VAWA") ||
-                        key.toUpperCase().contains("VIOLENCE AGAINST WOMEN");
-
-                final double? avgValue = (showAverageBar &&
-                        averageValues != null &&
-                        averageValues!.containsKey(key))
-                    ? averageValues![key]!.toDouble()
-                    : null;
-
                 final List<BarChartRodData> rods = [];
-                print(
-                    '[$key] avgValue = $avgValue, showAverageBar = $showAverageBar');
-
-                if (avgValue != null) {
-                  rods.add(
-                    BarChartRodData(
-                      toY: avgValue,
-                      color: Colors.grey,
-                      width: 26,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  );
-                }
 
                 rods.add(
                   BarChartRodData(
@@ -92,30 +81,33 @@ class BarChartWidget extends StatelessWidget {
                   x: index,
                   barsSpace: 8,
                   barRods: rods,
+                  showingTooltipIndicators: [0],
                 );
               }),
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
+                  tooltipBorder: BorderSide.none,
+                  getTooltipColor: (group) => Colors.transparent,
+                  tooltipRoundedRadius: 8,
+                  tooltipPadding: const EdgeInsets.all(4),
+                  tooltipMargin: 6,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final value = rod.toY > 100
-                        ? rod.toY.toStringAsFixed(0)
-                        : rod.toY.toStringAsFixed(2);
-
-                    final isAverage = rodIndex == 0 && averageValues != null;
-                    final label =
-                        isAverage ? 'National Average: $value' : '$value';
+                    final label = rod.toY == 0 ? 'None' : rod.toY.customRound();
+                    final color = colors[groupIndex % colors.length];
                     return BarTooltipItem(
                       label,
-                      const TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255)),
+                      TextStyle(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                      ),
                     );
                   },
                 ),
               ),
               gridData: FlGridData(
                 show: true,
-                drawVerticalLine: true,
+                drawVerticalLine: false,
                 drawHorizontalLine: true,
                 getDrawingHorizontalLine: (value) => const FlLine(
                   color: Colors.grey,
@@ -150,22 +142,20 @@ class BarChartWidget extends StatelessWidget {
                 ),
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 60,
-                    getTitlesWidget: (value, meta) {
-                      if (value == maxY) {
-                        return const SizedBox.shrink();
-                      }
-                      if (value % 1 == 0) {
+                      showTitles: true,
+                      reservedSize: 60,
+                      getTitlesWidget: (value, meta) {
+                        if (value >= maxY || (value - maxY).abs() < 0.00001) {
+                          return const SizedBox.shrink();
+                        }
                         return Text(
-                          '${value.toInt()}',
+                          value.customRound(),
                           style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
+                      }),
                 ),
                 rightTitles:
                     const AxisTitles(sideTitles: SideTitles(showTitles: false)),

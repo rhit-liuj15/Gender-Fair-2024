@@ -4,6 +4,7 @@ import 'package:gender_fair_2024/components/nav_tile.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/pages/about_us_page.dart';
 import 'package:gender_fair_2024/pages/school_list_page.dart';
+import 'package:gender_fair_2024/pages/help_page.dart';
 
 Future<void> main() async {
   await DataLoader.instance.loadData();
@@ -20,7 +21,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final Map<int, Widget> pages = {
     0: const SchoolListPage(),
-    1: const AboutUsPage(),
+    1: const HelpPage(),
+    2: const AboutUsPage(),
   };
   int currentPageIndex = 0;
 
@@ -72,6 +74,16 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(width: 10),
                 NavTile(
                   label: "About Us",
+                  isSelected: currentPageIndex == 2,
+                  onTap: () {
+                    setState(() {
+                      currentPageIndex = 2;
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                NavTile(
+                  label: "Help",
                   isSelected: currentPageIndex == 1,
                   onTap: () {
                     setState(() {
@@ -79,7 +91,6 @@ class _MyAppState extends State<MyApp> {
                     });
                   },
                 ),
-                
               ],
             ),
           ),

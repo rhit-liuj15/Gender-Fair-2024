@@ -34,8 +34,6 @@ class _SchoolListPageState extends State<SchoolListPage> {
   void initState() {
     super.initState();
     loadData();
-    print(DataLoader.instance.allAverages.keys);
-
   }
 
   Future<void> loadData() async {
