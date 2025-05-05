@@ -47,7 +47,7 @@ Scoring/*.csv
 Scoring/*.txt
 
 # Ignore the credentials json file
-API/.procedure_runner_config.json
+API/.*.json
 
 # Ignore cache
 *.cache
