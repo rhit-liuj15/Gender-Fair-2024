@@ -52,6 +52,12 @@ Once the API is hosted, remember update the `hostname` found in `/Flutter/lib/mo
 
 # Scoring
 
+| Category       | Weight | Distribution                                                         |
+| -------------- | ------ | -------------------------------------------------------------------- |
+| Leadership     | 30%    | Academic Staff Gender Composition (30%)                              |
+| Policies & Pay | 25%    | Average pay for gender (15%), campus daycare (10%, not shown)        |
+| Safety         | 20%    | Violence Against Women Act (VAWA) incidents (10%), hate crimes (10%) |
+| Diversity      | 25%    | Racial diversity of academic (20%) and non-academic staff (5%)       |
 
 # Data Sources
 
