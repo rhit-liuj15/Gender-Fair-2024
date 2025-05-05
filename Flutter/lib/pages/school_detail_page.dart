@@ -276,7 +276,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                           child: Column(
                             children: [
                               const Text(
-                                "Average Annual Salary by Gender (USD)",
+                                "Academic Staff Salary by Gender",
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
@@ -294,7 +294,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                   },
                                   colors: const [Colors.blue, Colors.pink],
                                   yAxisDescription:
-                                      "Academic Staff Average Salary (USD)",
+                                      "Average Salary (USD)",
                                 ),
                               ),
                             ],
@@ -307,7 +307,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               const Padding(
                                 padding: EdgeInsets.only(right: 30),
                                 child: Text(
-                                  "Hate Crimes Per Year",
+                                  "Hate Crimes Statistics (2022)",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
@@ -319,15 +319,15 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                 height: 300,
                                 child: BarChartWidget(
                                   data: {
-                                    "Avg": DataLoader.instance
+                                    "National\nAverage": DataLoader.instance
                                         .getAverageByChartLabel(
                                             "AverageHateCrime"),
-                                    "Hate":
+                                    "This\nSchool":
                                         schoolData.getNum("YEARLYHATECRIME1K"),
                                   },
                                   colors: const [Colors.red],
                                   yAxisDescription:
-                                      "Cases Per Year Per 1000 Students",
+                                      "Cases Per 1000 Students",
                                 ),
                               ),
                             ],
@@ -341,7 +341,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                               const Padding(
                                 padding: EdgeInsets.only(right: 30),
                                 child: Text(
-                                  "VAWA Incidents per Year",
+                                  "VAWA Statistics (2022)",
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
@@ -356,16 +356,16 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                     
                                     child: BarChartWidget(
                                       data: {
-                                        "Avg": DataLoader.instance
+                                        "National\nAverage": DataLoader.instance
                                             .getAverageByChartLabel(
                                                 "violence against women"),
                                                 
-                                        "VAWA":
+                                        "This\nSchool":
                                             schoolData.getNum("YEARLYVAWA1K"),
                                       },
                                       colors: const [Colors.orange],
                                       yAxisDescription:
-                                          "Cases Per Year Per 1000 Students",
+                                          "Cases Per 1000 Students",
                                     ),
                                   ),
                                   const SizedBox(height: 4),
