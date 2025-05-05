@@ -119,20 +119,6 @@ class DataLoader {
     }
   }
 
-  double getAverageByChartLabel(String label) {
-  if (label.toLowerCase().contains("hate")) {
-    print("AverageHate raw value: ${allAverages["AverageHateCrime"]}");
-    return double.tryParse(allAverages["AverageHateCrime"] ?? "") ?? 0.0;
-  }
-  if (label.toLowerCase().contains("vawa") ||
-      label.toLowerCase().contains("violence against women")) {
-      print("AverageVAWA raw value: ${allAverages["AverageVAWA"]}");
-
-    return double.tryParse(allAverages["AverageVAWA"] ?? "") ?? 0.0;
-  }
-  return 0;
-}
-
 
 
   Future<void> requestSchoolData(Set<int> uids) async {

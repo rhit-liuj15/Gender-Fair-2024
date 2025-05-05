@@ -319,9 +319,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                 height: 300,
                                 child: BarChartWidget(
                                   data: {
-                                    "National\nAverage": DataLoader.instance
-                                        .getAverageByChartLabel(
-                                            "AverageHateCrime"),
+                                    "National\nAverage": double.tryParse(DataLoader.instance.allAverages["AverageHateCrime"] ?? "") ?? 0.0,
                                     "This\nSchool":
                                         schoolData.getNum("YEARLYHATECRIME1K"),
                                   },
@@ -356,12 +354,9 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                     
                                     child: BarChartWidget(
                                       data: {
-                                        "National\nAverage": DataLoader.instance
-                                            .getAverageByChartLabel(
-                                                "violence against women"),
-                                                
+                                        "National\nAverage":double.tryParse(DataLoader.instance.allAverages["AverageVAWA"] ?? "") ?? 0.0,
                                         "This\nSchool":
-                                            schoolData.getNum("YEARLYVAWA1K"),
+                                            schoolData.getNum("YEARLYVAWA1K"),  
                                       },
                                       colors: const [Colors.orange],
                                       yAxisDescription:
