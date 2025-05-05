@@ -6,6 +6,7 @@ import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/components/bar_chart_widget.dart';
 
 class SchoolDetailPage extends StatefulWidget {
+	/// Creates the detail page for a school with UID [uid]
   final int uid;
   const SchoolDetailPage({super.key, required this.uid});
 
