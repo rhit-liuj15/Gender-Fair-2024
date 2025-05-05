@@ -7,7 +7,7 @@ import 'package:gender_fair_2024/models/school_score.dart';
 class DataLoader {
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
-  Map<String, String> allAverages = <String, String>{};
+  Map<String, double> allAverages = <String, double>{};
   // The reason allSchoolData and allSchoolScores are separate is that allSchoolScores are loaded up front, but allSchoolData is requested as necessary.
   bool initialDataLoadComplete = false;
   static final DataLoader instance = DataLoader._privateConstructor();
@@ -118,8 +118,6 @@ class DataLoader {
       allSchoolData[data.getUID()] = data;
     }
   }
-
-
 
   Future<void> requestSchoolData(Set<int> uids) async {
     // This is to be expanded later with an actual request
