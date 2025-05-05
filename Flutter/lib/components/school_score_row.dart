@@ -4,6 +4,8 @@ import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 import 'package:gender_fair_2024/pages/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
+	/// A component that makes 1 row for [SchoolListPane]
+
   final void Function() onUpdateSelected;
   static List<int> flexValues = ListPageColumnAttributes.flexValues;
   static List<String> columnNames = ListPageColumnAttributes.colNames;

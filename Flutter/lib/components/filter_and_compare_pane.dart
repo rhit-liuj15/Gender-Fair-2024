@@ -4,7 +4,11 @@ import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 class FilterAndComparePane extends StatefulWidget {
-  final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
+	/// The pane on the list page which contains the filters
+	/// 
+	/// Takes in a reference to the list of [filterFunctions] and a callback for [updateShownSchools] to update the filters
+  
+	final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
       filterFunctions;
   final Function() updateShownSchools;
   final int selectedSchoolsCount;

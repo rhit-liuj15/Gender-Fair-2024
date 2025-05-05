@@ -6,7 +6,9 @@ import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 
 class SchoolListPane extends StatefulWidget {
-  final ValueChanged<ListPageColumnAttributes> updateSortingMetricCallback;
+	/// The pane on the list page that has the list of schools as filtered for by the user (or all schools if filters are absent)
+  
+	final ValueChanged<ListPageColumnAttributes> updateSortingMetricCallback;
   final Function() invertSortCallback;
   final ListPageColumnAttributes sortingMetric;
   final Function() updateSortCallback;
