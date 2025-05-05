@@ -8,18 +8,22 @@ equality-focused metrics using reputable data sources.
 
 | Segment         | Technology    |
 | --------------- | ------------- |
-| Data processing | Python & MySQL|
-| Database        | MySQL         |
 | Front End       | Flutter       |
 | API             | JavaScript    |
+| Data processing | Python & MySQL|
+| Database        | MySQL         |
 
 # Installation/Setup
+
+
 
 ## Database
 
 ## Website
 
 Our website is written in dart/flutter
+
+### Deploying on firebase
 
 ## API
 
