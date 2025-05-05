@@ -97,7 +97,6 @@ class DataLoader {
           for (var item in data) {
             allAverages[item['Name']] = item['Value'];
           }
-          
         } else {
           print(
               'Failed to load averages data. HTTP Status Code: ${averagesResponse.statusCode}');
@@ -128,8 +127,8 @@ class DataLoader {
       String fetchUIDs = notPresentData.join(',');
       var dataUrl = Uri.https(
           'genderfair2024.csse.rose-hulman.edu', 'data', {'uids': fetchUIDs});
-      print("Making a request for UIDs $fetchUIDs");
-      print(dataUrl);
+      // print("Making a request for UIDs $fetchUIDs");
+      // print(dataUrl);
       try {
         final https.Response response = await https.get(dataUrl);
         if (response.statusCode == 200) {
