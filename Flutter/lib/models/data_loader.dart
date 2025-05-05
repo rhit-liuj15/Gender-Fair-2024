@@ -7,7 +7,7 @@ import 'package:gender_fair_2024/models/school_score.dart';
 class DataLoader {
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
-  Map<String, String> allAverages = <String, String>{};
+  Map<String, double> allAverages = <String, double>{};
   // The reason allSchoolData and allSchoolScores are separate is that allSchoolScores are loaded up front, but allSchoolData is requested as necessary.
   bool initialDataLoadComplete = false;
   static final DataLoader instance = DataLoader._privateConstructor();
@@ -122,13 +122,13 @@ class DataLoader {
   double getAverageByChartLabel(String label) {
 		if (label.toLowerCase().contains("hate")) {
 			print("AverageHate raw value: ${allAverages["AverageHateCrime"]}");
-			return double.tryParse(allAverages["AverageHateCrime"] ?? "") ?? 0.0;
+			return allAverages["AverageHateCrime"] ?? -170.0;
 		}
 		if (label.toLowerCase().contains("vawa") ||
 				label.toLowerCase().contains("violence against women")) {
 				print("AverageVAWA raw value: ${allAverages["AverageVAWA"]}");
 
-			return double.tryParse(allAverages["AverageVAWA"] ?? "") ?? 0.0;
+			return allAverages["AverageVAWA"] ?? -170.0;
 		}
 		return 0;
 	}
