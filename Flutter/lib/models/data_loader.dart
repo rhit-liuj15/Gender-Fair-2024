@@ -119,22 +119,6 @@ class DataLoader {
     }
   }
 
-  double getAverageByChartLabel(String label) {
-		if (label.toLowerCase().contains("hate")) {
-			print("AverageHate raw value: ${allAverages["AverageHateCrime"]}");
-			return allAverages["AverageHateCrime"] ?? -170.0;
-		}
-		if (label.toLowerCase().contains("vawa") ||
-				label.toLowerCase().contains("violence against women")) {
-				print("AverageVAWA raw value: ${allAverages["AverageVAWA"]}");
-
-			return allAverages["AverageVAWA"] ?? -170.0;
-		}
-		return 0;
-	}
-
-
-
   Future<void> requestSchoolData(Set<int> uids) async {
     // This is to be expanded later with an actual request
     Set<int> notPresentData = uids.difference(allSchoolData.keys.toSet());
