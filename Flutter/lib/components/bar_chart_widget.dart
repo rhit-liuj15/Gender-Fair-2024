@@ -92,6 +92,7 @@ class BarChartWidget extends StatelessWidget {
                   x: index,
                   barsSpace: 8,
                   barRods: rods,
+									showingTooltipIndicators: [0],
                 );
               }),
               barTouchData: BarTouchData(
