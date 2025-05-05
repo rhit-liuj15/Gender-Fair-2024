@@ -4,7 +4,7 @@ const cors = require('cors')
 const https = require('https')
 const fs = require('fs')
 const os = require('os')
-const CONFIG = require('./.procedure_runner_config.json')
+const CONFIG = require('./.server_config.json')
 
 
 const connection = mysql.createConnection({
@@ -37,7 +37,7 @@ app.get('/hello', (req, res) => {
  * @api {get} Score
  * @apiDescription Retrieve each subcategory's score and overall score for each institution
  */
-app.get('/score', (res) => {
+app.get('/score', (req, res) => {
   connection.query('CALL GetSchoolScores', (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'CALL GetSchoolScore failed' })
@@ -51,7 +51,7 @@ app.get('/score', (res) => {
  * @api {get} Averages
  * @apiDescription Retrieve average male and female executive pay for each institution
  */
-app.get('/averages', (res) => {
+app.get('/averages', (req, res) => {
   connection.query('CALL GetAverages', (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'CALL GetAverages failed' })
@@ -66,7 +66,7 @@ app.get('/averages', (res) => {
  * @apiDescription Retrieve state (location), institution ownership,
  * and financial structure metadata for each institution
  */
-app.get('/metadata', (res) => {
+app.get('/metadata', (req, res) => {
   connection.query('CALL GetMetadata', (err, rows) => {
     if (err) {
       res.status(500).json({ error: 'CALL GetMetadata failed' })
@@ -96,9 +96,8 @@ app.get('/data', (req, res) => {
 });
 
 const options = {
-  key: fs.readFileSync('/home/ethan/genderfair2024api/certificate/privkey.pem'),
-  cert: fs.readFileSync('/home/ethan/genderfair2024api/certificate/cert.pem'),
-  ca: fs.readFileSync('/home/ethan/genderfair2024api/certificate/fullchain.pem')
+  key: fs.readFileSync(CONFIG.key),
+  cert: fs.readFileSync(CONFIG.cert),
 }
 
 https.createServer(options, app).listen(port, () => {
