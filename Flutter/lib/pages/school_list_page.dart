@@ -15,7 +15,6 @@ class SchoolListPage extends StatefulWidget {
 }
 
 class _SchoolListPageState extends State<SchoolListPage> {
-  // int _hoveredColumnIndex = -1;
   final int schoolsPerPage = 20;
   int selectedSchoolsCount = SchoolScore.selectedSchools.length;
 

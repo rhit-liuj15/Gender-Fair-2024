@@ -15,15 +15,31 @@ equality-focused metrics using reputable data sources.
 
 # Installation/Setup
 
+Three separate components need to be set up for the project: database, website, and API.
 
+Setting up the website and API on the same host sharing port 443 for HTTPS is not tested.
 
 ## Database
 
+### Importing Data
+
+IPEDS: 
+CSS: Refer to `/Database/CSS/readme.txt`
+IRS: 
+
+### Processing Data
+
+First, run `/Database/merge_script.sql` to merge the data from IPEDS, CSS and IRS.
+
+Then, run the scripts found in `/Database/CreateTable`.
+
+Then, run `/Database/Scoring/Scoring_v2.sql`.
+
+Then, run the scripts found in `/Database/CreateStoredProcedure`.
+
 ## Website
 
-Our website is written in dart/flutter
-
-### Deploying on firebase
+Our website is written in dart/flutter. To build into a HTML/CSS/JS release, cd into the `/Flutter` directory (Note the capitalization), and run `flutter build web`. By default, the web build will be placed in `/Flutter/build/web`.
 
 ## API
 

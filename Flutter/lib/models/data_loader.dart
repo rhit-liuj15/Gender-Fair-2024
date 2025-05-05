@@ -70,8 +70,7 @@ class DataLoader {
           }
           computeRankings();
         } else {
-          print(
-              'Failed to load score data. HTTP Status Code: ${scoreResponse.statusCode}');
+          print('Failed to load score data. HTTP Status Code: ${scoreResponse.statusCode}');
         }
       } catch (e) {
         print('Error occurred while fetching scores: $e');
@@ -124,13 +123,10 @@ class DataLoader {
   Future<void> requestSchoolData(Set<int> uids) async {
     // This is to be expanded later with an actual request
     Set<int> notPresentData = uids.difference(allSchoolData.keys.toSet());
-    // print("UIDS ${allSchoolData.keys.toSet().intersection(uids)} already exist in data");
     if (notPresentData.isNotEmpty) {
       String fetchUIDs = notPresentData.join(',');
       var dataUrl = Uri.https(
           'genderfair2024.csse.rose-hulman.edu', 'data', {'uids': fetchUIDs});
-      // print("Making a request for UIDs $fetchUIDs");
-      // print(dataUrl);
       try {
         final https.Response response = await https.get(dataUrl);
         if (response.statusCode == 200) {
