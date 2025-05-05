@@ -33,9 +33,20 @@ At the time of deciding tech stack, dart did not have a good way of connecting w
 
 The API expects:
 1. credentials to the account which can be used to run stored procedures.
-2. The key, certificate (cert) and certificate authority (ca, optional if the certificate is issued by a publicly trusted certificate authority) which the API server will use
+2. The key and certificate (cert) which the API server will use
 
-TODO: Write about using credentials and hosting
+The expected format for the config file is:
+
+```
+{
+	"host": "",
+	"user": "",
+	"password": "",
+	"database": "",
+	"key": "",
+	"cert": ""
+}
+```
 
 Once the API is hosted, remember update the `hostname` found in `/Flutter/lib/models/data_loader.dart`.
 
