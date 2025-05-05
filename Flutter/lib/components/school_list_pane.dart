@@ -7,6 +7,7 @@ import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 
 class SchoolListPane extends StatefulWidget {
   final ValueChanged<ListPageColumnAttributes> updateSortingMetricCallback;
+  final Function() invertSortCallback;
   final ListPageColumnAttributes sortingMetric;
   final Function() updateSortCallback;
   final List<SchoolScore> schoolsFilteredFor;
@@ -16,6 +17,7 @@ class SchoolListPane extends StatefulWidget {
   const SchoolListPane({
     super.key,
     required this.updateSortingMetricCallback,
+    required this.invertSortCallback,
     required this.sortingMetric,
     required this.updateSortCallback,
     required this.schoolsFilteredFor,
@@ -117,6 +119,11 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                   isExpanded: false,
                   hint: const Text("Select column"),
                 ),
+                const SizedBox(width: 8.0),
+								TextButton(
+									child: Text("Invert Sort"),
+									onPressed: widget.invertSortCallback,
+								)
               ],
             ),
           ),

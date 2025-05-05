@@ -45,13 +45,17 @@ class _SchoolListPageState extends State<SchoolListPage> {
   }
 
   void updateSortMetric(ListPageColumnAttributes column) {
-    if (sortingBy == column) {
-      sortDescending = !sortDescending;
-    } else {
+    if (sortingBy != column) {
       sortingBy = column;
       sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
+    	sortData();
     }
-    sortData();
+		// Otherwise, the same element has been selected. The website won't need to respond in that case.
+  }
+
+  void invertSort() {
+		sortDescending = !sortDescending;
+		sortData();
   }
 
   void updateShownSchools() {
@@ -137,6 +141,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                       flex: 5,
                       child: SchoolListPane(
                         updateSortingMetricCallback: updateSortMetric,
+                        invertSortCallback: invertSort,
                         sortingMetric: sortingBy,
                         updateSortCallback: sortData,
                         schoolsFilteredFor: schoolsFilteredFor,
