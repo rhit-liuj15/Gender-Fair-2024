@@ -127,7 +127,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
             if (widget.showLabels) ...[
               SizedBox(width: widget.size * 0.4),
               SizedBox(
-                width: 170,
+                width: widget.size * 1.3,
                 height: widget.size * 1.4,
                 child: Center(
                   child: LayoutBuilder(

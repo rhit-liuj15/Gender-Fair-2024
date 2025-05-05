@@ -31,7 +31,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   List<Color> raceColors = [
     Colors.yellow[800]!,
     Colors.brown,
-    Colors.blue,
+    const Color.fromARGB(255, 66, 107, 241),
     Colors.green,
     Colors.red,
     Colors.cyan,

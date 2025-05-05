@@ -42,7 +42,7 @@ class BarChartWidget extends StatelessWidget {
 
     final double maxY = allYValues.isEmpty
         ? 1.0
-        : allYValues.reduce((a, b) => a > b ? a : b) * 1.5;
+        : allYValues.reduce((a, b) => a > b ? a : b) * 1.25;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,7 +94,6 @@ class BarChartWidget extends StatelessWidget {
                   tooltipMargin: 6,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
                     final label = rod.toY == 0 ? 'None' : rod.toY.customRound();
-
                     final color = colors[groupIndex % colors.length];
                     return BarTooltipItem(
                       label,
@@ -108,7 +107,7 @@ class BarChartWidget extends StatelessWidget {
               ),
               gridData: FlGridData(
                 show: true,
-                drawVerticalLine: true,
+                drawVerticalLine: false,
                 drawHorizontalLine: true,
                 getDrawingHorizontalLine: (value) => const FlLine(
                   color: Colors.grey,
