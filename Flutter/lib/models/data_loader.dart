@@ -127,7 +127,7 @@ class DataLoader {
       label.toLowerCase().contains("violence against women")) {
     return double.tryParse(allAverages["AverageVAWA"] ?? "") ?? 0.0;
   }
-  return 1.14;
+  return 0;
 }
 
 
