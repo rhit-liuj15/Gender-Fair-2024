@@ -6,34 +6,6 @@ WITH cssYearly AS (
 		OPEID,
 		MAX(cssh.Total) AS SchoolPopulation,
 		SUM(
-			cssh.MURD20 +
-			cssh.RAPE20 +
-			cssh.FOND20 +
-			cssh.INCE20 +
-			cssh.STAT20 +
-			cssh.ROBBE20 +
-			cssh.AGG_A20 +
-			cssh.BURGLA20 +
-			cssh.VEHIC20 +
-			cssh.ARSON20 +
-			cssh.SIM_A20 +
-			cssh.LAR_T20 +
-			cssh.INTIM20 +
-			cssh.VANDAL20 +
-			cssh.MURD21 +
-			cssh.RAPE21 +
-			cssh.FOND21 +
-			cssh.INCE21 +
-			cssh.STAT21 +
-			cssh.ROBBE21 +
-			cssh.AGG_A21 +
-			cssh.BURGLA21 +
-			cssh.VEHIC21 +
-			cssh.ARSON21 +
-			cssh.SIM_A21 +
-			cssh.LAR_T21 +
-			cssh.INTIM21 +
-			cssh.VANDAL21 +
 			cssh.MURD22 +
 			cssh.RAPE22 +
 			cssh.FOND22 +
@@ -48,18 +20,12 @@ WITH cssYearly AS (
 			cssh.LAR_T22 +
 			cssh.INTIM22 +
 			cssh.VANDAL22
-		) / 3 AS YEARLYHATECRIME,
+		) AS YEARLYHATECRIME,
 		SUM(
-			cssv.DOMEST20 +
-			cssv.DATING20 +
-			cssv.STALK20 +
-			cssv.DOMEST21 +
-			cssv.DATING21 +
-			cssv.STALK21 +
 			cssv.DOMEST22 +
 			cssv.DATING22 +
 			cssv.STALK22
-		) / 3 AS YEARLYVAWA
+		) AS YEARLYVAWA
 	FROM `css`.`css_hate` cssh
 	JOIN `css`.`css_vawa` cssv
 	USING (OPEID)

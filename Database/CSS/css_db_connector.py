@@ -3,19 +3,18 @@ from pathlib import Path
 import mysql.connector
 
 class DatabaseConnector:
-    ##################################################################################
-    ## Load a database config file to establish a connection to the database        ##
-    ## Make sure to put css_db_connector.py and db_config.ini under the same folder ##
-    ## :Param config_filename: name of the database config file                     ##
-    ## :Return database connection                                                  ##
-    ##################################################################################
-    def __init__(self, config_filename="db_config.ini"):
-        self.config_filename = config_filename
+    ############################################################################
+    ## Load a database config file to establish a connection to the database  ##
+    ## :Param config_path: path of the database config file                   ##
+    ## :Return database connection                                            ##
+    ############################################################################
+    def __init__(self, config_path):
+        self.config_path = config_path
         self.connection = None
         self.cursor = None
 
     def connect(self):
-        config_path = Path(__file__).parent / self.config_filename
+        config_path = Path(self.config_path).expanduser().resolve()
 
         if not config_path.is_file():
             raise FileNotFoundError(f"Config file not found: {config_path}")

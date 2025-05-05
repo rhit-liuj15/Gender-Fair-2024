@@ -1,22 +1,13 @@
 CSS import script README
 
-In the github repo you will find the following files:
-- css_data_downloader.py
-- css_db_connector.py
-- css_table_builder.py
-- example_config.ini
-- main.py
-- requirement.txt
-- readme.txt
-- css_data_download_test.py
-- css_db_connection_test.py
-
-*The two test files can be omitted as they are for development testing.
+*The python version used during development is 3.10.11
 
 **The requirement.txt include all libraries and their current version installed for the scripts.
+**To install all dependencies, use <pip install -r requirement.txt>
+**Ideally, install pip packages in a virtual environment and not on one's root Python installation to avoid version conflicts
 
-***The example_config.ini contains a example format of a .ini file for database credential storage. Note that all information in example_config.ini is for mock only.
-***Fields in example_config.ini:
+***The main.py requires a path to the config.ini file, which is used for database credential storage.
+***Fields required in such db_config.ini:
 	host: hostname of the mysql database
 	port: port
 	user: username of a user of the database
@@ -26,4 +17,8 @@ In the github repo you will find the following files:
 
 ***IMPORTANT: DO NO PUSH ANY ACTUAL CREDENTIALS TO GITHUB***
 
-To run the script, run <python main.py> in the git-terminal to automatically download CSS database online and import to a Database.
+To run the script, run 
+	python main.py --file-path <actual/path/to/config.ini>
+in the git-terminal to automatically download CSS database online and import to a Database.
+
+The script will automatically generate a temporary directory and store all downloaded files there until the end of the script, where they are cleaned up and removed.
