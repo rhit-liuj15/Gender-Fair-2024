@@ -87,6 +87,8 @@ class BarChartWidget extends StatelessWidget {
               barTouchData: BarTouchData(
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
+                  tooltipBorder: BorderSide.none,
+                  getTooltipColor: (group) => Colors.transparent,
                   tooltipRoundedRadius: 8,
                   tooltipPadding: const EdgeInsets.all(4),
                   tooltipMargin: 6,
