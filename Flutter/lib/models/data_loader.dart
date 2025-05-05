@@ -5,7 +5,10 @@ import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 class DataLoader {
-	/// Hostname: this is the hostname for the API. The specification of where the MySQL database is hosted is placed in the credentials file of the 
+	/// The module responsible for fetching data from the API and loading them into respective data classes (if exists)
+	/// 
+	/// Has a variable [hostname] that should be configured to the correct domain for access.
+	
 	String hostname = "genderfair2024.csse.rose-hulman.edu";
 
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
