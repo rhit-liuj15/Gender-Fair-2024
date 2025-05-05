@@ -333,6 +333,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                             ],
                           ),
                         ),
+                        
                         SizedBox(
                           width: 400,
                           child: Column(
@@ -352,11 +353,13 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                 children: [
                                   SizedBox(
                                     height: 300,
+                                    
                                     child: BarChartWidget(
                                       data: {
                                         "Avg": DataLoader.instance
                                             .getAverageByChartLabel(
                                                 "violence against women"),
+                                                
                                         "VAWA":
                                             schoolData.getNum("YEARLYVAWA1K"),
                                       },

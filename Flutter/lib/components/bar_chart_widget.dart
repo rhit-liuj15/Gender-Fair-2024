@@ -1,5 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'dart:math';
+
+extension CustomRounded on num {
+  String customRound() {
+    if (this == 0) return "0";
+
+    if (this < 1) {
+      final log10 = log(this.abs()) / ln10;
+      final factor = pow(10, 2 - 1 - log10.floor());
+      final rounded = (this * factor).round() / factor;
+      return rounded.toString();
+    } else if (this <= 1000) {
+      return this.toStringAsFixed(2);
+    } else {
+      return this.toStringAsFixed(0);
+    }
+  }
+}
 
 class BarChartWidget extends StatelessWidget {
   final Map<String, num> data;
@@ -48,10 +66,7 @@ class BarChartWidget extends StatelessWidget {
                         ? values[index].toDouble()
                         : 0.0;
 
-
-
                 final List<BarChartRodData> rods = [];
-
 
                 rods.add(
                   BarChartRodData(
@@ -73,16 +88,12 @@ class BarChartWidget extends StatelessWidget {
                 enabled: true,
                 touchTooltipData: BarTouchTooltipData(
                   tooltipRoundedRadius: 8,
-                  
-                  tooltipPadding: const EdgeInsets.all(4), 
+                  tooltipPadding: const EdgeInsets.all(4),
                   tooltipMargin: 6,
                   getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final value = rod.toY > 100
-                        ? rod.toY.toStringAsFixed(0)
-                        : rod.toY.toStringAsFixed(2);
+                    final label = rod.toY == 0 ? 'None' : rod.toY.customRound();
 
-                    final label = '$value';
-                    final color =  colors[groupIndex % colors.length];
+                    final color = colors[groupIndex % colors.length];
                     return BarTooltipItem(
                       label,
                       TextStyle(
@@ -130,22 +141,20 @@ class BarChartWidget extends StatelessWidget {
                 ),
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 60,
-                    getTitlesWidget: (value, meta) {
-                      if (value == maxY) {
-                        return const SizedBox.shrink();
-                      }
-                      if (value % 1 == 0) {
+                      showTitles: true,
+                      reservedSize: 60,
+                      getTitlesWidget: (value, meta) {
+                        if (value >= maxY || (value - maxY).abs() < 0.00001) {
+                          return const SizedBox.shrink();
+                        }
                         return Text(
-                          '${value.toInt()}',
+                          value.customRound(),
                           style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         );
-                      }
-                      return const SizedBox.shrink();
-                    },
-                  ),
+                      }),
                 ),
                 rightTitles:
                     const AxisTitles(sideTitles: SideTitles(showTitles: false)),
