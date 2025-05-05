@@ -73,21 +73,21 @@ class _MyAppState extends State<MyApp> {
                 ),
                 const SizedBox(width: 10),
                 NavTile(
-                  label: "Help",
-                  isSelected: currentPageIndex == 1,
-                  onTap: () {
-                    setState(() {
-                      currentPageIndex = 1;
-                    });
-                  },
-                ),
-                const SizedBox(width: 10),
-                NavTile(
                   label: "About Us",
                   isSelected: currentPageIndex == 2,
                   onTap: () {
                     setState(() {
                       currentPageIndex = 2;
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                NavTile(
+                  label: "Help",
+                  isSelected: currentPageIndex == 1,
+                  onTap: () {
+                    setState(() {
+                      currentPageIndex = 1;
                     });
                   },
                 ),
