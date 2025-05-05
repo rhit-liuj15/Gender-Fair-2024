@@ -25,8 +25,8 @@ const port = 443
  * @api {get} Hello
  * @apiDescription Responds to the '/hello' suffix with the webserver's and the system's uptime.
  */
-app.get('/hello', (res) => {
-  res.json([
+app.get('/hello', (req, res) => {
+	res.json([
     "Hello! The database is live.",
     "The server has been up for " + process.uptime() + " seconds",
     "The system has been up for " + os.uptime() + " seconds"
