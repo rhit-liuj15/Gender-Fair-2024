@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `PublicFacingData`.`Metadata`;
 CREATE TABLE `PublicFacingData`.`Metadata` (
 	`GROUP` INT NOT NULL,
 	`ABBR` VARCHAR(7) NOT NULL,
-	`DESC` VARCHAR(200) NULL,
+	`DESC` VARCHAR(200) NOT NULL,
 	PRIMARY KEY (`GROUP`, `ABBR`)
 );
 
