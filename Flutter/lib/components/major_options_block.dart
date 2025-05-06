@@ -30,6 +30,17 @@ class MajorOptionsBlock extends StatelessWidget {
 									fontSize: 16.0, fontWeight: FontWeight.bold),
 							textAlign: TextAlign.start,
 						),
+						const Expanded(
+							child: SizedBox()
+						),
+						IconButton(
+							icon: const Icon(Icons.close),
+							tooltip: 'Remove $majorName',
+							onPressed: () {
+								selectedLevels.clear();
+								updateLevelsCallback();
+							},
+						),
 					],
 				),
         Padding(
