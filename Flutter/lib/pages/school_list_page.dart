@@ -15,12 +15,11 @@ class SchoolListPage extends StatefulWidget {
 }
 
 class _SchoolListPageState extends State<SchoolListPage> {
-  // int _hoveredColumnIndex = -1;
   final int schoolsPerPage = 20;
   int selectedSchoolsCount = SchoolScore.selectedSchools.length;
 
-  final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
-      filterFunctions = {};
+  final Map<String, List<SchoolScore> Function(List<SchoolScore>)> filterFunctions = {};
+  final Map<String, Function()> filterResetCallbacks = {};
 
   List<SchoolScore> scoreList = <SchoolScore>[];
   List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
@@ -45,13 +44,50 @@ class _SchoolListPageState extends State<SchoolListPage> {
   }
 
   void updateSortMetric(ListPageColumnAttributes column) {
-    if (sortingBy == column) {
-      sortDescending = !sortDescending;
-    } else {
+    if (sortingBy != column) {
       sortingBy = column;
       sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
+    	sortData();
     }
-    sortData();
+		// Otherwise, the same element has been selected. The website won't need to respond in that case.
+  }
+
+  void invertSort() {
+		sortDescending = !sortDescending;
+		sortData();
+  }
+
+  void addFilter({
+		required String name,
+		required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
+		required Function() resetCallback,
+	}) {
+		filterFunctions[name] = filterFunction;
+		filterResetCallbacks[name] = resetCallback;
+    updateShownSchools();
+  }
+
+  void removeFilter({
+		required String name,
+	}) {
+		filterFunctions.remove(name);
+		filterResetCallbacks.remove(name);
+    updateShownSchools();
+  }
+
+  void resetFilters() {
+		filterResetCallbacks.forEach((key, value) {
+		  value();
+		});
+		filterFunctions.clear();
+		filterResetCallbacks.clear();
+    updateShownSchools();
+  }
+
+  void clearSchoolSelection() {
+		
+		SchoolScore.selectedSchools.clear();
+    updateShownSchools();
   }
 
   void updateShownSchools() {
@@ -126,8 +162,10 @@ class _SchoolListPageState extends State<SchoolListPage> {
                       child: FilterAndComparePane(
                         selectedSchoolsCount:
                             SchoolScore.selectedSchools.length,
-                        filterFunctions: filterFunctions,
-                        updateShownSchools: updateShownSchools,
+												addFilterCallback: addFilter,
+												removeFilterCallback: removeFilter,
+                        resetFilters: resetFilters,
+                        clearSchoolSelection: clearSchoolSelection,
                       ),
                     ),
 
@@ -137,6 +175,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
                       flex: 5,
                       child: SchoolListPane(
                         updateSortingMetricCallback: updateSortMetric,
+                        invertSortCallback: invertSort,
                         sortingMetric: sortingBy,
                         updateSortCallback: sortData,
                         schoolsFilteredFor: schoolsFilteredFor,
@@ -168,10 +207,10 @@ class AboutButton extends StatelessWidget {
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text("About GenderFair Ranking"),
-              content: SingleChildScrollView(
+              content: const SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, it empowers prospective students to make informed decisions aligned with their values. Schools with identical rank and score are treated as having equal standing.",
                       style: TextStyle(fontSize: 14),

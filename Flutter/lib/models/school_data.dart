@@ -1,4 +1,6 @@
 class SchoolData {
+	/// The data class that stored data specific to the school with [uid] and [name].
+
   late Map<String, dynamic> _data;
 	int uid = -4826;
 	late String name;
@@ -24,11 +26,11 @@ class SchoolData {
   }
 
   String getName() {
-    return _data["INSTNM"];
+    return getString("INSTNM");
   }
 
   int getUID() {
-    return _data["UNITID"];
+    return getInt("UNITID", convert: false);
   }
 
   int getInt(String name, {bool convert = true}) {

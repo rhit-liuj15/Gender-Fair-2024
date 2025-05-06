@@ -6,12 +6,14 @@ import 'package:gender_fair_2024/pages/about_us_page.dart';
 import 'package:gender_fair_2024/pages/school_list_page.dart';
 import 'package:gender_fair_2024/pages/help_page.dart';
 
+
 Future<void> main() async {
   await DataLoader.instance.loadData();
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+	/// Creates the app
   const MyApp({super.key});
 
   @override

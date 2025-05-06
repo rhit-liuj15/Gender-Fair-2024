@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class PieChartWidget extends StatefulWidget {
+	/// A widget that creates a single pie chart
+	/// 
+	/// The pie chart has its own [title] which may be hidden via the flag [showTitle]
+	/// 
+	/// the pie chart requires [labels], [values] and [colors] of equal length. Showing of [labels] can be turned off with [showLabels].
+	/// 
+	/// Optionally, the overall size of the pie chart can be adjusted via [size].
+
   final String title;
   final bool showTitle;
   final bool showLabels;
@@ -14,7 +22,6 @@ class PieChartWidget extends StatefulWidget {
   final double pieChartShowPercentageSliceSizeCutoff;
   final TextAlign titleTextAlign;
   final double textSizeRatio;
-
   const PieChartWidget({
     super.key,
     required this.title,

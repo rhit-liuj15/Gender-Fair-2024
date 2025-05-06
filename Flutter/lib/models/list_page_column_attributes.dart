@@ -1,6 +1,8 @@
 import 'package:gender_fair_2024/models/school_score.dart';
 
 enum ListPageColumnAttributes {
+	/// This enum serves as the config file for how the columns on the list page should be ordered
+
   addToList(
       flexWidth: 2,
       name: "Add To List",

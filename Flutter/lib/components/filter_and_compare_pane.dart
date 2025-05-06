@@ -1,18 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/components/filter_block.dart';
 import 'package:gender_fair_2024/components/state_filter.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 class FilterAndComparePane extends StatefulWidget {
-  final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
-      filterFunctions;
-  final Function() updateShownSchools;
+  /// The pane on the list page which contains the filters
+  ///
+  /// Takes in a reference to the list of [filterFunctions] and a callback for [updateShownSchools] to update the filters
+
+  // final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
+  //     filterFunctions;
+  final void Function(
+      {required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
+      required String name,
+      required dynamic Function() resetCallback}) addFilterCallback;
+  final Function({required String name}) removeFilterCallback;
+  final Function() resetFilters;
+  final Function() clearSchoolSelection;
   final int selectedSchoolsCount;
 
   const FilterAndComparePane({
     super.key,
-    required this.filterFunctions,
-    required this.updateShownSchools,
+    required this.addFilterCallback,
+    required this.removeFilterCallback,
+    required this.resetFilters,
+    required this.clearSchoolSelection,
     required this.selectedSchoolsCount,
   });
 
@@ -60,122 +73,145 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
             child: Column(
               children: [
                 const Text(
-                  "",
+                  "Filters",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
                 ),
-                const SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-                  child: TextField(
-                    controller: filterTextEditingController,
-                    decoration: InputDecoration(
-                      labelText: 'Search Schools',
-                      hintText: 'Type School Name Here',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      prefixIcon: const Icon(Icons.search),
-                    ),
-                    onChanged: (value) {
-                      if (value.isEmpty) {
-                        widget.filterFunctions.remove('School Name');
-                      } else {
-                        widget.filterFunctions['School Name'] =
-                            (List<SchoolScore> scores) {
-                          return scores
-                              .where((school) => school.schoolName
-                                  .toLowerCase()
-                                  .contains(value.toLowerCase()))
-                              .toList();
-                        };
-                      }
-                      widget.updateShownSchools();
-                    },
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Container(
-                  decoration: BoxDecoration(
-                    color: widget.selectedSchoolsCount >= 2
-                        ? const Color(0xFFFF4713)
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: widget.selectedSchoolsCount >= 2
-                        ? const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ]
-                        : [],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 5.0),
-                  child: StateFilter(
-                    filterFunctions: widget.filterFunctions,
-                    updateShownSchools: widget.updateShownSchools,
-                  ),
-                ),
-                const SizedBox(height: 10),
                 Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: schoolCategories.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 15),
-                            Checkbox(
-                              value: showSchoolCategories[index],
-                              onChanged: (value) {
-                                if (value != null) {
-                                  setState(() {
-                                    showSchoolCategories[index] = value;
-                                    if (showSchoolCategories.any((v) => v)) {
-                                      final selectedKeys = [
-                                        for (int i = 0;
-                                            i < showSchoolCategories.length;
-                                            i++)
-                                          if (showSchoolCategories[i])
-                                            schoolCategories[i].key
-                                      ];
-                                      widget.filterFunctions['School Type'] =
-                                          (scores) => scores
-                                              .where((s) => selectedKeys
-                                                  .contains(s.schoolType))
-                                              .toList();
-                                    } else {
-                                      widget.filterFunctions
-                                          .remove('School Type');
-                                    }
-                                    widget.updateShownSchools();
-                                  });
-                                }
-                              },
+                  child: ListView(
+                    children: [
+                      FilterBlock(
+                        title: 'Search By School Name',
+                        child: TextField(
+                          controller: filterTextEditingController,
+                          decoration: InputDecoration(
+                            labelText: 'Search Schools',
+                            hintText: 'Type School Name Here',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            const SizedBox(width: 15),
-                            Expanded(
-                              child: Text(
-                                schoolCategories[index].value,
-                                style: const TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ],
+                            prefixIcon: const Icon(Icons.search),
+                          ),
+                          onChanged: (value) {
+                            if (value.isEmpty) {
+                              widget.removeFilterCallback(
+                                name: 'School Name',
+                              );
+                            } else {
+                              widget.addFilterCallback(
+                                name: 'School Name',
+                                filterFunction: (List<SchoolScore> scores) {
+                                  return scores
+                                      .where((school) => school.schoolName
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase()))
+                                      .toList();
+                                },
+                                resetCallback: () {
+                                  filterTextEditingController.clear();
+                                },
+                              );
+                            }
+                          },
                         ),
-                      );
-                    },
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: widget.selectedSchoolsCount >= 2
+                              ? const Color(0xFFFF4713)
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: widget.selectedSchoolsCount >= 2
+                              ? const [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ]
+                              : [],
+                        ),
+                      ),
+                      FilterBlock(
+                        title: 'Filter By State',
+                        child: StateFilter(
+                          addFilterCallback: widget.addFilterCallback,
+                          removeFilterCallback: widget.removeFilterCallback,
+                        ),
+                      ),
+                      FilterBlock(
+                        title: 'Filter By Public/Private',
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          itemCount: schoolCategories.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12.0),
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 15),
+                                  Checkbox(
+                                    value: showSchoolCategories[index],
+                                    onChanged: (value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          showSchoolCategories[index] = value;
+                                          if (showSchoolCategories
+                                              .any((v) => v)) {
+                                            widget.addFilterCallback(
+                                              name: 'School Type',
+                                              filterFunction: (scores) => scores
+                                                  .where((s) => [
+                                                        for (int i = 0;
+                                                            i <
+                                                                showSchoolCategories
+                                                                    .length;
+                                                            i++)
+                                                          if (showSchoolCategories[
+                                                              i])
+                                                            schoolCategories[i]
+                                                                .key
+                                                      ].contains(s.schoolType))
+                                                  .toList(),
+                                              resetCallback: () {
+                                                showSchoolCategories =
+                                                    List.filled(
+                                                        showSchoolCategories
+                                                            .length,
+                                                        false,
+                                                        growable: true);
+                                              },
+                                            );
+                                          } else {
+                                            widget.removeFilterCallback(
+                                              name: 'School Type',
+                                            );
+                                          }
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(width: 15),
+                                  Expanded(
+                                    child: Text(
+                                      schoolCategories[index].value,
+                                      style: const TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 10),
                 Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -187,41 +223,53 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                             setState(() {
                               showOnlySelected = newValue;
                               if (newValue) {
-                                widget.filterFunctions['Only Selected'] =
-                                    (scores) => scores
-                                        .where((s) => SchoolScore
-                                            .selectedSchools
-                                            .contains(s.uid))
-                                        .toList();
+                                widget.resetFilters();
+                                widget.addFilterCallback(
+                                  name: 'Only Selected',
+                                  filterFunction: (scores) => scores
+                                      .where((s) => SchoolScore.selectedSchools
+                                          .contains(s.uid))
+                                      .toList(),
+                                  resetCallback: () {
+                                    showOnlySelected = false;
+                                  },
+                                );
                               } else {
-                                widget.filterFunctions.remove('Only Selected');
+                                widget.removeFilterCallback(
+                                    name: "Only Selected");
                               }
-                              widget.updateShownSchools();
                             });
                           }
                         },
                       ),
-                      const Text(
-                        "Show Only Selected",
+                      Text(
+                        "Compare ${widget.selectedSchoolsCount} Selected Schools",
                         style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: widget.selectedSchoolsCount >= 2
+                              ? Colors.green
+                              : Colors.grey,
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  "Compare ${widget.selectedSchoolsCount} Selected Schools",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: widget.selectedSchoolsCount >= 2
-                        ? Colors.green
-                        : Colors.grey,
-                  ),
-                ),
+								Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+								  children: [
+								    TextButton(
+								    	onPressed: widget.resetFilters,
+								    	child: const Text("Reset Filters"),
+								    ),
+                    const SizedBox(width: 50.0,),
+								    TextButton(
+								    	onPressed: widget.clearSchoolSelection,
+								    	child: const Text("Clear Selected Schools"),
+								    ),
+								  ],
+								),
               ],
             ),
           ),

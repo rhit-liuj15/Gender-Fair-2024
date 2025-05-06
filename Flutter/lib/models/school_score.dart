@@ -1,5 +1,7 @@
 class SchoolScore {
-  static final Set<int> selectedSchools = <int>{};
+	/// Data class for the scores of one school
+  
+	static final Set<int> selectedSchools = <int>{};
 
   int rank = 0;
   int uid;
@@ -19,9 +21,6 @@ class SchoolScore {
     this.rank = 0,
   });
 
-  bool scoreOutOfBounds(Map<SchoolScoreAttributes, int> val) {
-    return false;
-  }
 
   @override
   String toString() {
@@ -30,6 +29,7 @@ class SchoolScore {
 }
 
 enum SchoolScoreAttributes {
+	/// Mapping of category to name to allow changing the names in one place only
   leadership(name: "Leadership"),
   polnpay(name: "Policies & Pay"),
   safety(name: "Safety"),

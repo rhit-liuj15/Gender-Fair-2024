@@ -5,6 +5,12 @@ import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 class DataLoader {
+	/// The module responsible for fetching data from the API and loading them into respective data classes (if exists)
+	/// 
+	/// Has a variable [hostname] that should be configured to the correct domain for access.
+	
+	String hostname = "genderfair2024.csse.rose-hulman.edu";
+
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
   Map<String, double> allAverages = <String, double>{};
@@ -42,11 +48,11 @@ class DataLoader {
 
   Future<void> loadData() async {
     if (!initialDataLoadComplete) {
-      var scoreUrl = Uri.https('genderfair2024.csse.rose-hulman.edu', 'score');
+      var scoreUrl = Uri.https(hostname, 'score');
       var averagesUrl =
-          Uri.https('genderfair2024.csse.rose-hulman.edu', 'averages');
+          Uri.https(hostname, 'averages');
       var metadataUrl =
-          Uri.https('genderfair2024.csse.rose-hulman.edu', 'metadata');
+          Uri.https(hostname, 'metadata');
       try {
         final scoreResponse = await https.get(scoreUrl);
         if (scoreResponse.statusCode == 200) {
@@ -67,8 +73,7 @@ class DataLoader {
           }
           computeRankings();
         } else {
-          print(
-              'Failed to load score data. HTTP Status Code: ${scoreResponse.statusCode}');
+          print('Failed to load score data. HTTP Status Code: ${scoreResponse.statusCode}');
         }
       } catch (e) {
         print('Error occurred while fetching scores: $e');
@@ -121,14 +126,10 @@ class DataLoader {
   Future<void> requestSchoolData(Set<int> uids) async {
     // This is to be expanded later with an actual request
     Set<int> notPresentData = uids.difference(allSchoolData.keys.toSet());
-    print(
-        "UIDS ${allSchoolData.keys.toSet().intersection(uids)} already exist in data");
     if (notPresentData.isNotEmpty) {
       String fetchUIDs = notPresentData.join(',');
       var dataUrl = Uri.https(
           'genderfair2024.csse.rose-hulman.edu', 'data', {'uids': fetchUIDs});
-      // print("Making a request for UIDs $fetchUIDs");
-      // print(dataUrl);
       try {
         final https.Response response = await https.get(dataUrl);
         if (response.statusCode == 200) {
