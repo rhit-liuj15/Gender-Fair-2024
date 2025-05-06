@@ -117,7 +117,7 @@ class _MajorLevelFilterState extends State<MajorLevelFilter> {
               itemCount: autocompleteMajors.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text("[${autocompleteMajors[index].key}] ${autocompleteMajors[index].value}"),
+                  title: Text(autocompleteMajors[index].value),
                   onTap: () {
                     _addMajor(autocompleteMajors[index]);
 										autocompleteMajors = [];
