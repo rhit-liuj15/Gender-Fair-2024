@@ -26,10 +26,7 @@ class _StateFilterState extends State<StateFilter> {
       Metadata.instance.getMetadataCategory(1).metadataPairs;
 
   List<MapEntry<String, String>> autocompleteStates = [];
-  Map<String, bool> selectedStates = {
-    for (var key in Metadata.instance.getMetadataCategory(1).metadataPairs.keys)
-      key: false,
-  };
+  Set<String> selectedStates = <String>{};
 
   void _updateAutocomplete(String inputString) {
     setState(() {
@@ -43,7 +40,7 @@ class _StateFilterState extends State<StateFilter> {
                 (entry) =>
                     (entry.key.toLowerCase().contains(inputStringLower) ||
                         entry.value.toLowerCase().contains(inputStringLower)) &&
-                    !selectedStates[entry.key]!)
+                    !selectedStates.contains(entry.key))
             .toList();
       }
     });
@@ -51,10 +48,10 @@ class _StateFilterState extends State<StateFilter> {
 
   void _selectState(MapEntry<String, String> state) {
     setState(() {
-      selectedStates[state.key] = true;
-      onSelectState();
+      selectedStates.add(state.key);
       autocompleteStates = [];
       controller.clear();
+      onSelectState();
     });
   }
 
@@ -66,7 +63,7 @@ class _StateFilterState extends State<StateFilter> {
   }
 
   void onSelectState() {
-    if (!selectedStates.values.any((item) => item)) {
+    if (selectedStates.isEmpty) {
       widget.removeFilterCallback(
         name: 'States',
       );
@@ -75,15 +72,12 @@ class _StateFilterState extends State<StateFilter> {
         name: "States",
         filterFunction: (List<SchoolScore> scores) {
           return scores
-              .where((school) => selectedStates.entries
-                  .where((element) => element.value)
-                  .map((entry) => entry.key)
-                  .toList()
+              .where((school) => selectedStates
                   .contains(school.schoolState))
               .toList();
         },
         resetCallback: () {
-					selectedStates.updateAll((name, value) => value = false);
+					selectedStates.clear();
         },
       );
     }
@@ -129,16 +123,15 @@ class _StateFilterState extends State<StateFilter> {
             ),
           ),
         Visibility(
-					visible: selectedStates.values.any((item) => item),
+					visible: selectedStates.isNotEmpty,
 					child: const SizedBox(height: 10)
 				),
         Wrap(
           spacing: 8,
-          children: selectedStates.entries
-              .where((entry) => entry.value)
+          children: selectedStates
               .map((entry) => StateNameTile(
-                    state: states[entry.key]!,
-                    removeStateCallback: () => _removeState(entry.key),
+                    state: states[entry]!,
+                    removeStateCallback: () => _removeState(entry),
                   ))
               .toList(),
         ),
