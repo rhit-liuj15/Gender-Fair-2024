@@ -77,6 +77,21 @@ app.get('/metadata', (req, res) => {
 })
 
 /**
+ * @api {get} Offerings
+ * @apiDescription Retrieve state (location), institution ownership,
+ * and financial structure metadata for each institution
+ */
+app.get('/offering', (req, res) => {
+  connection.query('CALL GetOfferings', (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: 'CALL GetOfferings failed' })
+      return
+    }
+    res.json(rows[0])
+  })
+})
+
+/**
  * @api {get} Data
  * @apiDescription Retrieve data of an institution by its UID
  */
