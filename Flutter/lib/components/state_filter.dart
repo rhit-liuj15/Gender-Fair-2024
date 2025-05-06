@@ -4,14 +4,16 @@ import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 class StateFilter extends StatefulWidget {
-  final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
-      filterFunctions;
-  final Function() updateShownSchools;
+  final void Function(
+      {required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
+      required String name,
+      required dynamic Function() resetCallback}) addFilterCallback;
+  final Function({required String name}) removeFilterCallback;
 
   const StateFilter({
     super.key,
-    required this.filterFunctions,
-    required this.updateShownSchools,
+    required this.addFilterCallback,
+    required this.removeFilterCallback,
   });
 
   @override
@@ -34,13 +36,15 @@ class _StateFilterState extends State<StateFilter> {
       if (inputString.isEmpty) {
         autocompleteStates = [];
       } else {
-				String inputStringLower = inputString.toLowerCase();
-        autocompleteStates = states.entries.where(
-					// If it the user entered states that matches 1a) the state name or 1b) the state abbreviation and 2) does not already exist in the selected states
-					(entry) => (entry.key.toLowerCase().contains(inputStringLower) ||
-              entry.value.toLowerCase().contains(inputStringLower)) &&
-							!selectedStates[entry.key]!
-        ).toList();
+        String inputStringLower = inputString.toLowerCase();
+        autocompleteStates = states.entries
+            .where(
+                // If it the user entered states that matches 1a) the state name or 1b) the state abbreviation and 2) does not already exist in the selected states
+                (entry) =>
+                    (entry.key.toLowerCase().contains(inputStringLower) ||
+                        entry.value.toLowerCase().contains(inputStringLower)) &&
+                    !selectedStates[entry.key]!)
+            .toList();
       }
     });
   }
@@ -63,19 +67,26 @@ class _StateFilterState extends State<StateFilter> {
 
   void onSelectState() {
     if (!selectedStates.values.any((item) => item)) {
-      widget.filterFunctions.remove('States');
+      widget.removeFilterCallback(
+        name: 'States',
+      );
     } else {
-      List<String> filteredStatesList = selectedStates.entries
-          .where((element) => element.value)
-          .map((entry) => entry.key)
-          .toList();
-      widget.filterFunctions['States'] = (List<SchoolScore> scores) {
-        return scores
-            .where((school) => filteredStatesList.contains(school.schoolState))
-            .toList();
-      };
+      widget.addFilterCallback(
+        name: "States",
+        filterFunction: (List<SchoolScore> scores) {
+          return scores
+              .where((school) => selectedStates.entries
+                  .where((element) => element.value)
+                  .map((entry) => entry.key)
+                  .toList()
+                  .contains(school.schoolState))
+              .toList();
+        },
+        resetCallback: () {
+					selectedStates.updateAll((name, value) => value = false);
+        },
+      );
     }
-    widget.updateShownSchools();
   }
 
   @override
@@ -95,7 +106,6 @@ class _StateFilterState extends State<StateFilter> {
           ),
           onChanged: _updateAutocomplete,
         ),
-        const SizedBox(height: 10),
         if (autocompleteStates.isNotEmpty)
           Container(
             height: 150,
@@ -118,7 +128,10 @@ class _StateFilterState extends State<StateFilter> {
               },
             ),
           ),
-        const SizedBox(height: 10),
+        Visibility(
+					visible: selectedStates.values.any((item) => item),
+					child: const SizedBox(height: 10)
+				),
         Wrap(
           spacing: 8,
           children: selectedStates.entries

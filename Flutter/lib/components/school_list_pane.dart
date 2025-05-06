@@ -123,8 +123,8 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                 ),
                 const SizedBox(width: 8.0),
 								TextButton(
-									child: Text("Invert Sort"),
 									onPressed: widget.invertSortCallback,
+									child: const Text("Invert Sort"),
 								)
               ],
             ),
