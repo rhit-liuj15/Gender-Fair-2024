@@ -60,6 +60,26 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
     });
   }
 
+  // Function to get IRS display text
+  Widget getIRSdisplaytext() {
+    int cr = 0;
+    int wb = 0;
+    String? message;
+    try {cr = schoolData.getInt("CEO_REVIEWED_COMPENSATION");} catch (e) {cr = 0;}
+    try {wb = schoolData.getInt("WHISTLEBLOWER_POLICY");} catch (e) {wb = 0;}
+    if (cr == 1 && wb == 1) {
+      message = "* This institution is one of ~30% with a Compensation Review and a Whistleblower Policy.";
+    } else if (cr == 1) {
+      message = "* This institution is one of ~30% with a Compensation Review.";
+    } else if (wb == 1) {
+      message = "* This institution is one of ~30% with a Whistleblower Policy.";
+    }
+    if (message == null) {
+      return const SizedBox.shrink(); // Return an empty widget
+    }
+    return Text(message);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -378,6 +398,11 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Compensation Review and Whistleblower policy
+                    Center(
+                      child: getIRSdisplaytext()
                     )
                   ],
                 ),
