@@ -30,16 +30,6 @@ class MajorOptionsBlock extends StatelessWidget {
 									fontSize: 16.0, fontWeight: FontWeight.bold),
 							textAlign: TextAlign.start,
 						),
-						const SizedBox(width: 14.0),
-						Expanded(
-							child: Align(
-								alignment: Alignment.centerRight,
-								child: Container(
-									height: 1.5,
-									color: Colors.black,
-								),
-							),
-						),
 					],
 				),
         Padding(
