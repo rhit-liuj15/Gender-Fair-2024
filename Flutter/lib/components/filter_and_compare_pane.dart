@@ -78,7 +78,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
                 ),
                 Expanded(
-                  child: Column(
+                  child: ListView(
                     children: [
                       FilterBlock(
                         title: 'Search By School Name',
