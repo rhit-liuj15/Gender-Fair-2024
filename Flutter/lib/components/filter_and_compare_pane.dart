@@ -231,7 +231,6 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                             setState(() {
                               showOnlySelected = newValue;
                               if (newValue) {
-                                widget.resetFilters();
                                 widget.addFilterCallback(
                                   name: 'Only Selected',
                                   filterFunction: (scores) => scores
