@@ -1,83 +1,84 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/state_name_tile.dart';
+import 'package:gender_fair_2024/components/major_options_block.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
-class StateFilter extends StatefulWidget {
+class MajorLevelFilter extends StatefulWidget {
   final void Function(
       {required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
       required String name,
       required dynamic Function() resetCallback}) addFilterCallback;
   final Function({required String name}) removeFilterCallback;
 
-  const StateFilter({
+  const MajorLevelFilter({
     super.key,
     required this.addFilterCallback,
     required this.removeFilterCallback,
   });
 
   @override
-  _StateFilterState createState() => _StateFilterState();
+  _MajorLevelFilterState createState() => _MajorLevelFilterState();
 }
 
-class _StateFilterState extends State<StateFilter> {
+class _MajorLevelFilterState extends State<MajorLevelFilter> {
   final TextEditingController controller = TextEditingController();
-  Map<String, String> states =
-      Metadata.instance.getMetadataCategory(1).metadataPairs;
-
-  List<MapEntry<String, String>> autocompleteStates = [];
-  Set<String> selectedStates = <String>{};
+  Map<String, String> majors =
+      Metadata.instance.getMetadataCategory(3).metadataPairs;
+  List<MapEntry<String, String>> autocompleteMajors = [];
+  Map<String, Set<int>> selectedMajors = <String, Set<int>>{};
 
   void _updateAutocomplete(String inputString) {
     setState(() {
       if (inputString.isEmpty) {
-        autocompleteStates = [];
+        autocompleteMajors = [];
       } else {
         String inputStringLower = inputString.toLowerCase();
-        autocompleteStates = states.entries
+        autocompleteMajors = majors.entries
             .where(
-                // If it the user entered states that matches 1a) the state name or 1b) the state abbreviation and 2) does not already exist in the selected states
                 (entry) =>
                     (entry.key.toLowerCase().contains(inputStringLower) ||
                         entry.value.toLowerCase().contains(inputStringLower)) &&
-                    !selectedStates.contains(entry.key))
+                    !selectedMajors.keys.contains(entry.key))
+										.map((e) => e)
             .toList();
       }
     });
   }
 
-  void _selectState(MapEntry<String, String> state) {
+  void _addMajor(MapEntry<String, String> major) {
     setState(() {
-      selectedStates.add(state.key);
-      autocompleteStates = [];
+			print(9);
+      selectedMajors[major.key] = {5,7};
+      autocompleteMajors = [];
       controller.clear();
-      onStatesSelectedChange();
+      onMajorChange();
     });
   }
 
-  void _removeState(String state) {
-    setState(() {
-      selectedStates.remove(state);
-      onStatesSelectedChange();
-    });
+  void _updateMajor(String major) {
+		setState(() {
+			print(5);
+			if (selectedMajors[major]!.isEmpty) {
+				selectedMajors.remove(major);
+				onMajorChange();
+			}
+		});
   }
 
-  void onStatesSelectedChange() {
-    if (selectedStates.isEmpty) {
+  void onMajorChange() {
+    if (selectedMajors.isEmpty) {
       widget.removeFilterCallback(
-        name: 'States',
+        name: 'Majors',
       );
     } else {
       widget.addFilterCallback(
-        name: "States",
+        name: "Majors",
         filterFunction: (List<SchoolScore> scores) {
-          return scores
-              .where((school) => selectedStates
-                  .contains(school.schoolState))
-              .toList();
+					// TODO: Implement the filter
+          return scores;
         },
         resetCallback: () {
-					selectedStates.clear();
+					selectedMajors.clear();
         },
       );
     }
@@ -91,8 +92,8 @@ class _StateFilterState extends State<StateFilter> {
         TextField(
           controller: controller,
           decoration: InputDecoration(
-            labelText: 'Filter By State',
-            hintText: 'Enter State Name Here',
+            labelText: 'Filter By Major',
+            hintText: 'Enter Major Here',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -100,7 +101,7 @@ class _StateFilterState extends State<StateFilter> {
           ),
           onChanged: _updateAutocomplete,
         ),
-        if (autocompleteStates.isNotEmpty)
+        if (autocompleteMajors.isNotEmpty)
           Container(
             height: 150,
             decoration: BoxDecoration(
@@ -108,32 +109,31 @@ class _StateFilterState extends State<StateFilter> {
               borderRadius: BorderRadius.circular(5),
             ),
             child: ListView.builder(
-              itemCount: autocompleteStates.length,
+              itemCount: autocompleteMajors.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(autocompleteStates[index].value),
+                  title: Text("[${autocompleteMajors[index].key}] ${autocompleteMajors[index].value}"),
                   onTap: () {
-                    _selectState(autocompleteStates[index]);
-                    setState(() {
-                      autocompleteStates = [];
-                    });
+                    _addMajor(autocompleteMajors[index]);
+										autocompleteMajors = [];
                   },
                 );
               },
             ),
           ),
         Visibility(
-					visible: selectedStates.isNotEmpty,
+					visible: selectedMajors.isNotEmpty,
 					child: const SizedBox(height: 10)
 				),
         Wrap(
           spacing: 8,
-          children: selectedStates
-              .map((entry) => StateNameTile(
-                    state: states[entry]!,
-                    removeStateCallback: () => _removeState(entry),
-                  ))
-              .toList(),
+          children: selectedMajors.entries.map((entry) {
+            return MajorOptionsBlock(
+							majorName: majors[entry.key]!,
+							selectedLevels: entry.value,
+							updateLevelsCallback: () => _updateMajor(entry.key),
+						);
+          },).toList(),
         ),
       ],
     );

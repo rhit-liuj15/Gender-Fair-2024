@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:gender_fair_2024/models/metadata.dart';
+import 'package:gender_fair_2024/models/school_academic_offerings.dart';
 import 'package:http/http.dart' as https;
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
@@ -14,6 +15,8 @@ class DataLoader {
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
   Map<String, double> allAverages = <String, double>{};
+  Map<String, SchoolAcademicOfferings> allSchoolOfferings = <String, SchoolAcademicOfferings>{};
+	
   // The reason allSchoolData and allSchoolScores are separate is that allSchoolScores are loaded up front, but allSchoolData is requested as necessary.
   bool initialDataLoadComplete = false;
   static final DataLoader instance = DataLoader._privateConstructor();

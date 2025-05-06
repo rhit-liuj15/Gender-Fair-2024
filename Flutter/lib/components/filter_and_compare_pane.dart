@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/components/filter_block.dart';
+import 'package:gender_fair_2024/components/major_level_filter.dart';
 import 'package:gender_fair_2024/components/state_filter.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
@@ -209,6 +210,13 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                           },
                         ),
                       ),
+                      FilterBlock(
+                        title: 'Filter By Major And Level',
+                        child: MajorLevelFilter(
+                          addFilterCallback: widget.addFilterCallback,
+                          removeFilterCallback: widget.removeFilterCallback,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -256,20 +264,22 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                   ),
                 ),
                 const SizedBox(height: 10),
-								Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-								  children: [
-								    TextButton(
-								    	onPressed: widget.resetFilters,
-								    	child: const Text("Reset Filters"),
-								    ),
-                    const SizedBox(width: 50.0,),
-								    TextButton(
-								    	onPressed: widget.clearSchoolSelection,
-								    	child: const Text("Clear Selected Schools"),
-								    ),
-								  ],
-								),
+                  children: [
+                    TextButton(
+                      onPressed: widget.resetFilters,
+                      child: const Text("Reset Filters"),
+                    ),
+                    const SizedBox(
+                      width: 50.0,
+                    ),
+                    TextButton(
+                      onPressed: widget.clearSchoolSelection,
+                      child: const Text("Clear Selected Schools"),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
