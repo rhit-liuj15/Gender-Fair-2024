@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/components/major_options_block.dart';
+import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
+import 'package:gender_fair_2024/models/school_academic_offerings.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 class MajorLevelFilter extends StatefulWidget {
@@ -47,7 +49,6 @@ class _MajorLevelFilterState extends State<MajorLevelFilter> {
 
   void _addMajor(MapEntry<String, String> major) {
     setState(() {
-			print(9);
       selectedMajors[major.key] = {5,7};
       autocompleteMajors = [];
       controller.clear();
@@ -56,13 +57,10 @@ class _MajorLevelFilterState extends State<MajorLevelFilter> {
   }
 
   void _updateMajor(String major) {
-		setState(() {
-			print(5);
-			if (selectedMajors[major]!.isEmpty) {
-				selectedMajors.remove(major);
-				onMajorChange();
-			}
-		});
+		if (selectedMajors[major]!.isEmpty) {
+			selectedMajors.remove(major);
+		}
+		onMajorChange();
   }
 
   void onMajorChange() {
@@ -74,8 +72,15 @@ class _MajorLevelFilterState extends State<MajorLevelFilter> {
       widget.addFilterCallback(
         name: "Majors",
         filterFunction: (List<SchoolScore> scores) {
-					// TODO: Implement the filter
-          return scores;
+					Set<int> allUIDsMatchingSelection = <int>{};
+					for (MapEntry<String, Set<int>> item in selectedMajors.entries) {
+						SchoolAcademicOfferings offeringWithCIPCODE = DataLoader.instance.allSchoolOfferings[item.key]!;
+						for (int level in item.value) {
+							allUIDsMatchingSelection = allUIDsMatchingSelection.union(offeringWithCIPCODE.schoolsOfferingCourseAtLevel(level: level));
+						}
+					}
+					// print(allUIDsMatchingSelection);
+          return scores.where((element) => allUIDsMatchingSelection.contains(element.uid),).toList();
         },
         resetCallback: () {
 					selectedMajors.clear();

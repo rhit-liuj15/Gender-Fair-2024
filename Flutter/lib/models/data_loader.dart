@@ -56,6 +56,8 @@ class DataLoader {
           Uri.https(hostname, 'averages');
       var metadataUrl =
           Uri.https(hostname, 'metadata');
+      var offeringsUrl =
+          Uri.https(hostname, 'offering');
       try {
         final scoreResponse = await https.get(scoreUrl);
         if (scoreResponse.statusCode == 200) {
@@ -112,6 +114,28 @@ class DataLoader {
       } catch (e) {
         print('Error occurred while fetching averages: $e');
       }
+
+      try {
+        final offeringsResponse = await https.get(offeringsUrl);
+        if (offeringsResponse.statusCode == 200) {
+          List<dynamic> data = jsonDecode(offeringsResponse.body);
+          for (var item in data) {
+						if (!allSchoolOfferings.containsKey(item["CIPCODE"])) {
+							allSchoolOfferings[item["CIPCODE"]] = SchoolAcademicOfferings(cipcode: item["CIPCODE"]);
+						}
+            allSchoolOfferings[item["CIPCODE"]]!.addOffering(
+							uid: item["UNITID"],
+							level: item["AWLEVEL"],
+						);
+          }
+        } else {
+          print(
+              'Failed to load offerings data. HTTP Status Code: ${offeringsResponse.statusCode}');
+        }
+      } catch (e) {
+        print('Error occurred while fetching averages: $e');
+      }
+
       initialDataLoadComplete = true;
     }
   }
