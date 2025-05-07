@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
-import 'package:gender_fair_2024/pages/school_detail_page.dart';
+import 'package:gender_fair_2024/pages/detailPage/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
 	/// A component that makes 1 row for [SchoolListPane]

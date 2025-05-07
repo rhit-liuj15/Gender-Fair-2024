@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/filter_widget.dart';
-import 'package:gender_fair_2024/components/state_name_tile.dart';
+import 'package:gender_fair_2024/pages/listPage/filterPane/filters/filter_widget.dart';
+import 'package:gender_fair_2024/pages/listPage/filterPane/filters/stateFilter/state_name_tile.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 

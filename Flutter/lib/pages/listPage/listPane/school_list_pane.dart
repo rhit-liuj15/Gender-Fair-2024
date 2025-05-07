@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/school_score_row.dart';
+import 'package:gender_fair_2024/pages/listPage/listPane/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 

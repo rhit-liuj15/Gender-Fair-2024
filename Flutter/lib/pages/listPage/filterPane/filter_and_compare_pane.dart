@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/filter_block_with_header.dart';
-import 'package:gender_fair_2024/components/major_level_filter.dart';
-import 'package:gender_fair_2024/components/state_filter.dart';
+import 'package:gender_fair_2024/pages/listPage/filterPane/filters/filter_block_with_header.dart';
+import 'package:gender_fair_2024/pages/listPage/filterPane/filters/major_level_filter.dart';
+import 'package:gender_fair_2024/pages/listPage/filterPane/filters/state_filter.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 

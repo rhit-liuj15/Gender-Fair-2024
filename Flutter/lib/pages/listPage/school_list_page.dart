@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/school_score_row.dart';
+import 'package:gender_fair_2024/pages/listPage/listPane/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 
-import '../components/filter_and_compare_pane.dart';
-import '../components/school_list_pane.dart';
+import 'filterPane/filter_and_compare_pane.dart';
+import 'listPane/school_list_pane.dart';
 
 class SchoolListPage extends StatefulWidget {
   const SchoolListPage({super.key});
