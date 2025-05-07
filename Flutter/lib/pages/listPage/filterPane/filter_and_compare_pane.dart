@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/pages/listPage/filterPane/filters/filter_block_with_header.dart';
 import 'package:gender_fair_2024/pages/listPage/filterPane/filters/major_level_filter.dart';
+import 'package:gender_fair_2024/pages/listPage/filterPane/filters/public_private_filter.dart';
 import 'package:gender_fair_2024/pages/listPage/filterPane/filters/state_filter.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
@@ -115,23 +116,6 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                           },
                         ),
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: widget.selectedSchoolsCount >= 2
-                              ? const Color(0xFFFF4713)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: widget.selectedSchoolsCount >= 2
-                              ? const [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ]
-                              : [],
-                        ),
-                      ),
                       FilterBlockWithHeader(
                         title: 'Filter By State',
                         child: StateFilter(
@@ -141,72 +125,9 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                       ),
                       FilterBlockWithHeader(
                         title: 'Filter By Public/Private',
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          itemCount: schoolCategories.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12.0),
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 15),
-                                  Checkbox(
-                                    value: showSchoolCategories[index],
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        setState(() {
-                                          showSchoolCategories[index] = value;
-                                          if (showSchoolCategories
-                                              .any((v) => v)) {
-                                            widget.updateFilterCallback(
-                                              name: 'School Type',
-                                              filterFunction: (scores) => scores
-                                                  .where((s) => [
-                                                        for (int i = 0;
-                                                            i <
-                                                                showSchoolCategories
-                                                                    .length;
-                                                            i++)
-                                                          if (showSchoolCategories[
-                                                              i])
-                                                            schoolCategories[i]
-                                                                .key
-                                                      ].contains(s.schoolType))
-                                                  .toList(),
-                                              resetCallback: () {
-                                                showSchoolCategories =
-                                                    List.filled(
-                                                        showSchoolCategories
-                                                            .length,
-                                                        false,
-                                                        growable: true);
-                                              },
-                                            );
-                                          } else {
-                                            widget.removeFilterCallback(
-                                              name: 'School Type',
-                                            );
-                                          }
-                                        });
-                                      }
-                                    },
-                                  ),
-                                  const SizedBox(width: 15),
-                                  Expanded(
-                                    child: Text(
-                                      schoolCategories[index].value,
-                                      style: const TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                        child: PublicPrivateFilter(
+                          updateFilterCallback: widget.updateFilterCallback,
+                          removeFilterCallback: widget.removeFilterCallback,
                         ),
                       ),
                       FilterBlockWithHeader(
