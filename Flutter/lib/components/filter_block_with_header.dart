@@ -4,7 +4,7 @@ class FilterBlockWithHeader extends StatefulWidget {
   final String title;
   final Widget child;
 
-  FilterBlockWithHeader({
+  const FilterBlockWithHeader({
     super.key,
     required this.title,
     required this.child,
