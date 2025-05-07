@@ -9,16 +9,16 @@ import 'package:gender_fair_2024/models/school_score.dart';
 class MajorLevelFilter extends StatefulWidget implements FilterWidget {
   @override
   final void Function({
-		required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
-		required String name,
-		required dynamic Function() resetCallback,
-	}) updateFilterCallback;
-	
+    required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
+    required String name,
+    required dynamic Function() resetCallback,
+  }) updateFilterCallback;
+
   @override
   final Function({required String name}) removeFilterCallback;
 
   const MajorLevelFilter({
-    super.key,	
+    super.key,
     required this.updateFilterCallback,
     required this.removeFilterCallback,
   });
@@ -41,31 +41,28 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
       } else {
         String inputStringLower = inputString.toLowerCase();
         autocompleteMajors = majors.entries
-            .where(
-                (entry) =>
-                    (entry.key.toLowerCase().contains(inputStringLower) ||
-                        entry.value.toLowerCase().contains(inputStringLower)) &&
-                    !selectedMajors.keys.contains(entry.key))
-										.map((e) => e)
+            .where((entry) =>
+                (entry.key.toLowerCase().contains(inputStringLower) ||
+                    entry.value.toLowerCase().contains(inputStringLower)) &&
+                !selectedMajors.keys.contains(entry.key))
+            .map((e) => e)
             .toList();
       }
     });
   }
 
-  void _addMajor(MapEntry<String, String> major) {
-    setState(() {
-      selectedMajors[major.key] = {5,7};
-      autocompleteMajors = [];
-      controller.clear();
-      onMajorChange();
-    });
+  void _addMajor(String major) {
+		selectedMajors[major] = DataLoader.instance.allSchoolOfferings[major]!.levelsAvailableForMajor();
+		autocompleteMajors = [];
+		controller.clear();
+		onMajorChange();
   }
 
   void _updateMajor(String major) {
-		if (selectedMajors[major]!.isEmpty) {
-			selectedMajors.remove(major);
-		}
-		onMajorChange();
+    if (selectedMajors[major]!.isEmpty) {
+      selectedMajors.remove(major);
+    }
+    onMajorChange();
   }
 
   void onMajorChange() {
@@ -77,18 +74,25 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
       widget.updateFilterCallback(
         name: "Majors",
         filterFunction: (List<SchoolScore> scores) {
-					Set<int> allUIDsMatchingSelection = <int>{};
-					for (MapEntry<String, Set<int>> item in selectedMajors.entries) {
-						SchoolAcademicOfferings offeringWithCIPCODE = DataLoader.instance.allSchoolOfferings[item.key]!;
-						for (int level in item.value) {
-							allUIDsMatchingSelection = allUIDsMatchingSelection.union(offeringWithCIPCODE.schoolsOfferingCourseAtLevel(level: level));
-						}
-					}
-					// print(allUIDsMatchingSelection);
-          return scores.where((element) => allUIDsMatchingSelection.contains(element.uid),).toList();
+          Set<int> allUIDsMatchingSelection = <int>{};
+          for (MapEntry<String, Set<int>> item in selectedMajors.entries) {
+            SchoolAcademicOfferings offeringWithCIPCODE =
+                DataLoader.instance.allSchoolOfferings[item.key]!;
+            for (int level in item.value) {
+              allUIDsMatchingSelection = allUIDsMatchingSelection.union(
+                  offeringWithCIPCODE.schoolsOfferingCourseAtLevel(
+                      level: level));
+            }
+          }
+          // print(allUIDsMatchingSelection);
+          return scores
+              .where(
+                (element) => allUIDsMatchingSelection.contains(element.uid),
+              )
+              .toList();
         },
         resetCallback: () {
-					selectedMajors.clear();
+          selectedMajors.clear();
         },
       );
     }
@@ -113,37 +117,46 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
         ),
         if (autocompleteMajors.isNotEmpty)
           Container(
-            height: 150,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5),
             ),
-            child: ListView.builder(
-              itemCount: autocompleteMajors.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(autocompleteMajors[index].value),
-                  onTap: () {
-                    _addMajor(autocompleteMajors[index]);
-										autocompleteMajors = [];
-                  },
-                );
-              },
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 400),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: autocompleteMajors.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(autocompleteMajors[index].value),
+                    onTap: () {
+                      _addMajor(autocompleteMajors[index].key);
+                      autocompleteMajors = [];
+                    },
+                  );
+                },
+              ),
             ),
           ),
         Visibility(
-					visible: selectedMajors.isNotEmpty,
-					child: const SizedBox(height: 10)
-				),
-        Wrap(
-          spacing: 8,
-          children: selectedMajors.entries.map((entry) {
-            return MajorOptionsBlock(
-							majorName: majors[entry.key]!,
-							selectedLevels: entry.value,
-							updateLevelsCallback: () => _updateMajor(entry.key),
-						);
-          },).toList(),
+          visible: selectedMajors.isNotEmpty,
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                children: selectedMajors.entries.map(
+                  (entry) {
+                    return MajorOptionsBlock(
+                      majorName: majors[entry.key]!,
+                      selectedLevels: entry.value,
+                      updateLevelsCallback: () => _updateMajor(entry.key),
+                    );
+                  },
+                ).toList(),
+              ),
+            ],
+          ),
         ),
       ],
     );

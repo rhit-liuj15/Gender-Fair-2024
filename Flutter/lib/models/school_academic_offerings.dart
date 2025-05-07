@@ -25,4 +25,8 @@ class SchoolAcademicOfferings {
 	}) {
 		return _levelToUIDs[level] ?? <int>{};
 	}
+
+	Set<int> levelsAvailableForMajor() {
+		return _levelToUIDs.keys.toSet();
+	}
 }
