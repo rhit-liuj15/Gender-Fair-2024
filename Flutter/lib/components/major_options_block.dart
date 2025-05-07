@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
+import 'package:gender_fair_2024/models/school_academic_offerings.dart';
 
 class MajorOptionsBlock extends StatelessWidget {
   static final Map<int, String> allCategories = Map.unmodifiable(Metadata
@@ -7,19 +8,22 @@ class MajorOptionsBlock extends StatelessWidget {
       .getMetadataCategory(4)
       .metadataPairs
       .map((key, value) => MapEntry(int.parse(key), value)));
-  final String majorName;
+  final SchoolAcademicOfferings offerings;
   final Set<int> selectedLevels;
   final void Function() updateLevelsCallback;
 
   const MajorOptionsBlock({
     super.key,
-    required this.majorName,
+    required this.offerings,
     required this.selectedLevels,
     required this.updateLevelsCallback,
   });
 
   @override
   Widget build(BuildContext context) {
+
+		String majorName = Metadata.instance.getMetadataCategory(3).metadataPairs[offerings.cipcode]!;
+
     return Column(
       children: [
 				Row(
@@ -34,7 +38,6 @@ class MajorOptionsBlock extends StatelessWidget {
 						),
 						IconButton(
 							icon: const Icon(Icons.close),
-							tooltip: 'Remove $majorName',
 							onPressed: () {
 								selectedLevels.clear();
 								updateLevelsCallback();
@@ -47,7 +50,7 @@ class MajorOptionsBlock extends StatelessWidget {
           child: Column(
             children: [
               for (MapEntry<int, String> entry in allCategories.entries)
-                Row(
+							if (offerings.numSchoolsOfferingLevel(level: entry.key) > 0) Row(
                   children: [
 										Checkbox(
 											value: selectedLevels.contains(entry.key),
@@ -62,7 +65,7 @@ class MajorOptionsBlock extends StatelessWidget {
 												}
 											},
 										),
-										Text(entry.value)
+										Text("${entry.value} (${offerings.numSchoolsOfferingLevel(level: entry.key)})"),
 									],
                 ),
             ],

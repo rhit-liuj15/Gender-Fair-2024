@@ -3,7 +3,6 @@ class SchoolAcademicOfferings {
 
 	String cipcode;
   final Map<int, Set<int>> _levelToUIDs = {};
-
 	
   SchoolAcademicOfferings({
     required this.cipcode,
@@ -28,5 +27,15 @@ class SchoolAcademicOfferings {
 
 	Set<int> levelsAvailableForMajor() {
 		return _levelToUIDs.keys.toSet();
+	}
+
+	int numSchoolsOfferingLevel({
+		required int level,
+	}) {
+		if (_levelToUIDs.containsKey(level)) {
+			return _levelToUIDs[level]!.length;
+		} else {
+			return 0;
+		}
 	}
 }

@@ -52,6 +52,7 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
   }
 
   void _addMajor(String major) {
+		// By default, every available major is selected
 		selectedMajors[major] = DataLoader.instance.allSchoolOfferings[major]!.levelsAvailableForMajor();
 		autocompleteMajors = [];
 		controller.clear();
@@ -148,7 +149,7 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
                 children: selectedMajors.entries.map(
                   (entry) {
                     return MajorOptionsBlock(
-                      majorName: majors[entry.key]!,
+                      offerings: DataLoader.instance.allSchoolOfferings[entry.key]!,
                       selectedLevels: entry.value,
                       updateLevelsCallback: () => _updateMajor(entry.key),
                     );
