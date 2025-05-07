@@ -24,14 +24,13 @@ class MajorOptionsBlock extends StatelessWidget {
       children: [
 				Row(
 					children: [
-						Text(
-							majorName,
-							style: const TextStyle(
-									fontSize: 16.0, fontWeight: FontWeight.bold),
-							textAlign: TextAlign.start,
-						),
-						const Expanded(
-							child: SizedBox()
+						Expanded(
+							child: Text(
+								majorName,
+								style: const TextStyle(
+										fontSize: 16.0, fontWeight: FontWeight.bold),
+								textAlign: TextAlign.start,
+							),
 						),
 						IconButton(
 							icon: const Icon(Icons.close),

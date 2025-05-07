@@ -1,28 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/components/filter_widget.dart';
 import 'package:gender_fair_2024/components/major_options_block.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_academic_offerings.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
-class MajorLevelFilter extends StatefulWidget {
-  final void Function(
-      {required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
-      required String name,
-      required dynamic Function() resetCallback}) addFilterCallback;
+class MajorLevelFilter extends StatefulWidget implements FilterWidget {
+  @override
+  final void Function({
+		required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
+		required String name,
+		required dynamic Function() resetCallback,
+	}) updateFilterCallback;
+	
+  @override
   final Function({required String name}) removeFilterCallback;
 
   const MajorLevelFilter({
-    super.key,
-    required this.addFilterCallback,
+    super.key,	
+    required this.updateFilterCallback,
     required this.removeFilterCallback,
   });
 
   @override
-  _MajorLevelFilterState createState() => _MajorLevelFilterState();
+  MajorLevelFilterState createState() => MajorLevelFilterState();
 }
 
-class _MajorLevelFilterState extends State<MajorLevelFilter> {
+class MajorLevelFilterState extends State<MajorLevelFilter> {
   final TextEditingController controller = TextEditingController();
   Map<String, String> majors =
       Metadata.instance.getMetadataCategory(3).metadataPairs;
@@ -69,7 +74,7 @@ class _MajorLevelFilterState extends State<MajorLevelFilter> {
         name: 'Majors',
       );
     } else {
-      widget.addFilterCallback(
+      widget.updateFilterCallback(
         name: "Majors",
         filterFunction: (List<SchoolScore> scores) {
 					Set<int> allUIDsMatchingSelection = <int>{};

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/filter_block.dart';
+import 'package:gender_fair_2024/components/filter_block_with_header.dart';
 import 'package:gender_fair_2024/components/major_level_filter.dart';
 import 'package:gender_fair_2024/components/state_filter.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
@@ -10,24 +10,23 @@ class FilterAndComparePane extends StatefulWidget {
   ///
   /// Takes in a reference to the list of [filterFunctions] and a callback for [updateShownSchools] to update the filters
 
-  // final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
-  //     filterFunctions;
-  final void Function(
-      {required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
-      required String name,
-      required dynamic Function() resetCallback}) addFilterCallback;
-  final Function({required String name}) removeFilterCallback;
-  final Function() resetFilters;
+  final void Function({
+		required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
+		required String name,
+		required dynamic Function() resetCallback,
+	}) updateFilterCallback;
+	final Function({required String name}) removeFilterCallback;
+  final Function() clearAllCallback;
   final Function() clearSchoolSelection;
   final int selectedSchoolsCount;
 
   const FilterAndComparePane({
     super.key,
-    required this.addFilterCallback,
+		required this.updateFilterCallback,
     required this.removeFilterCallback,
-    required this.resetFilters,
+    required this.clearAllCallback,
     required this.clearSchoolSelection,
-    required this.selectedSchoolsCount,
+    required this.selectedSchoolsCount, 
   });
 
   @override
@@ -81,7 +80,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                 Expanded(
                   child: ListView(
                     children: [
-                      FilterBlock(
+                      FilterBlockWithHeader(
                         title: 'Search By School Name',
                         child: TextField(
                           controller: filterTextEditingController,
@@ -99,7 +98,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                                 name: 'School Name',
                               );
                             } else {
-                              widget.addFilterCallback(
+                              widget.updateFilterCallback(
                                 name: 'School Name',
                                 filterFunction: (List<SchoolScore> scores) {
                                   return scores
@@ -133,14 +132,14 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                               : [],
                         ),
                       ),
-                      FilterBlock(
+                      FilterBlockWithHeader(
                         title: 'Filter By State',
                         child: StateFilter(
-                          addFilterCallback: widget.addFilterCallback,
+                          updateFilterCallback: widget.updateFilterCallback,
                           removeFilterCallback: widget.removeFilterCallback,
                         ),
                       ),
-                      FilterBlock(
+                      FilterBlockWithHeader(
                         title: 'Filter By Public/Private',
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -161,7 +160,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                                           showSchoolCategories[index] = value;
                                           if (showSchoolCategories
                                               .any((v) => v)) {
-                                            widget.addFilterCallback(
+                                            widget.updateFilterCallback(
                                               name: 'School Type',
                                               filterFunction: (scores) => scores
                                                   .where((s) => [
@@ -210,10 +209,10 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                           },
                         ),
                       ),
-                      FilterBlock(
+                      FilterBlockWithHeader(
                         title: 'Filter By Major And Level',
                         child: MajorLevelFilter(
-                          addFilterCallback: widget.addFilterCallback,
+                          updateFilterCallback: widget.updateFilterCallback,
                           removeFilterCallback: widget.removeFilterCallback,
                         ),
                       ),
@@ -231,7 +230,7 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                             setState(() {
                               showOnlySelected = newValue;
                               if (newValue) {
-                                widget.addFilterCallback(
+                                widget.updateFilterCallback(
                                   name: 'Only Selected',
                                   filterFunction: (scores) => scores
                                       .where((s) => SchoolScore.selectedSchools
@@ -267,8 +266,8 @@ class _FilterAndComparePaneState extends State<FilterAndComparePane> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                      onPressed: widget.resetFilters,
-                      child: const Text("Reset Filters"),
+                      onPressed: widget.clearAllCallback,
+                      child: const Text("Clear All Filters"),
                     ),
                     const SizedBox(
                       width: 50.0,

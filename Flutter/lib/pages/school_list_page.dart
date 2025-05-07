@@ -75,7 +75,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
     updateShownSchools();
   }
 
-  void resetFilters() {
+  void clearAllFilters() {
 		filterResetCallbacks.forEach((key, value) {
 		  value();
 		});
@@ -145,8 +145,6 @@ class _SchoolListPageState extends State<SchoolListPage> {
     return Scaffold(
       body: Column(
         children: [
-          // Top header
-         
           Expanded(
             child: Center(
               child: Padding(
@@ -162,15 +160,13 @@ class _SchoolListPageState extends State<SchoolListPage> {
                       child: FilterAndComparePane(
                         selectedSchoolsCount:
                             SchoolScore.selectedSchools.length,
-												addFilterCallback: addFilter,
+												updateFilterCallback: addFilter,
 												removeFilterCallback: removeFilter,
-                        resetFilters: resetFilters,
+                        clearAllCallback: clearAllFilters,
                         clearSchoolSelection: clearSchoolSelection,
                       ),
                     ),
-
                     const SizedBox(width: 30.0),
-
                     Expanded(
                       flex: 5,
                       child: SchoolListPane(

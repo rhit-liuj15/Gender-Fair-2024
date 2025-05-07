@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/components/filter_widget.dart';
 import 'package:gender_fair_2024/components/state_name_tile.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
-class StateFilter extends StatefulWidget {
-  final void Function(
-      {required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
-      required String name,
-      required dynamic Function() resetCallback}) addFilterCallback;
-  final Function({required String name}) removeFilterCallback;
+class StateFilter extends StatefulWidget implements FilterWidget {
+  @override
+	final void Function({
+		required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
+		required String name,
+		required dynamic Function() resetCallback,
+	}) updateFilterCallback;
+  @override
+	final Function({required String name}) removeFilterCallback;
 
   const StateFilter({
     super.key,
-    required this.addFilterCallback,
+    required this.updateFilterCallback,
     required this.removeFilterCallback,
   });
 
   @override
-  _StateFilterState createState() => _StateFilterState();
+  StateFilterState createState() => StateFilterState();
 }
 
-class _StateFilterState extends State<StateFilter> {
+class StateFilterState extends State<StateFilter> {
   final TextEditingController controller = TextEditingController();
   Map<String, String> states =
       Metadata.instance.getMetadataCategory(1).metadataPairs;
@@ -68,7 +72,7 @@ class _StateFilterState extends State<StateFilter> {
         name: 'States',
       );
     } else {
-      widget.addFilterCallback(
+      widget.updateFilterCallback(
         name: "States",
         filterFunction: (List<SchoolScore> scores) {
           return scores
