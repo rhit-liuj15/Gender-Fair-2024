@@ -60,9 +60,6 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
   }
 
   void _updateMajor(String major) {
-    if (selectedMajors[major]!.isEmpty) {
-      selectedMajors.remove(major);
-    }
     onMajorChange();
   }
 
