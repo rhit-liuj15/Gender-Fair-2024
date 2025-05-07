@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/models/mutable_value_notifier.dart';
 import 'package:gender_fair_2024/pages/listPage/listPane/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
@@ -22,7 +23,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
   final Map<String, Function()> filterResetCallbacks = {};
 
   List<SchoolScore> scoreList = <SchoolScore>[];
-  List<SchoolScore> schoolsFilteredFor = <SchoolScore>[];
+	MutableValueNotifier<List<SchoolScore>> schoolsFilteredFor = MutableValueNotifier<List<SchoolScore>>(<SchoolScore>[]);
 
   ListPageColumnAttributes sortingBy = ListPageColumnAttributes.total;
   bool sortDescending = ListPageColumnAttributes.total.sortDescending;
@@ -36,11 +37,9 @@ class _SchoolListPageState extends State<SchoolListPage> {
   }
 
   Future<void> loadData() async {
-    setState(() {
-      scoreList = DataLoader.instance.allSchoolScores.values.toList();
-      schoolsFilteredFor = List.from(scoreList);
-      sortData();
-    });
+		scoreList = DataLoader.instance.allSchoolScores.values.toList();
+		schoolsFilteredFor.value = List.from(scoreList);
+		sortData();
   }
 
   void updateSortMetric(ListPageColumnAttributes column) {
@@ -57,7 +56,7 @@ class _SchoolListPageState extends State<SchoolListPage> {
 		sortData();
   }
 
-  void addFilter({
+  void updateFilter({
 		required String name,
 		required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
 		required Function() resetCallback,
@@ -91,53 +90,49 @@ class _SchoolListPageState extends State<SchoolListPage> {
   }
 
   void updateShownSchools() {
-    setState(() {
-      schoolsFilteredFor = scoreList;
-      for (List<SchoolScore> Function(List<SchoolScore>) func
-          in filterFunctions.values) {
-        schoolsFilteredFor = func(schoolsFilteredFor);
-      }
-    });
+		schoolsFilteredFor.value = scoreList;
+		for (List<SchoolScore> Function(List<SchoolScore>) func
+				in filterFunctions.values) {
+			schoolsFilteredFor.value = func(schoolsFilteredFor.value);
+		}
     sortData();
   }
 
   void sortData() {
-    setState(() {
-      Comparator<SchoolScore> comparator;
-      switch (sortingBy) {
-        case ListPageColumnAttributes.instName:
-          comparator = (a, b) => a.schoolName.compareTo(b.schoolName);
-          break;
+		Comparator<SchoolScore> comparator;
+		switch (sortingBy) {
+			case ListPageColumnAttributes.instName:
+				comparator = (a, b) => a.schoolName.compareTo(b.schoolName);
+				break;
 
-        case ListPageColumnAttributes.ranking:
-        case ListPageColumnAttributes.total:
-          comparator = (a, b) => a.score.compareTo(b.score);
-          break;
+			case ListPageColumnAttributes.ranking:
+			case ListPageColumnAttributes.total:
+				comparator = (a, b) => a.score.compareTo(b.score);
+				break;
 
-        case ListPageColumnAttributes.leadership:
-        case ListPageColumnAttributes.polnpay:
-        case ListPageColumnAttributes.safety:
-        case ListPageColumnAttributes.diversity:
-          comparator = (a, b) => a.subscores[ListPageColumnAttributes
-                  .listPageToSchoolScoreMapping[sortingBy]]!
-              .compareTo(b.subscores[ListPageColumnAttributes
-                  .listPageToSchoolScoreMapping[sortingBy]]!);
-          break;
-        default:
-          if (sortingBy.sortable) {
-            comparator = (a, b) => 0; // No sorting needed
-          } else {
-            throw ("Sort column '$sortingBy' is not supported");
-          }
-      }
-      schoolsFilteredFor.sort((a, b) {
-        int compareResult = comparator(a, b);
-        if (compareResult == 0) {
-          compareResult = a.score.compareTo(b.score);
-        }
-        return sortDescending ? -compareResult : compareResult;
-      });
-    });
+			case ListPageColumnAttributes.leadership:
+			case ListPageColumnAttributes.polnpay:
+			case ListPageColumnAttributes.safety:
+			case ListPageColumnAttributes.diversity:
+				comparator = (a, b) => a.subscores[ListPageColumnAttributes
+								.listPageToSchoolScoreMapping[sortingBy]]!
+						.compareTo(b.subscores[ListPageColumnAttributes
+								.listPageToSchoolScoreMapping[sortingBy]]!);
+				break;
+			default:
+				if (sortingBy.sortable) {
+					comparator = (a, b) => 0; // No sorting needed
+				} else {
+					throw ("Sort column '$sortingBy' is not supported");
+				}
+		}
+		schoolsFilteredFor.value.sort((a, b) {
+			int compareResult = comparator(a, b);
+			if (compareResult == 0) {
+				compareResult = a.score.compareTo(b.score);
+			}
+			return sortDescending ? -compareResult : compareResult;
+		});
   }
 
   @override
@@ -154,13 +149,12 @@ class _SchoolListPageState extends State<SchoolListPage> {
                 ),
                 child: Row(
                   children: [
-                    // Left pane: filter, compare
                     Expanded(
                       flex: 2,
                       child: FilterAndComparePane(
                         selectedSchoolsCount:
                             SchoolScore.selectedSchools.length,
-												updateFilterCallback: addFilter,
+												updateFilterCallback: updateFilter,
 												removeFilterCallback: removeFilter,
                         clearAllCallback: clearAllFilters,
                         clearSchoolSelection: clearSchoolSelection,

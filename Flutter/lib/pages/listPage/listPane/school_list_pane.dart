@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/models/mutable_value_notifier.dart';
 import 'package:gender_fair_2024/pages/listPage/listPane/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
@@ -12,7 +13,7 @@ class SchoolListPane extends StatefulWidget {
   final Function() invertSortCallback;
   final ListPageColumnAttributes sortingMetric;
   final Function() updateSortCallback;
-  final List<SchoolScore> schoolsFilteredFor;
+  final MutableValueNotifier<List<SchoolScore>> schoolsFilteredFor;
   final int schoolsPerPage;
   final Function() onUpdateSelected;
 
@@ -35,17 +36,21 @@ class _SchoolListPaneState extends State<SchoolListPane> {
   int currentPage = 1;
   int get numSchoolsOnPage => max<int>(
       min<int>(
-          widget.schoolsFilteredFor.length -
+          widget.schoolsFilteredFor.value.length -
               widget.schoolsPerPage * (currentPage - 1),
           widget.schoolsPerPage),
       0);
   int get totalPages =>
-      (widget.schoolsFilteredFor.length - 1) ~/ widget.schoolsPerPage + 1;
-  // ((widget.schoolsFilteredFor.length + widget.schoolsPerPage - 1) / widget.schoolsPerPage)
-  // 		.ceil();
+      (widget.schoolsFilteredFor.value.length - 1) ~/ widget.schoolsPerPage + 1;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.schoolsFilteredFor.addListener(onSchoolListChange);
+  }
 
   List<SchoolScore> get schoolOnCurrentPage {
-    if (widget.schoolsFilteredFor.isEmpty) {
+    if (widget.schoolsFilteredFor.value.isEmpty) {
       return [];
     }
 
@@ -53,29 +58,21 @@ class _SchoolListPaneState extends State<SchoolListPane> {
 
     final startIndex = (currentPage - 1) * widget.schoolsPerPage;
     final endIndex = (startIndex + widget.schoolsPerPage)
-        .clamp(0, widget.schoolsFilteredFor.length);
+        .clamp(0, widget.schoolsFilteredFor.value.length);
 
-    return startIndex < widget.schoolsFilteredFor.length
-        ? widget.schoolsFilteredFor.sublist(startIndex, endIndex)
+    return startIndex < widget.schoolsFilteredFor.value.length
+        ? widget.schoolsFilteredFor.value.sublist(startIndex, endIndex)
         : [];
   }
+
+	void onSchoolListChange() {
+		setState(() {});
+	}
 
   void onPageChange(int newPage) {
     setState(() {
       currentPage = newPage;
     });
-  }
-
-  @override
-  void didUpdateWidget(covariant SchoolListPane oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    final newTotalPages =
-        (widget.schoolsFilteredFor.length - 1) ~/ widget.schoolsPerPage + 1;
-    if (currentPage > newTotalPages) {
-      setState(() {
-        currentPage = newTotalPages;
-      });
-    }
   }
 
   @override
