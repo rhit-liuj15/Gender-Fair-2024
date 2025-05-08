@@ -60,24 +60,17 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
     });
   }
 
-  // Function to get IRS display text
-  Widget getIRSdisplaytext() {
-    int cr = 0;
-    int wb = 0;
-    String? message;
-    try {cr = schoolData.getInt("CEO_REVIEWED_COMPENSATION");} catch (e) {cr = 0;}
-    try {wb = schoolData.getInt("WHISTLEBLOWER_POLICY");} catch (e) {wb = 0;}
-    if (cr == 1 && wb == 1) {
-      message = "* This institution is one of ~30% with a Compensation Review and a Whistleblower Policy.";
-    } else if (cr == 1) {
-      message = "* This institution is one of ~30% with a Compensation Review.";
-    } else if (wb == 1) {
-      message = "* This institution is one of ~30% with a Whistleblower Policy.";
+  // Function to check IRS data
+  String hasIRSData(String varName) {
+    try {
+      if (schoolData.getInt(varName) == 1) {
+        return "Yes";
+      } else {
+        return "No";
+      }
+    } catch (e) {
+      return "N/A";
     }
-    if (message == null) {
-      return const SizedBox.shrink(); // Return an empty widget
-    }
-    return Text(message);
   }
 
   @override
@@ -402,8 +395,40 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                     const SizedBox(height: 20),
                     // Compensation Review and Whistleblower policy
                     Center(
-                      child: getIRSdisplaytext()
-                    )
+                      child: Table(
+                        columnWidths: const {
+                          0: IntrinsicColumnWidth(),
+                          1: IntrinsicColumnWidth(),
+                        },
+                        border: TableBorder.all(color: Colors.black, width: 1.0),
+                        children: [
+                          const TableRow(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Compensation Review'),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Whistleblower Policy'),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(child: Text(hasIRSData("CEO_REVIEWED_COMPENSATION"))),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(child: Text(hasIRSData("WHISTLEBLOWER_POLICY"))),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
