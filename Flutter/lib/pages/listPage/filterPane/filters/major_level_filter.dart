@@ -54,7 +54,9 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
   void _addMajor(String major) {
 		// By default, every available major is selected
 		selectedMajors[major] = DataLoader.instance.allSchoolOfferings[major]!.levelsAvailableForMajor();
-		autocompleteMajors = [];
+		setState(() {
+			autocompleteMajors = [];
+		});
 		controller.clear();
 		onMajorChange();
   }
@@ -125,9 +127,11 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
                 shrinkWrap: true,
                 itemCount: autocompleteMajors.length,
                 itemBuilder: (context, index) {
+									// print("Length of array is ${autocompleteMajors.length}. $index: $autocompleteMajors");
                   return ListTile(
                     title: Text(autocompleteMajors[index].value),
                     onTap: () {
+											// print("My index is $index");
                       _addMajor(autocompleteMajors[index].key);
                       autocompleteMajors = [];
                     },
