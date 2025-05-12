@@ -15,7 +15,7 @@ class FilterBlockWithHeader extends StatefulWidget {
 }
 
 class _FilterBlockWithHeaderState extends State<FilterBlockWithHeader> {
-  bool isVisible = false;
+  bool isVisible = true;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,10 +27,10 @@ class _FilterBlockWithHeaderState extends State<FilterBlockWithHeader> {
               IconButton(
                 icon: isVisible
                     ? const Icon(
-                        Icons.add,
+                        Icons.remove,
                       )
                     : const Icon(
-                        Icons.remove,
+                        Icons.add,
                       ),
                 onPressed: () {
                   setState(() {
