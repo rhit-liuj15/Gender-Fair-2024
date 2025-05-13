@@ -1,111 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/pages/listPage/filterPane/filters/filter_widget.dart';
-import 'package:gender_fair_2024/models/metadata.dart';
+import 'package:gender_fair_2024/models/filter_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
-class PublicPrivateFilter extends StatefulWidget implements FilterWidget {
-  @override
-  final void Function({
-    required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
-    required String name,
-    required dynamic Function() resetCallback,
-  }) updateFilterCallback;
-  @override
-  final Function({required String name}) removeFilterCallback;
+class PublicPrivateFilter extends StatefulWidget {
+  static const filterName = "Public/Private";
 
-  const PublicPrivateFilter({
-    super.key,
-    required this.updateFilterCallback,
-    required this.removeFilterCallback,
-  });
+  static List<SchoolScore> Function(List<SchoolScore>) filterLogic =
+      (List<SchoolScore> scores) {
+    if (!FilterData.instance.showSchoolCategories.values.any((v) => v)) {
+      return scores;
+    } else {
+      return scores.where((s) {
+        return FilterData.instance.showSchoolCategories.entries
+            .where((e) => e.value)
+            .map((e) => e.key)
+            .toList()
+            .contains(s.schoolType);
+      }).toList();
+    }
+  };
+
+  static const PublicPrivateFilter instance =
+      PublicPrivateFilter._privateConstructor();
+
+  const PublicPrivateFilter._privateConstructor();
 
   @override
-  PublicPrivateFilterState createState() => PublicPrivateFilterState();
+  State<PublicPrivateFilter> createState() => _PublicPrivateFilterState();
 }
 
-class PublicPrivateFilterState extends State<PublicPrivateFilter> {
+class _PublicPrivateFilterState extends State<PublicPrivateFilter> {
   final TextEditingController controller = TextEditingController();
-  Map<String, String> states =
-      Metadata.instance.getMetadataCategory(1).metadataPairs;
 
-  List<MapEntry<String, String>> autocompleteStates = [];
-  Set<String> selectedStates = <String>{};
+  @override
+  void initState() {
+    super.initState();
+    FilterData.instance.registerFilter(
+        name: PublicPrivateFilter.filterName,
+        filterFunction: PublicPrivateFilter.filterLogic);
+    FilterData.instance.registerResetCallback(
+      name: PublicPrivateFilter.filterName,
+      resetCallback: () {
+        FilterData.instance.showSchoolCategories.updateAll(
+          (key, value) => false
+        );
+      },
+    );
+    FilterData.instance.addRebuildCallback(
+      name: PublicPrivateFilter.filterName,
+      rebuildCallback: () {
+        setState(() {});
+      },
+    );
+  }
 
-  void onStatesSelectedChange() {
-    if (selectedStates.isEmpty) {
-      widget.removeFilterCallback(
-        name: 'States',
-      );
-    } else {
-      widget.updateFilterCallback(
-        name: "States",
-        filterFunction: (List<SchoolScore> scores) {
-          return scores
-              .where((school) => selectedStates.contains(school.schoolState))
-              .toList();
-        },
-        resetCallback: () {
-          selectedStates.clear();
-        },
-      );
-    }
+  @override
+  void dispose() {
+    FilterData.instance.removeRebuildCallback(
+      name: PublicPrivateFilter.filterName,
+    );
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<MapEntry<String, String>> schoolCategories =
-        Metadata.instance.getMetadataCategory(2).metadataPairs.entries.toList();
-    List<bool> showSchoolCategories = List.generate(
-      Metadata.instance.getMetadataCategory(2).metadataPairs.length,
-      (index) => false,
-    );
-    return ListView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      itemCount: schoolCategories.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Row(
+    return Column(
+      children: [
+        for (MapEntry<String, bool> entry
+            in FilterData.instance.showSchoolCategories.entries)
+          Row(
             children: [
               const SizedBox(width: 15),
               Checkbox(
-                value: showSchoolCategories[index],
+                value: entry.value,
                 onChanged: (value) {
                   if (value != null) {
                     setState(() {
-                      showSchoolCategories[index] = value;
-                      if (showSchoolCategories.any((v) => v)) {
-                        widget.updateFilterCallback(
-                          name: 'School Type',
-                          filterFunction: (scores) => scores
-                              .where((s) => [
-                                    for (int i = 0;
-                                        i < showSchoolCategories.length;
-                                        i++)
-                                      if (showSchoolCategories[i])
-                                        schoolCategories[i].key
-                                  ].contains(s.schoolType))
-                              .toList(),
-                          resetCallback: () {
-                            showSchoolCategories = List.filled(
-                                showSchoolCategories.length, false,
-                                growable: true);
-                          },
-                        );
-                      } else {
-                        widget.removeFilterCallback(
-                          name: 'School Type',
-                        );
-                      }
+                      FilterData.instance.showSchoolCategories[entry.key] =
+                          value;
                     });
+                    FilterData.instance.applyFilters();
                   }
                 },
               ),
               const SizedBox(width: 15),
               Expanded(
                 child: Text(
-                  schoolCategories[index].value,
+                  FilterData.instance.schoolCategories[entry.key]!,
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w500,
@@ -114,8 +95,7 @@ class PublicPrivateFilterState extends State<PublicPrivateFilter> {
               ),
             ],
           ),
-        );
-      },
+      ],
     );
   }
 }

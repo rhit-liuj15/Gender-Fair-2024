@@ -1,38 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/pages/listPage/filterPane/filters/filter_widget.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
+import 'package:gender_fair_2024/models/filter_data.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_academic_offerings.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/pages/listPage/filterPane/filters/majorLeveFilter/major_options_block.dart';
 
-class MajorLevelFilter extends StatefulWidget implements FilterWidget {
-  @override
-  final void Function({
-    required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
-    required String name,
-    required dynamic Function() resetCallback,
-  }) updateFilterCallback;
+class MajorLevelFilter extends StatefulWidget {
+  static const filterName = "Major/Level";
+
+  static List<SchoolScore> Function(List<SchoolScore>) filterLogic =
+      (List<SchoolScore> scores) {
+    if (!FilterData.instance.selectedLevelsByCIPCODE.entries.any((entry) => entry.value.isNotEmpty)) {
+      return scores;
+    } else {
+      Set<int> allUIDsMatchingSelection = <int>{};
+      for (MapEntry<String, Set<int>> item
+          in FilterData.instance.selectedLevelsByCIPCODE.entries) {
+        SchoolAcademicOfferings offeringWithCIPCODE =
+            DataLoader.instance.allSchoolOfferings[item.key]!;
+        for (int level in item.value) {
+          allUIDsMatchingSelection = allUIDsMatchingSelection.union(
+              offeringWithCIPCODE.schoolsOfferingCourseAtLevel(level: level));
+        }
+      }
+      return scores
+          .where(
+            (element) => allUIDsMatchingSelection.contains(element.uid),
+          )
+          .toList();
+    }
+  };
+
+  static const MajorLevelFilter instance =
+      MajorLevelFilter._privateConstructor();
+
+  const MajorLevelFilter._privateConstructor();
 
   @override
-  final Function({required String name}) removeFilterCallback;
-
-  const MajorLevelFilter({
-    super.key,
-    required this.updateFilterCallback,
-    required this.removeFilterCallback,
-  });
-
-  @override
-  MajorLevelFilterState createState() => MajorLevelFilterState();
+  State<MajorLevelFilter> createState() => _MajorLevelFilterState();
 }
 
-class MajorLevelFilterState extends State<MajorLevelFilter> {
+class _MajorLevelFilterState extends State<MajorLevelFilter> {
   final TextEditingController controller = TextEditingController();
   Map<String, String> majors =
       Metadata.instance.getMetadataCategory(3).metadataPairs;
   List<MapEntry<String, String>> autocompleteMajors = [];
-  Map<String, Set<int>> selectedMajors = <String, Set<int>>{};
+
+  @override
+  void initState() {
+    super.initState();
+    FilterData.instance.registerFilter(
+      name: MajorLevelFilter.filterName,
+      filterFunction: MajorLevelFilter.filterLogic,
+    );
+    FilterData.instance.registerResetCallback(
+      name: MajorLevelFilter.filterName,
+      resetCallback: () {
+				FilterData.instance.selectedLevelsByCIPCODE.clear();
+      },
+    );
+    FilterData.instance.addRebuildCallback(
+      name: MajorLevelFilter.filterName,
+      rebuildCallback: () {
+        setState(() {});
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    FilterData.instance.removeRebuildCallback(
+      name: MajorLevelFilter.filterName,
+    );
+    super.dispose();
+  }
 
   void _updateAutocomplete(String inputString) {
     setState(() {
@@ -44,7 +86,7 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
             .where((entry) =>
                 (entry.key.toLowerCase().contains(inputStringLower) ||
                     entry.value.toLowerCase().contains(inputStringLower)) &&
-                !selectedMajors.keys.contains(entry.key))
+                !FilterData.instance.selectedLevelsByCIPCODE.keys.contains(entry.key))
             .map((e) => e)
             .toList();
       }
@@ -52,50 +94,13 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
   }
 
   void _addMajor(String major) {
-		// By default, every available major is selected
-		selectedMajors[major] = DataLoader.instance.allSchoolOfferings[major]!.levelsAvailableForMajor();
-		setState(() {
-			autocompleteMajors = [];
-		});
-		controller.clear();
-		onMajorChange();
-  }
-
-  void _updateMajor(String major) {
-    onMajorChange();
-  }
-
-  void onMajorChange() {
-    if (selectedMajors.isEmpty) {
-      widget.removeFilterCallback(
-        name: 'Majors',
-      );
-    } else {
-      widget.updateFilterCallback(
-        name: "Majors",
-        filterFunction: (List<SchoolScore> scores) {
-          Set<int> allUIDsMatchingSelection = <int>{};
-          for (MapEntry<String, Set<int>> item in selectedMajors.entries) {
-            SchoolAcademicOfferings offeringWithCIPCODE =
-                DataLoader.instance.allSchoolOfferings[item.key]!;
-            for (int level in item.value) {
-              allUIDsMatchingSelection = allUIDsMatchingSelection.union(
-                  offeringWithCIPCODE.schoolsOfferingCourseAtLevel(
-                      level: level));
-            }
-          }
-          // print(allUIDsMatchingSelection);
-          return scores
-              .where(
-                (element) => allUIDsMatchingSelection.contains(element.uid),
-              )
-              .toList();
-        },
-        resetCallback: () {
-          selectedMajors.clear();
-        },
-      );
-    }
+    // By default, every available major is selected
+    setState(() {
+      autocompleteMajors = [];
+      FilterData.instance.selectedLevelsByCIPCODE[major] = DataLoader.instance.allSchoolOfferings[major]!
+          .levelsAvailableForMajor();
+      controller.clear();
+    });
   }
 
   @override
@@ -127,12 +132,11 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
                 shrinkWrap: true,
                 itemCount: autocompleteMajors.length,
                 itemBuilder: (context, index) {
-									// print("Length of array is ${autocompleteMajors.length}. $index: $autocompleteMajors");
                   return ListTile(
                     title: Text(autocompleteMajors[index].value),
                     onTap: () {
-											// print("My index is $index");
                       _addMajor(autocompleteMajors[index].key);
+											FilterData.instance.applyFilters();
                       autocompleteMajors = [];
                     },
                   );
@@ -141,18 +145,21 @@ class MajorLevelFilterState extends State<MajorLevelFilter> {
             ),
           ),
         Visibility(
-          visible: selectedMajors.isNotEmpty,
+          visible: FilterData.instance.selectedLevelsByCIPCODE.isNotEmpty,
           child: Column(
             children: [
               const SizedBox(height: 10),
               Wrap(
                 spacing: 8,
-                children: selectedMajors.entries.map(
+                children: FilterData.instance.selectedLevelsByCIPCODE.entries.map(
                   (entry) {
                     return MajorOptionsBlock(
-                      offerings: DataLoader.instance.allSchoolOfferings[entry.key]!,
-                      selectedLevels: entry.value,
-                      updateLevelsCallback: () => _updateMajor(entry.key),
+											cipcode: entry.key,
+                      updateLevelsCallback: () {
+												setState(() {
+													FilterData.instance.applyFilters();
+												});
+											}
                     );
                   },
                 ).toList(),

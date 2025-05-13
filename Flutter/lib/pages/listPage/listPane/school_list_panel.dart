@@ -1,73 +1,140 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/models/mutable_value_notifier.dart';
+import 'package:gender_fair_2024/models/data_loader.dart';
+import 'package:gender_fair_2024/models/filter_data.dart';
+import 'package:gender_fair_2024/models/selected_schools.dart';
+import 'package:gender_fair_2024/pages/listPage/filterPane/filters/school_name_filter.dart';
 import 'package:gender_fair_2024/pages/listPage/listPane/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 
-class SchoolListPane extends StatefulWidget {
-	/// The pane on the list page that has the list of schools as filtered for by the user (or all schools if filters are absent)
-  
-	final ValueChanged<ListPageColumnAttributes> updateSortingMetricCallback;
-  final Function() invertSortCallback;
-  final ListPageColumnAttributes sortingMetric;
-  final Function() updateSortCallback;
-  final MutableValueNotifier<List<SchoolScore>> schoolsFilteredFor;
-  final int schoolsPerPage;
-  final Function() onUpdateSelected;
+/// The pane on the list page that has the list of schools as filtered for by the user (or all schools if filters are absent)
+class SchoolListPanel extends StatefulWidget {
+  static const SchoolListPanel instance = SchoolListPanel._privateConstructor();
 
-  const SchoolListPane({
-    super.key,
-    required this.updateSortingMetricCallback,
-    required this.invertSortCallback,
-    required this.sortingMetric,
-    required this.updateSortCallback,
-    required this.schoolsFilteredFor,
-    required this.schoolsPerPage,
-    required this.onUpdateSelected,
-  });
+  static const String schoolListListenerName = "List Panel";
+  static const String selectedSchoolsListListenerName = "List Panel";
+
+  const SchoolListPanel._privateConstructor();
 
   @override
-  State<SchoolListPane> createState() => _SchoolListPaneState();
+  State<SchoolListPanel> createState() => _SchoolListPanelState();
 }
 
-class _SchoolListPaneState extends State<SchoolListPane> {
+class _SchoolListPanelState extends State<SchoolListPanel> {
   int currentPage = 1;
   int get numSchoolsOnPage => max<int>(
-      min<int>(
-          widget.schoolsFilteredFor.value.length -
-              widget.schoolsPerPage * (currentPage - 1),
-          widget.schoolsPerPage),
+      min<int>(schoolsFilteredFor.length - schoolsPerPage * (currentPage - 1),
+          schoolsPerPage),
       0);
-  int get totalPages =>
-      (widget.schoolsFilteredFor.value.length - 1) ~/ widget.schoolsPerPage + 1;
+  int get totalPages => (schoolsFilteredFor.length - 1) ~/ schoolsPerPage + 1;
+
+  static final List<SchoolScore> scoreList =
+      DataLoader.instance.allSchoolScores.values.toList();
+  static List<SchoolScore> schoolsFilteredFor = scoreList;
+
+  ListPageColumnAttributes sortingBy = ListPageColumnAttributes.total;
+  bool sortDescending = ListPageColumnAttributes.total.sortDescending;
+
+  final int schoolsPerPage = 20;
+
+  ListPageColumnAttributes sortingMetric = ListPageColumnAttributes.total;
 
   @override
   void initState() {
     super.initState();
-    widget.schoolsFilteredFor.addListener(onSchoolListChange);
+    FilterData.instance.addSchoolListListener(
+        name: SchoolListPanel.schoolListListenerName, callback: onSchoolListChange);
+    SelectedSchools.instance.addSelectedSchoolsListListener(
+        name: SchoolListPanel.schoolListListenerName, callback: onSchoolListChange);
+    sortData();
+  }
+
+  void updateSortMetric(ListPageColumnAttributes column) {
+    if (sortingBy != column) {
+      sortingBy = column;
+      sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
+      updateShownSchools();
+    }
+    // Otherwise, the same element has been selected. The website won't need to respond in that case.
+  }
+
+  void invertSort() {
+    sortDescending = !sortDescending;
+    updateShownSchools();
+  }
+
+  void updateShownSchools() {
+    schoolsFilteredFor = FilterData.instance.filterSchools(scoreList);
+    sortData();
+  }
+
+  void sortData() {
+    Comparator<SchoolScore> comparator;
+    switch (sortingBy) {
+      case ListPageColumnAttributes.instName:
+        comparator = (a, b) => a.schoolName.compareTo(b.schoolName);
+        break;
+
+      case ListPageColumnAttributes.ranking:
+      case ListPageColumnAttributes.total:
+        comparator = (a, b) => a.score.compareTo(b.score);
+        break;
+
+      case ListPageColumnAttributes.leadership:
+      case ListPageColumnAttributes.polnpay:
+      case ListPageColumnAttributes.safety:
+      case ListPageColumnAttributes.diversity:
+        comparator = (a, b) => a.subscores[ListPageColumnAttributes
+                .listPageToSchoolScoreMapping[sortingBy]]!
+            .compareTo(b.subscores[ListPageColumnAttributes
+                .listPageToSchoolScoreMapping[sortingBy]]!);
+        break;
+      default:
+        if (sortingBy.sortable) {
+          comparator = (a, b) => 0; // No sorting needed
+        } else {
+          throw ("Sort column '$sortingBy' is not supported");
+        }
+    }
+    schoolsFilteredFor.sort((a, b) {
+      int compareResult = comparator(a, b);
+      if (compareResult == 0) {
+        compareResult = a.score.compareTo(b.score);
+      }
+      return sortDescending ? -compareResult : compareResult;
+    });
+  }
+
+  @override
+  void dispose() {
+    FilterData.instance
+        .removeSchoolListListener(name: SchoolListPanel.schoolListListenerName);
+    super.dispose();
   }
 
   List<SchoolScore> get schoolOnCurrentPage {
-    if (widget.schoolsFilteredFor.value.isEmpty) {
+    if (schoolsFilteredFor.isEmpty) {
       return [];
     }
 
     currentPage = currentPage.clamp(1, totalPages);
 
-    final startIndex = (currentPage - 1) * widget.schoolsPerPage;
-    final endIndex = (startIndex + widget.schoolsPerPage)
-        .clamp(0, widget.schoolsFilteredFor.value.length);
+    final startIndex = (currentPage - 1) * schoolsPerPage;
+    final endIndex =
+        (startIndex + schoolsPerPage).clamp(0, schoolsFilteredFor.length);
 
-    return startIndex < widget.schoolsFilteredFor.value.length
-        ? widget.schoolsFilteredFor.value.sublist(startIndex, endIndex)
+    return startIndex < schoolsFilteredFor.length
+        ? schoolsFilteredFor.sublist(startIndex, endIndex)
         : [];
   }
 
-	void onSchoolListChange() {
-		setState(() {});
-	}
+  void onSchoolListChange() {
+    setState(() {
+      updateShownSchools();
+    });
+  }
 
   void onPageChange(int newPage) {
     setState(() {
@@ -85,8 +152,7 @@ class _SchoolListPaneState extends State<SchoolListPane> {
       child: Column(
         children: [
           Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            padding: const EdgeInsets.all(18),
             child: Row(
               children: [
                 const Text(
@@ -95,10 +161,10 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                 ),
                 const SizedBox(width: 8.0),
                 DropdownButton<ListPageColumnAttributes>(
-                  value: widget.sortingMetric,
+                  value: sortingMetric,
                   onChanged: (ListPageColumnAttributes? newValue) {
                     if (newValue != null) {
-                      widget.updateSortingMetricCallback(newValue);
+                      updateSortMetric(newValue);
                     }
                   },
                   // Generate dropdown entry for all sortable columns
@@ -119,10 +185,15 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                   hint: const Text("Select column"),
                 ),
                 const SizedBox(width: 8.0),
-								TextButton(
-									onPressed: widget.invertSortCallback,
-									child: const Text("Invert Sort"),
-								)
+                TextButton(
+                  onPressed: invertSort,
+                  child: const Text("Invert Sort"),
+                ),
+                const Expanded(child: SizedBox()),
+                const SizedBox(
+                  width: 500,
+                  child: SchoolNameFilter.instance,
+                ),
               ],
             ),
           ),
@@ -176,7 +247,8 @@ class _SchoolListPaneState extends State<SchoolListPane> {
                             padding: const EdgeInsets.symmetric(vertical: 4.0),
                             child: SchoolScoreRow(
                               school: schoolOnCurrentPage[index],
-                              onUpdateSelected: widget.onUpdateSelected,
+                              onUpdateSelected: SelectedSchools
+                                  .instance.applySelectedSchoolChange,
                             ),
                           ),
                         );

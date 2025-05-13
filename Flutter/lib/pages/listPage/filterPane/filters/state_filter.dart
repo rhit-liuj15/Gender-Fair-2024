@@ -1,36 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/pages/listPage/filterPane/filters/filter_widget.dart';
+import 'package:gender_fair_2024/models/filter_data.dart';
 import 'package:gender_fair_2024/pages/listPage/filterPane/filters/stateFilter/state_name_tile.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
-class StateFilter extends StatefulWidget implements FilterWidget {
-  @override
-	final void Function({
-		required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
-		required String name,
-		required dynamic Function() resetCallback,
-	}) updateFilterCallback;
-  @override
-	final Function({required String name}) removeFilterCallback;
+class StateFilter extends StatefulWidget {
+  static const filterName = "States";
 
-  const StateFilter({
-    super.key,
-    required this.updateFilterCallback,
-    required this.removeFilterCallback,
-  });
+  static List<SchoolScore> Function(List<SchoolScore>) filterLogic =
+      (List<SchoolScore> scores) {
+    if (FilterData.instance.selectedStates.isEmpty) {
+      return scores;
+    } else {
+      return scores
+          .where((school) =>
+              FilterData.instance.selectedStates.contains(school.schoolState))
+          .toList();
+    }
+  };
+
+  static const StateFilter instance = StateFilter._privateConstructor();
+
+  const StateFilter._privateConstructor();
 
   @override
-  StateFilterState createState() => StateFilterState();
+  State<StateFilter> createState() => _StateFilterState();
 }
 
-class StateFilterState extends State<StateFilter> {
+class _StateFilterState extends State<StateFilter> {
   final TextEditingController controller = TextEditingController();
-  Map<String, String> states =
+  static final Map<String, String> states =
       Metadata.instance.getMetadataCategory(1).metadataPairs;
-
   List<MapEntry<String, String>> autocompleteStates = [];
-  Set<String> selectedStates = <String>{};
+
+  @override
+  void initState() {
+    super.initState();
+    FilterData.instance.registerFilter(
+      name: StateFilter.filterName,
+      filterFunction: StateFilter.filterLogic,
+    );
+    FilterData.instance.registerResetCallback(
+      name: StateFilter.filterName,
+      resetCallback: () {
+        FilterData.instance.selectedStates.clear();
+      },
+    );
+    FilterData.instance.addRebuildCallback(
+      name: StateFilter.filterName,
+      rebuildCallback: () {
+        setState(() {});
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    FilterData.instance.removeRebuildCallback(
+      name: StateFilter.filterName,
+    );
+    super.dispose();
+  }
 
   void _updateAutocomplete(String inputString) {
     setState(() {
@@ -44,7 +74,7 @@ class StateFilterState extends State<StateFilter> {
                 (entry) =>
                     (entry.key.toLowerCase().contains(inputStringLower) ||
                         entry.value.toLowerCase().contains(inputStringLower)) &&
-                    !selectedStates.contains(entry.key))
+                    !FilterData.instance.selectedStates.contains(entry.key))
             .toList();
       }
     });
@@ -52,39 +82,18 @@ class StateFilterState extends State<StateFilter> {
 
   void _selectState(MapEntry<String, String> state) {
     setState(() {
-      selectedStates.add(state.key);
+      FilterData.instance.selectedStates.add(state.key);
       autocompleteStates = [];
       controller.clear();
-      onStatesSelectedChange();
     });
+    FilterData.instance.applyFilters();
   }
 
   void _removeState(String state) {
     setState(() {
-      selectedStates.remove(state);
-      onStatesSelectedChange();
+      FilterData.instance.selectedStates.remove(state);
     });
-  }
-
-  void onStatesSelectedChange() {
-    if (selectedStates.isEmpty) {
-      widget.removeFilterCallback(
-        name: 'States',
-      );
-    } else {
-      widget.updateFilterCallback(
-        name: "States",
-        filterFunction: (List<SchoolScore> scores) {
-          return scores
-              .where((school) => selectedStates
-                  .contains(school.schoolState))
-              .toList();
-        },
-        resetCallback: () {
-					selectedStates.clear();
-        },
-      );
-    }
+    FilterData.instance.applyFilters();
   }
 
   @override
@@ -106,33 +115,35 @@ class StateFilterState extends State<StateFilter> {
         ),
         if (autocompleteStates.isNotEmpty)
           Container(
-            height: 150,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(5),
             ),
-            child: ListView.builder(
-              itemCount: autocompleteStates.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(autocompleteStates[index].value),
-                  onTap: () {
-                    _selectState(autocompleteStates[index]);
-                    setState(() {
-                      autocompleteStates = [];
-                    });
-                  },
-                );
-              },
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 180),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: autocompleteStates.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(autocompleteStates[index].value),
+                    onTap: () {
+                      _selectState(autocompleteStates[index]);
+                      setState(() {
+                        autocompleteStates = [];
+                      });
+                    },
+                  );
+                },
+              ),
             ),
           ),
         Visibility(
-					visible: selectedStates.isNotEmpty,
-					child: const SizedBox(height: 10)
-				),
+            visible: FilterData.instance.selectedStates.isNotEmpty,
+            child: const SizedBox(height: 10)),
         Wrap(
           spacing: 8,
-          children: selectedStates
+          children: FilterData.instance.selectedStates
               .map((entry) => StateNameTile(
                     state: states[entry]!,
                     removeStateCallback: () => _removeState(entry),

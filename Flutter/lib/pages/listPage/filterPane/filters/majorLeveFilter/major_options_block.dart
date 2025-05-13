@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/models/data_loader.dart';
+import 'package:gender_fair_2024/models/filter_data.dart';
 import 'package:gender_fair_2024/models/metadata.dart';
-import 'package:gender_fair_2024/models/school_academic_offerings.dart';
 
 class MajorOptionsBlock extends StatefulWidget {
   static final Map<int, String> allCategories = Map.unmodifiable(Metadata
@@ -8,14 +9,12 @@ class MajorOptionsBlock extends StatefulWidget {
       .getMetadataCategory(4)
       .metadataPairs
       .map((key, value) => MapEntry(int.parse(key), value)));
-  final SchoolAcademicOfferings offerings;
-  final Set<int> selectedLevels;
+	final String cipcode;
   final void Function() updateLevelsCallback;
 
   const MajorOptionsBlock({
     super.key,
-    required this.offerings,
-    required this.selectedLevels,
+    required this.cipcode,
     required this.updateLevelsCallback,
   });
 
@@ -26,16 +25,13 @@ class MajorOptionsBlock extends StatefulWidget {
 class _MajorOptionsBlockState extends State<MajorOptionsBlock> {
   @override
   Widget build(BuildContext context) {
-
-		String majorName = Metadata.instance.getMetadataCategory(3).metadataPairs[widget.offerings.cipcode]!;
-
     return Column(
       children: [
 				Row(
 					children: [
 						Expanded(
 							child: Text(
-								majorName,
+								Metadata.instance.getMetadataCategory(3).metadataPairs[widget.cipcode]!,
 								style: const TextStyle(
 										fontSize: 16.0, fontWeight: FontWeight.bold),
 								textAlign: TextAlign.start,
@@ -44,7 +40,7 @@ class _MajorOptionsBlockState extends State<MajorOptionsBlock> {
 						IconButton(
 							icon: const Icon(Icons.close),
 							onPressed: () {
-								widget.selectedLevels.clear();
+								FilterData.instance.selectedLevelsByCIPCODE.remove(widget.cipcode);
 								widget.updateLevelsCallback();
 							},
 						),
@@ -55,24 +51,24 @@ class _MajorOptionsBlockState extends State<MajorOptionsBlock> {
           child: Column(
             children: [
               for (MapEntry<int, String> entry in MajorOptionsBlock.allCategories.entries)
-							if (widget.offerings.numSchoolsOfferingLevel(level: entry.key) > 0) Row(
+							if (DataLoader.instance.allSchoolOfferings[widget.cipcode]!.numSchoolsOfferingLevel(level: entry.key) > 0) Row(
                   children: [
 										Checkbox(
-											value: widget.selectedLevels.contains(entry.key),
+											value: FilterData.instance.selectedLevelsByCIPCODE[widget.cipcode]!.contains(entry.key),
 											onChanged: (value) {
 											  if (value != null) {
 													setState(() {
 														if (value) {
-															widget.selectedLevels.add(entry.key);
+															FilterData.instance.selectedLevelsByCIPCODE[widget.cipcode]!.add(entry.key);
 														} else {
-															widget.selectedLevels.remove(entry.key);
+															FilterData.instance.selectedLevelsByCIPCODE[widget.cipcode]!.remove(entry.key);
 														}
 													});
 													widget.updateLevelsCallback();
 												}
 											},
 										),
-										Text("${entry.value} (${widget.offerings.numSchoolsOfferingLevel(level: entry.key)})"),
+										Text(entry.value),
 									],
                 ),
             ],
