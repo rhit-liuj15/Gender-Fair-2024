@@ -125,32 +125,61 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
           ),
         ),
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: ListView.builder(
-              itemCount: numSchoolsOnPage,
-              itemBuilder: (context, index) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: Color.fromARGB(255, 185, 182, 174),
-                        width: 1.0,
+          child: filteredSchools.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "Your selection matched no schools",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                    ),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: () {
+                          FilterData.instance.resetFilters();
+                        },
+                        child: const Text("Reset Filters"),
+                      ),
+                      if (FilterData.instance.showOnlySelected)
+                        const Padding(
+                          padding: EdgeInsets.only(top: 12),
+                          child: Text(
+                            "You may also deselect [Show Only Selected Schools] at the bottom of the filter panel.",
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                    ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                    child: SchoolScoreRow(
-                      school: schoolOnCurrentPage[index],
-                      onUpdateSelected:
-                          SelectedSchools.instance.applySelectedSchoolChange,
-                    ),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: ListView.builder(
+                    itemCount: numSchoolsOnPage,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Color.fromARGB(255, 185, 182, 174),
+                              width: 1.0,
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          child: SchoolScoreRow(
+                            school: schoolOnCurrentPage[index],
+                            onUpdateSelected: SelectedSchools
+                                .instance.applySelectedSchoolChange,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ),
+                ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
