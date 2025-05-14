@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/pie_chart_row_widget.dart';
-import 'package:gender_fair_2024/components/pie_chart_widget.dart';
+import 'package:gender_fair_2024/pages/detailPage/components/pie_chart_row_widget.dart';
+import 'package:gender_fair_2024/pages/detailPage/components/pie_chart_widget.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_data.dart';
-import 'package:gender_fair_2024/components/bar_chart_widget.dart';
+import 'package:gender_fair_2024/pages/detailPage/components/bar_chart_widget.dart';
 
 class SchoolDetailPage extends StatefulWidget {
 	/// Creates the detail page for a school with UID [uid]

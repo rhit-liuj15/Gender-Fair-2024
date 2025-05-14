@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/pie_chart_widget.dart';
+import 'package:gender_fair_2024/pages/detailPage/components/pie_chart_widget.dart';
 
 class PieChartRowWidget extends StatefulWidget {
 	/// A widget that creates a row of pie charts

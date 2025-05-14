@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:gender_fair_2024/models/metadata.dart';
+import 'package:gender_fair_2024/models/school_academic_offerings.dart';
 import 'package:http/http.dart' as https;
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
@@ -14,6 +15,8 @@ class DataLoader {
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
   Map<String, double> allAverages = <String, double>{};
+  Map<String, SchoolAcademicOfferings> allSchoolOfferings = <String, SchoolAcademicOfferings>{};
+	
   // The reason allSchoolData and allSchoolScores are separate is that allSchoolScores are loaded up front, but allSchoolData is requested as necessary.
   bool initialDataLoadComplete = false;
   static final DataLoader instance = DataLoader._privateConstructor();
@@ -53,6 +56,8 @@ class DataLoader {
           Uri.https(hostname, 'averages');
       var metadataUrl =
           Uri.https(hostname, 'metadata');
+      var offeringsUrl =
+          Uri.https(hostname, 'offering');
       try {
         final scoreResponse = await https.get(scoreUrl);
         if (scoreResponse.statusCode == 200) {
@@ -109,6 +114,28 @@ class DataLoader {
       } catch (e) {
         print('Error occurred while fetching averages: $e');
       }
+
+      try {
+        final offeringsResponse = await https.get(offeringsUrl);
+        if (offeringsResponse.statusCode == 200) {
+          List<dynamic> data = jsonDecode(offeringsResponse.body);
+          for (var item in data) {
+						if (!allSchoolOfferings.containsKey(item["CIPCODE"])) {
+							allSchoolOfferings[item["CIPCODE"]] = SchoolAcademicOfferings(cipcode: item["CIPCODE"]);
+						}
+            allSchoolOfferings[item["CIPCODE"]]!.addOffering(
+							uid: item["UNITID"],
+							level: item["AWLEVEL"],
+						);
+          }
+        } else {
+          print(
+              'Failed to load offerings data. HTTP Status Code: ${offeringsResponse.statusCode}');
+        }
+      } catch (e) {
+        print('Error occurred while fetching averages: $e');
+      }
+
       initialDataLoadComplete = true;
     }
   }
