@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS `PublicFacingData`.`SchoolData_v2`;
+DROP TABLE IF EXISTS `PublicFacingData`.`SchoolData`;
 
 -- Create Table w/ Concrete Dtype --
-CREATE TABLE `PublicFacingData`.`SchoolData_v2` (
+CREATE TABLE `PublicFacingData`.`SchoolData` (
 	UNITID INT PRIMARY KEY,
 	INSTNM varchar(255) NOT NULL,
 	STATE varchar(2) NOT NULL,
