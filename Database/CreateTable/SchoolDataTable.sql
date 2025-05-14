@@ -204,8 +204,7 @@ WHISTLEBLOWER_POLICY 			tinyint(1)			tinyint(1)
 CEO_REVIEWED_COMPENSATION 		tinyint(1)			tinyint(1)
 OTHER_REVIEWED_COMPENSATION		tinyint(1)			tinyint(1)
 
-Note that only YEARLYHATECRIME1K and YEARLYVAWA1K are new metadata that has no original dtype,
-and their aggregated dtype in SchoolData table is defaulted by the database.
+Note that only YEARLYHATECRIME1K and YEARLYVAWA1K are new metadata that has no original dtype, and DOUBLE is chosen due to its general suitability.
 
 Every other metadata shares the same aggregated dtype as their original.
 
