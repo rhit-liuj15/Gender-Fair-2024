@@ -25,7 +25,7 @@ Setting up the website and API on the same host sharing port 443 for HTTPS is no
 
 IPEDS: 
 CSS: Refer to `/Database/CSS/readme.txt`
-IRS: 
+IRS: See readme of https://github.com/rhit-shirakrk/irs-990-parser
 
 ### Processing Data
 
