@@ -81,6 +81,10 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
   void onSchoolListRequiringUpdate() {
     print("Update required");
     updateFilteredSchools();
+    final lastPage = totalPages > 0 ? totalPages : 1;
+    if (currentPage > lastPage) {
+      currentPage = lastPage;
+    }
     setState(() {});
   }
 
