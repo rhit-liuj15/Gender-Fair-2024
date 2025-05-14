@@ -5,10 +5,12 @@ class FilterData {
   final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
       filterFunctions = {};
 
-	// These two Maps are separate due to their intended functionality:
+	// These Maps are separate due to their intended functionality:
 	// filterResetCallbacks are provided by the filters as an instruction on how to reset the data
 	// and only if there is data being displayed, will that widget separately provide a widgetRebuildCallbacks
 	// to notify itself to rebuild.
+	// schoolListChangeCallbacks is created such that selected schools aren't updated or reset along
+	// with regular filters; instead, they get reset when 
   final Map<String, Function()> filterResetCallbacks = {};
   final Map<String, Function()> widgetRebuildCallbacks = {};
   final Map<String, Function()> schoolListChangeCallbacks = {};
@@ -84,12 +86,10 @@ class FilterData {
   }
 
   void clearFilters() {
-		print("Resetting data ======");
     filterResetCallbacks.forEach((key, value) {
 			print(key);
 			value();
 		});
-		print("Rebuilding widgets ======");
     widgetRebuildCallbacks.forEach((key, value) {
 			print(key);
 			value();
@@ -101,10 +101,7 @@ class FilterData {
     List<SchoolScore> schoolsFilteredFor = List.from(schools);
     for (MapEntry<String, List<SchoolScore> Function(List<SchoolScore>)> entry
         in filterFunctions.entries) {
-			print(entry.key);
-			print("B: ${schoolsFilteredFor.length}");
       schoolsFilteredFor = entry.value(schoolsFilteredFor);
-			print("A: ${schoolsFilteredFor.length}");
     }
     return schoolsFilteredFor;
   }
