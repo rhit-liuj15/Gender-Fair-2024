@@ -23,6 +23,8 @@ class SchoolScoreRowTable extends StatefulWidget {
 
 class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
   int currentPage = 1;
+  bool showApiFailureMessage = false;
+  bool hasShownFailurePopup = false;
   int get numSchoolsOnPage => max<int>(
       min<int>(filteredSchools.length - schoolsPerPage * (currentPage - 1),
           schoolsPerPage),
@@ -38,6 +40,28 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (DataLoader.instance.dataInitializationFailed && !hasShownFailurePopup) {
+      hasShownFailurePopup = true;
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text("Partial Data Loaded"),
+          content: const Text(
+            "Some parts of the data failed to load.\n"
+            "The school list may be incomplete or missing information.",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("OK"),
+            ),
+          ],
+        ),
+      );
+    }
+  });
     FilterData.instance.addSchoolListListener(
         name: SchoolScoreRowTable.schoolListListenerName,
         callback: onSchoolListRequiringUpdate);
@@ -86,6 +110,7 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
       currentPage = lastPage;
     }
     setState(() {});
+    showApiFailureMessage = DataLoader.instance.dataInitializationFailed;
   }
 
   void onPageChange(int newPage) {
