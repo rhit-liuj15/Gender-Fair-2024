@@ -97,16 +97,6 @@ class FilterData {
 		applyFilters();
   }
 
-  void resetFilters() {
-  schoolNameInput = "";
-  showOnlySelected = false;
-  selectedStates.clear();
-  showSchoolCategories.updateAll((key, value) => false);
-  selectedLevelsByCIPCODE.clear();
-
-  clearFilters();
-}
-
 
   List<SchoolScore> filterSchools(List<SchoolScore> schools) {
     List<SchoolScore> schoolsFilteredFor = List.from(schools);
