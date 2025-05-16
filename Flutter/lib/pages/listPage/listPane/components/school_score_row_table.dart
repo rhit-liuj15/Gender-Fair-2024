@@ -164,7 +164,7 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
                       const SizedBox(height: 12),
                       ElevatedButton(
                         onPressed: () {
-                          FilterData.instance.clearFilter();
+                          FilterData.instance.clearFilters();
                         },
                         child: const Text("Reset Filters"),
                       ),
