@@ -41,26 +41,26 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (DataLoader.instance.dataInitializationFailed && !hasShownFailurePopup) {
-      hasShownFailurePopup = true;
+    // if (DataLoader.instance.dataInitializationFailed && !hasShownFailurePopup) {
+    //   hasShownFailurePopup = true;
 
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Partial Data Loaded"),
-          content: const Text(
-            "Some parts of the data failed to load.\n"
-            "The school list may be incomplete or missing information.",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
-    }
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //       title: const Text("Partial Data Loaded"),
+    //       content: const Text(
+    //         "Some parts of the data failed to load.\n"
+    //         "The school list may be incomplete or missing information.",
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () => Navigator.of(context).pop(),
+    //           child: const Text("OK"),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
   });
     FilterData.instance.addSchoolListListener(
         name: SchoolScoreRowTable.schoolListListenerName,
