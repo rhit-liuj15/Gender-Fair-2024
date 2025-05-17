@@ -26,9 +26,9 @@ https://dev.mysql.com/doc/refman/9.3/en/installing.html
 
 ### Importing Data
 
-IPEDS: https://github.com/rhit-shirakrk/ipeds-data-import 
-CSS: Refer to `/Database/CSS/readme.txt`
-IRS: https://github.com/rhit-shirakrk/irs-990-parser
+- IPEDS: https://github.com/rhit-shirakrk/ipeds-data-import 
+- CSS: Refer to `/Database/CSS/readme.txt`
+- IRS: https://github.com/rhit-shirakrk/irs-990-parser
 
 ### Processing Data
 Before running the import scripts, make sure the db is up and running and has the following schemas:
