@@ -1,6 +1,6 @@
-USE merged_ipeds_css_irs;
+USE PublicFacingData;
 
-SET @numEntries = (SELECT COUNT(*) FROM GenderFair2024);
+SET @numEntries = (SELECT COUNT(*) FROM SchoolData);
 
 DROP FUNCTION IF EXISTS percentileToScore;
 
@@ -50,7 +50,7 @@ select
 	@ACDTOTNRESRATIO,
 	@ACDTOTTWOPRATIO,
 	@ACDTOTUNKNRATIO
-from GenderFair2024;
+from SchoolData;
 
 -- This code is borrowed from the table creation script
 
@@ -102,7 +102,7 @@ INSERT INTO `PublicFacingData`.`SchoolScores` (`UNITID`,`INSTNM`,`STATE`,`INSTFU
 				@numEntries,
 				10
 			) as VAWAScore
-		from GenderFair2024
+		from SchoolData
 	),
 	ACDRATIO AS (
 		select
@@ -116,7 +116,7 @@ INSERT INTO `PublicFacingData`.`SchoolScores` (`UNITID`,`INSTNM`,`STATE`,`INSTFU
 			(RANK() OVER (ORDER BY ACDTOTTWOP/(ACDTOTMEN+ACDTOTWOMEN))) * @ACDTOTTWOPRATIO +
 			(RANK() OVER (ORDER BY ACDTOTUNKN/(ACDTOTMEN+ACDTOTWOMEN))) * @ACDTOTUNKNRATIO
 			as AcademicRaceRatios
-		from GenderFair2024
+		from SchoolData
 	),
 	ACDSCORE AS (
 		select
@@ -142,7 +142,7 @@ INSERT INTO `PublicFacingData`.`SchoolScores` (`UNITID`,`INSTNM`,`STATE`,`INSTFU
 			(RANK() OVER (ORDER BY NONACDTWOP/(NONACDMEN+NONACDWOMEN))) * @NONACDTWOPRATIO +
 			(RANK() OVER (ORDER BY NONACDUNKN/(NONACDMEN+NONACDWOMEN))) * @NONACDUNKNRATIO
 			as NonAcademicRaceRatios
-		from GenderFair2024
+		from SchoolData
 	),
 	NONACDSCORE AS (
 		select
@@ -169,7 +169,7 @@ INSERT INTO `PublicFacingData`.`SchoolScores` (`UNITID`,`INSTNM`,`STATE`,`INSTFU
 			VAWAScore,
 			AcdDiversityScore,
 			NonAcdDiversityScore
-		from SCORES JOIN NONACDSCORE USING (UNITID) JOIN ACDSCORE USING (UNITID) JOIN GenderFair2024 USING (UNITID)
+		from SCORES JOIN NONACDSCORE USING (UNITID) JOIN ACDSCORE USING (UNITID) JOIN SchoolData USING (UNITID)
 	)
 	select
 		UNITID,
