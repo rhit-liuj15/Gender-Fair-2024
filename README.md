@@ -21,21 +21,35 @@ Setting up the website and API on the same host sharing port 443 for HTTPS is no
 
 ## Database
 
+The installation manual of the MySQL server can be found on MySQL's official wesite:
+https://dev.mysql.com/doc/refman/9.3/en/installing.html
+
 ### Importing Data
 
-IPEDS: 
+IPEDS: https://github.com/rhit-shirakrk/ipeds-data-import 
 CSS: Refer to `/Database/CSS/readme.txt`
-IRS: See readme of https://github.com/rhit-shirakrk/irs-990-parser
+IRS: https://github.com/rhit-shirakrk/irs-990-parser
 
 ### Processing Data
+Before running the import scripts, make sure the db is up and running and has the following schemas:
+- css
+- irs990
+- ipeds_2024_db
+- PublicFacingData
 
-First, run `/Database/merge_script.sql` to merge the data from IPEDS, CSS and IRS.
+If not, run the `/Database/create_all_schemas.sql` to create them.
 
-Then, run the scripts found in `/Database/CreateTable`.
+First, run `/Database/CreateTable/SchoolDataTable.sql` to create the table for general school data.
 
-Then, run `/Database/Scoring/Scoring_v2.sql`.
+Then, run `/Database/merge_script.sql` to merge the data from IPEDS, CSS and IRS and insert to school data table.
 
-Then, run the scripts found in `/Database/CreateStoredProcedure`.
+Only then, run the other scripts found in `/Database/CreateTable`.
+
+Next, run `/Database/Scoring/Scoring_v2.sql`.
+
+Finally, run the scripts found in `/Database/CreateStoredProcedure`.
+
+By now every table and stored procedure needed for the project should be created and ready to go.
 
 ## Website
 
