@@ -7,7 +7,7 @@ delimiter $$
 CREATE PROCEDURE GetSchoolScore ()
 BEGIN
 	SELECT UNITID, INSTNM, INSTFUNDINGTYPE, LEADERSHIP, POLICIES, SAFETY, DIVERSITY
-	FROM PublicFacingData.SchoolCategoryScore;
+	FROM PublicFacingData.SchoolScores;
 END$$
 
 delimiter ;
