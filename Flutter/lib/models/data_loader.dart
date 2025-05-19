@@ -19,6 +19,9 @@ class DataLoader {
 	
   // The reason allSchoolData and allSchoolScores are separate is that allSchoolScores are loaded up front, but allSchoolData is requested as necessary.
   bool initialDataLoadComplete = false;
+
+  bool dataInitializationFailed = false;
+
   static final DataLoader instance = DataLoader._privateConstructor();
 
   DataLoader._privateConstructor();
@@ -51,6 +54,8 @@ class DataLoader {
 
   Future<void> loadData() async {
     if (!initialDataLoadComplete) {
+      bool failure = false;
+
       var scoreUrl = Uri.https(hostname, 'score');
       var averagesUrl =
           Uri.https(hostname, 'averages');
@@ -78,9 +83,11 @@ class DataLoader {
           }
           computeRankings();
         } else {
+          failure = true;
           print('Failed to load score data. HTTP Status Code: ${scoreResponse.statusCode}');
         }
       } catch (e) {
+        failure = true;
         print('Error occurred while fetching scores: $e');
       }
 
@@ -93,10 +100,12 @@ class DataLoader {
                 .addEntry(item["GROUP"], item["ABBR"], item["DESC"]);
           }
         } else {
+          failure = true;
           print(
               'Failed to load metadata data. HTTP Status Code: ${metadataResponse.statusCode}');
         }
       } catch (e) {
+        failure = true;
         print('Error occurred while fetching metadata: $e');
       }
 
@@ -108,10 +117,12 @@ class DataLoader {
             allAverages[item['Name']] = item['Value'];
           }
         } else {
+          failure = true;
           print(
               'Failed to load averages data. HTTP Status Code: ${averagesResponse.statusCode}');
         }
       } catch (e) {
+        failure = true;
         print('Error occurred while fetching averages: $e');
       }
 
@@ -129,13 +140,16 @@ class DataLoader {
 						);
           }
         } else {
+          failure = true;
           print(
               'Failed to load offerings data. HTTP Status Code: ${offeringsResponse.statusCode}');
         }
       } catch (e) {
+        failure = true;
         print('Error occurred while fetching averages: $e');
       }
 
+      dataInitializationFailed = failure;
       initialDataLoadComplete = true;
     }
   }

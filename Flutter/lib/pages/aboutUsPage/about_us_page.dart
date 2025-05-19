@@ -22,6 +22,11 @@ class _AboutUsPageState extends State<AboutUsPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             children: [
               const Text(
+                "The GenderFair Ranking system evaluates colleges and universities based on gender equity, providing transparency on institutional fairness through data-driven insights. By integrating national databases, it empowers prospective students to make informed decisions aligned with their values. Currently, schools with identical rank and score are treated as having equal standing.",
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 24),
+              const Text(
                 "Data Sources",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
