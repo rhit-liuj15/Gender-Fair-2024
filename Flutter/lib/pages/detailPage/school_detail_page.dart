@@ -61,6 +61,19 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
     });
   }
 
+  // Function to check IRS data
+  String hasIRSData(String varName) {
+    try {
+      if (schoolData.getInt(varName) == 1) {
+        return "Yes";
+      } else {
+        return "No";
+      }
+    } catch (e) {
+      return "N/A";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -379,7 +392,44 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                           ),
                         ),
                       ],
-                    )
+                    ),
+                    const SizedBox(height: 20),
+                    // Compensation Review and Whistleblower policy
+                    Center(
+                      child: Table(
+                        columnWidths: const {
+                          0: IntrinsicColumnWidth(),
+                          1: IntrinsicColumnWidth(),
+                        },
+                        border: TableBorder.all(color: Colors.black, width: 1.0),
+                        children: [
+                          const TableRow(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Compensation Review'),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Whistleblower Policy'),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(child: Text(hasIRSData("CEO_REVIEWED_COMPENSATION"))),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(child: Text(hasIRSData("WHISTLEBLOWER_POLICY"))),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
