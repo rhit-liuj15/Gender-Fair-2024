@@ -17,11 +17,13 @@ equality-focused metrics using reputable data sources.
 
 Three separate components need to be set up for the project: database, website, and API.
 
+The installation/setup instructions can be found in each componnet's respective section.
+
 Setting up the website and API on the same host sharing port 443 for HTTPS is not tested.
 
 ## Database
 
-The installation manual of the MySQL server can be found on MySQL's official wesite:
+The installation and hosting manual of the MySQL server can be found on MySQL's official wesite:
 https://dev.mysql.com/doc/refman/9.3/en/installing.html
 
 ### Importing Data
@@ -59,6 +61,8 @@ Our website is written in dart/flutter. To build into a HTML/CSS/JS release, cd 
 
 The API can be found at `/API/express_query_database_https.js`
 
+Make sure you have Node.js installed on your device: https://nodejs.org/en/download
+
 At the time of deciding tech stack, dart did not have a good way of connecting with a MySQL server, and the purpose of the API is to take a request for data, run a stored procedure in the database, and return the data in JSON format.
 
 The API expects:
@@ -77,6 +81,8 @@ The expected format for the config file is:
 	"cert": ""
 }
 ```
+
+To host the API, simply run command `node express_query_database_https.js`
 
 Once the API is hosted, remember update the `hostname` found in `/Flutter/lib/models/data_loader.dart`.
 
