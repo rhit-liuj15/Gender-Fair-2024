@@ -50,7 +50,7 @@ class _NavTileState extends State<NavTile> {
         onTap: widget.onTap,
         borderRadius: BorderRadius.circular(6),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: tileColor,
             borderRadius: BorderRadius.circular(6),

@@ -280,6 +280,7 @@ class _HoverSlideText extends StatefulWidget {
   const _HoverSlideText({
     required this.text,
     required this.fontSize,
+    // ignore: unused_element
     this.duration = const Duration(seconds: 4),
   });
 
@@ -345,7 +346,7 @@ class _HoverSlideTextState extends State<_HoverSlideText>
           child: ClipRect(
             child: SlideTransition(
               position:
-                  shouldSlide ? animation : AlwaysStoppedAnimation(Offset.zero),
+                  shouldSlide ? animation : const AlwaysStoppedAnimation(Offset.zero),
               child: Text(
                 widget.text,
                 style: textStyle,

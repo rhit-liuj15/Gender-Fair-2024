@@ -42,7 +42,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 "Scoring",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Table(
                 columnWidths: const {
                   0: FlexColumnWidth(2),
