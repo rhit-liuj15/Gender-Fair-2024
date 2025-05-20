@@ -1,0 +1,4 @@
+CREATE SCHEMA `css`;
+CREATE SCHEMA `ipeds_2024_db`;
+CREATE SCHEMA `irs990`;
+CREATE SCHEMA `PublicFacingData`;

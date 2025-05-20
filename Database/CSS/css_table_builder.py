@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class CSSTableBuilder:
     ## Build a table in the database with PK and specified dtypes ##
@@ -35,6 +36,8 @@ class CSSTableBuilder:
         # Drop table if exists
         cursor.execute(f"DROP TABLE IF EXISTS `{self.table_name}`")
         cursor.execute(create_table_query)
+
+        self.df = self.df.replace({np.nan: None, 'nan': None})
 
         # Insert data
         placeholders = ', '.join(['%s'] * len(self.df.columns))
