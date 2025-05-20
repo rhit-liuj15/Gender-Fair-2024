@@ -1,8 +1,7 @@
-class SchoolScore {
-	/// Data class for the scores of one school
-  
-	static final Set<int> selectedSchools = <int>{};
+import 'package:flutter/material.dart';
 
+class SchoolScore extends ChangeNotifier {
+	
   int rank = 0;
   int uid;
   String schoolName;

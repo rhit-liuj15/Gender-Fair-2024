@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/pie_chart_row_widget.dart';
-import 'package:gender_fair_2024/components/pie_chart_widget.dart';
+import 'package:gender_fair_2024/pages/detailPage/components/pie_chart_row_widget.dart';
+import 'package:gender_fair_2024/pages/detailPage/components/pie_chart_widget.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_data.dart';
-import 'package:gender_fair_2024/components/bar_chart_widget.dart';
+import 'package:gender_fair_2024/pages/detailPage/components/bar_chart_widget.dart';
 
 class SchoolDetailPage extends StatefulWidget {
 	/// Creates the detail page for a school with UID [uid]
@@ -59,6 +59,19 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
           SchoolData.unknownUID(widget.uid);
       isLoading = false;
     });
+  }
+
+  // Function to check IRS data
+  String hasIRSData(String varName) {
+    try {
+      if (schoolData.getInt(varName) == 1) {
+        return "Yes";
+      } else {
+        return "No";
+      }
+    } catch (e) {
+      return "N/A";
+    }
   }
 
   @override
@@ -379,7 +392,44 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                           ),
                         ),
                       ],
-                    )
+                    ),
+                    const SizedBox(height: 20),
+                    // Compensation Review and Whistleblower policy
+                    Center(
+                      child: Table(
+                        columnWidths: const {
+                          0: IntrinsicColumnWidth(),
+                          1: IntrinsicColumnWidth(),
+                        },
+                        border: TableBorder.all(color: Colors.black, width: 1.0),
+                        children: [
+                          const TableRow(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Compensation Review'),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text('Whistleblower Policy'),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(child: Text(hasIRSData("CEO_REVIEWED_COMPENSATION"))),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Center(child: Text(hasIRSData("WHISTLEBLOWER_POLICY"))),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

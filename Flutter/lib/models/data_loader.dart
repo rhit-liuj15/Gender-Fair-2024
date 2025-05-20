@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:gender_fair_2024/models/metadata.dart';
+import 'package:gender_fair_2024/models/school_academic_offerings.dart';
 import 'package:http/http.dart' as https;
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
@@ -14,8 +15,13 @@ class DataLoader {
   Map<int, SchoolData> allSchoolData = <int, SchoolData>{};
   Map<int, SchoolScore> allSchoolScores = <int, SchoolScore>{};
   Map<String, double> allAverages = <String, double>{};
+  Map<String, SchoolAcademicOfferings> allSchoolOfferings = <String, SchoolAcademicOfferings>{};
+	
   // The reason allSchoolData and allSchoolScores are separate is that allSchoolScores are loaded up front, but allSchoolData is requested as necessary.
   bool initialDataLoadComplete = false;
+
+  bool dataInitializationFailed = false;
+
   static final DataLoader instance = DataLoader._privateConstructor();
 
   DataLoader._privateConstructor();
@@ -48,11 +54,15 @@ class DataLoader {
 
   Future<void> loadData() async {
     if (!initialDataLoadComplete) {
+      bool failure = false;
+
       var scoreUrl = Uri.https(hostname, 'score');
       var averagesUrl =
           Uri.https(hostname, 'averages');
       var metadataUrl =
           Uri.https(hostname, 'metadata');
+      var offeringsUrl =
+          Uri.https(hostname, 'offering');
       try {
         final scoreResponse = await https.get(scoreUrl);
         if (scoreResponse.statusCode == 200) {
@@ -73,9 +83,11 @@ class DataLoader {
           }
           computeRankings();
         } else {
+          failure = true;
           print('Failed to load score data. HTTP Status Code: ${scoreResponse.statusCode}');
         }
       } catch (e) {
+        failure = true;
         print('Error occurred while fetching scores: $e');
       }
 
@@ -88,10 +100,12 @@ class DataLoader {
                 .addEntry(item["GROUP"], item["ABBR"], item["DESC"]);
           }
         } else {
+          failure = true;
           print(
               'Failed to load metadata data. HTTP Status Code: ${metadataResponse.statusCode}');
         }
       } catch (e) {
+        failure = true;
         print('Error occurred while fetching metadata: $e');
       }
 
@@ -103,12 +117,39 @@ class DataLoader {
             allAverages[item['Name']] = item['Value'];
           }
         } else {
+          failure = true;
           print(
               'Failed to load averages data. HTTP Status Code: ${averagesResponse.statusCode}');
         }
       } catch (e) {
+        failure = true;
         print('Error occurred while fetching averages: $e');
       }
+
+      try {
+        final offeringsResponse = await https.get(offeringsUrl);
+        if (offeringsResponse.statusCode == 200) {
+          List<dynamic> data = jsonDecode(offeringsResponse.body);
+          for (var item in data) {
+						if (!allSchoolOfferings.containsKey(item["CIPCODE"])) {
+							allSchoolOfferings[item["CIPCODE"]] = SchoolAcademicOfferings(cipcode: item["CIPCODE"]);
+						}
+            allSchoolOfferings[item["CIPCODE"]]!.addOffering(
+							uid: item["UNITID"],
+							level: item["AWLEVEL"],
+						);
+          }
+        } else {
+          failure = true;
+          print(
+              'Failed to load offerings data. HTTP Status Code: ${offeringsResponse.statusCode}');
+        }
+      } catch (e) {
+        failure = true;
+        print('Error occurred while fetching averages: $e');
+      }
+
+      dataInitializationFailed = failure;
       initialDataLoadComplete = true;
     }
   }
