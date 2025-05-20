@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
-import 'package:gender_fair_2024/pages/school_detail_page.dart';
+import 'package:gender_fair_2024/models/selected_schools.dart';
+import 'package:gender_fair_2024/pages/detailPage/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
+	/// A component that makes 1 row for [SchoolListPanel]
+
   final void Function() onUpdateSelected;
   static List<int> flexValues = ListPageColumnAttributes.flexValues;
   static List<String> columnNames = ListPageColumnAttributes.colNames;
@@ -42,13 +45,13 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
       switch (item) {
         case ListPageColumnAttributes.addToList:
           return Checkbox(
-            value: SchoolScore.selectedSchools.contains(widget.school.uid),
+            value: SelectedSchools.instance.selectedSchools.contains(widget.school.uid),
             onChanged: (bool? newValue) {
               setState(() {
                 if (newValue!) {
-                  SchoolScore.selectedSchools.add(widget.school.uid);
+                  SelectedSchools.instance.selectedSchools.add(widget.school.uid);
                 } else {
-                  SchoolScore.selectedSchools.remove(widget.school.uid);
+                  SelectedSchools.instance.selectedSchools.remove(widget.school.uid);
                 }
                 widget.onUpdateSelected();
               });

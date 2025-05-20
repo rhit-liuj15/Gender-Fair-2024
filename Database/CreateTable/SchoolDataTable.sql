@@ -4,13 +4,9 @@ USE PublicFacingData;
 
 DROP TABLE IF EXISTS SchoolData;
 
-SELECT * FROM merged_ipeds_css_irs.GenderFair2024;
-
 CREATE TABLE SchoolData AS
 SELECT *
 FROM merged_ipeds_css_irs.GenderFair2024;
-
-SELECT * FROM SchoolData;
 
 /*
 
@@ -68,4 +64,4 @@ SELECT 1, Codevalue, LEFT(valueLabel, 100) FROM ipeds_2024_db.valuesets22
 	order by Codevalue;
 
 
-SELECT * FROM `PublicFacingData`.`SchoolData`;
+SELECT * FROM `SchoolData`;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 class NavTile extends StatefulWidget {
+	/// A tile used for the top navbar that responds to clicks and can become highlighted
   final String label;
   final bool isSelected;
   final VoidCallback onTap;

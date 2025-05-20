@@ -1,6 +1,7 @@
-class SchoolScore {
-  static final Set<int> selectedSchools = <int>{};
+import 'package:flutter/material.dart';
 
+class SchoolScore extends ChangeNotifier {
+	
   int rank = 0;
   int uid;
   String schoolName;
@@ -19,9 +20,6 @@ class SchoolScore {
     this.rank = 0,
   });
 
-  bool scoreOutOfBounds(Map<SchoolScoreAttributes, int> val) {
-    return false;
-  }
 
   @override
   String toString() {
@@ -30,6 +28,7 @@ class SchoolScore {
 }
 
 enum SchoolScoreAttributes {
+	/// Mapping of category to name to allow changing the names in one place only
   leadership(name: "Leadership"),
   polnpay(name: "Policies & Pay"),
   safety(name: "Safety"),

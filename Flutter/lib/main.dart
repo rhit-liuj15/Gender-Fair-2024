@@ -1,10 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/nav_tile.dart';
+import 'package:gender_fair_2024/pages/nav_tile.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
-import 'package:gender_fair_2024/pages/about_us_page.dart';
-import 'package:gender_fair_2024/pages/school_list_page.dart';
-import 'package:gender_fair_2024/pages/help_page.dart';
+import 'package:gender_fair_2024/pages/aboutUsPage/about_us_page.dart';
+import 'package:gender_fair_2024/pages/listPage/school_list_page.dart';
+import 'package:gender_fair_2024/pages/helpPage/help_page.dart';
+
 
 Future<void> main() async {
   await DataLoader.instance.loadData();
@@ -12,6 +13,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatefulWidget {
+	/// Creates the app
   const MyApp({super.key});
 
   @override

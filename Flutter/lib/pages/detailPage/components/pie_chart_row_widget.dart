@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/components/pie_chart_widget.dart';
+import 'package:gender_fair_2024/pages/detailPage/components/pie_chart_widget.dart';
 
 class PieChartRowWidget extends StatefulWidget {
+	/// A widget that creates a row of pie charts
+	/// 
+	/// The pie chart row has its own [rowTitle], separate from the [chartTitles] which are passed to the pie charts.
+	/// 
+	/// the pie chart requires [chartTitles] and [datasets] of equal length at first index.
+	
   final String rowTitle;
   final bool showTitle;
   final List<String> chartTitles;
@@ -38,7 +44,7 @@ class _PieChartRowWidgetState extends State<PieChartRowWidget> {
   Widget build(BuildContext context) {
     if (widget.chartTitles.length != widget.datasets.length) {
       throw Exception(
-        "Pie chart row '${widget.rowTitle}' observed a length mismatch between "
+        "Pie chart row '${widget.rowTitle}' observed a length mismatch between chartTitles and datasets."
       );
     }
 
