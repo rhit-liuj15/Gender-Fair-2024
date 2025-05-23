@@ -55,7 +55,7 @@ By now every table and stored procedure needed for the project should be created
 
 ## Website
 
-Our website is written in dart/flutter. To build into a HTML/CSS/JS release, cd into the `/Flutter` directory (Note the capitalization), and run `flutter build web`. By default, the web build will be placed in `/Flutter/build/web`.
+Our website is written in dart/flutter. To build into a HTML/CSS/JS release, cd into the `/Flutter` directory (Note the capitalization), and run `flutter build web`. By default, the web build will be placed in `/Flutter/build/web`. It has been tested and runs properly on a Windows 11 environment.
 
 ## API
 
