@@ -17,6 +17,8 @@ equality-focused metrics using reputable data sources.
 
 Three separate components need to be set up for the project: database, website, and API.
 
+This project is a standard Flutter web application and can be run using flutter run -d chrome or deployed to any web server. It has been tested and runs properly on a Windows 11 environmen
+
 Setting up the website and API on the same host sharing port 443 for HTTPS is not tested.
 
 ## Database
