@@ -39,19 +39,19 @@ Before running the import scripts, make sure the db is up and running and has th
 - ipeds_2024_db
 - PublicFacingData
 
-If not, run the `/Database/create_all_schemas.sql` to create them.
+If not, run the `/Database/create_all_schemas.sql` to create them. Then complete the following in order:
 
-First, run `/Database/CreateTable/SchoolDataTable.sql` to create the table for general school data.
+Run `/Database/CreateTable/SchoolDataTable.sql` to create the table for general school data.
 
-Then, run `/Database/merge_script.sql` to merge the data from IPEDS, CSS and IRS and insert to school data table.
+Run `/Database/merge_script.sql` to merge the data from IPEDS, CSS and IRS and insert to school data table.
 
-Only then, run the other scripts found in `/Database/CreateTable`.
+Run other scripts found in `/Database/CreateTable`.
 
-Next, run `/Database/Scoring/Scoring_v2.sql`.
+Run `/Database/Scoring/Scoring_v2.sql`.
 
-Finally, run the scripts found in `/Database/CreateStoredProcedure`.
+Run the scripts found in `/Database/CreateStoredProcedure`.
 
-By now every table and stored procedure needed for the project should be created and ready to go.
+This completes the database setup.
 
 ## Website
 
