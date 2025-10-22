@@ -1,3 +1,4 @@
+import os
 import requests
 import zipfile
 import io
@@ -20,14 +21,17 @@ class CSSDownloader:
         print("Located file ", excel_filename_in_zip)
 
         try:
-            if excel_path.suffix == '.xls':
-                df = pd.read_excel(excel_path, engine='xlrd')
-            elif excel_path.suffix == '.xlsx':
-                df = pd.read_excel(excel_path, engine='openpyxl')
+            if output_csv_path.exists():
+                print(f"csv file already exists at path '{output_csv_path}', convert skipped")
             else:
-                raise ValueError(f"Unsupported Excel format: {excel_path.suffix}")
-            df.to_csv(output_csv_path, index=False)
-            print(f"Converted '{excel_filename_in_zip}' to CSV at: {output_csv_path}")
+                if excel_path.suffix == '.xls':
+                    df = pd.read_excel(excel_path, engine='xlrd')
+                elif excel_path.suffix == '.xlsx':
+                    df = pd.read_excel(excel_path, engine='openpyxl')
+                else:
+                    raise ValueError(f"Unsupported Excel format: {excel_path.suffix}")
+                df.to_csv(output_csv_path, index=False)
+                print(f"Converted '{excel_filename_in_zip}' to CSV at: {output_csv_path}")
         except Exception as e:
             raise Exception(f"Failed to read/convert Excel file: {e}")
     
@@ -35,14 +39,18 @@ class CSSDownloader:
     ## Params: download_url: download link for CSS zip file
     ## Return: path to output .csv file
     def download_and_convert(self, download_url):
-        print(f"Downloading CSS data from {download_url} ...")
-        # Download the zip file using download_url
-        res = requests.get(download_url, timeout=10)
-        print(f"Downloaded ZIP file to {self.download_path}")
+        
+        if os.listdir(self.extract_path):
+            print(f"Skipping download and extraction, already complete")
+        else:
+            print(f"Downloading CSS data from {download_url} ...")
+            # Download the zip file using download_url
+            res = requests.get(download_url, timeout=5)
+            print(f"Downloaded ZIP file to {self.download_path}")
 
-        with zipfile.ZipFile(io.BytesIO(res.content)) as zip_ref:
-            zip_ref.extractall(self.extract_path)
-        print(f"Extracted to: {self.extract_path}")
+            with zipfile.ZipFile(io.BytesIO(res.content)) as zip_ref:
+                zip_ref.extractall(self.extract_path)
+            print(f"Extracted to: {self.extract_path}")
 
         hate_path = self.extract_path / "Oncampushate202122.csv"
         vawa_path = self.extract_path / "Oncampusvawa202122.csv"

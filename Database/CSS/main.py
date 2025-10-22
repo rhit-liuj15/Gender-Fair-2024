@@ -3,7 +3,6 @@ from css_downloader import CSSDownloader
 from css_db_connector import DatabaseConnector
 from css_table_builder import CSSTableBuilder
 import argparse
-import tempfile
 
 ## Main ##
 def main():
@@ -20,15 +19,14 @@ def main():
     ini_path = args.file_path
 
     ## Create temp directory instance
-    temp_dir_obj = tempfile.TemporaryDirectory()
-    temp_dir = Path(temp_dir_obj.name)
-    download_path = temp_dir / "download"
-    extract_path = temp_dir / "unzipped"
+    download_dir = "download/"
+    download_path = Path(download_dir + "raw")
+    extract_path = Path(download_dir + "unzipped")
     download_path.mkdir(parents=True, exist_ok=True)
     extract_path.mkdir(parents=True, exist_ok=True)
 
     ## initiate CSS Downloader instance
-    downloader = CSSDownloader(temp_dir=temp_dir, download_path=download_path, extract_path=extract_path)
+    downloader = CSSDownloader(temp_dir=download_dir, download_path=download_path, extract_path=extract_path)
 
     # Download data
     download_url = "https://ope.ed.gov/campussafety/api/dataFiles/file?fileName=Crime2023EXCEL.zip"
@@ -91,11 +89,6 @@ def main():
     ## Commmit and Close DB connection
     conn.commit()
     db.close()
-
-    ## Garbage collection for temp directory
-    temp_dir_obj.cleanup()
-    print("Garbage collected.")
-
 
 ## Run ##
 if __name__ == "__main__":

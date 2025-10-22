@@ -51,3 +51,4 @@ API/.*.json
 
 # Ignore cache
 *.cache
+Database/CSS/download
