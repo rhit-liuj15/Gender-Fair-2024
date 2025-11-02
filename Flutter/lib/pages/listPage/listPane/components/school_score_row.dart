@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
-import 'package:gender_fair_2024/models/selected_schools.dart';
 import 'package:gender_fair_2024/pages/detailPage/school_detail_page.dart';
 
 class SchoolScoreRow extends StatefulWidget {
@@ -30,33 +30,13 @@ class SchoolScoreRow extends StatefulWidget {
 }
 
 class _SchoolScoreRowState extends State<SchoolScoreRow> {
-  static TextStyle subscoreStyle =
-      const TextStyle(fontSize: 26, fontWeight: FontWeight.bold);
   static TextStyle totalScoreStyle =
       const TextStyle(fontSize: 26, fontWeight: FontWeight.bold);
-  static TextStyle rankingStyle = const TextStyle(
-      fontSize: 26,
-      fontWeight: FontWeight.bold,
-      color: Color.fromARGB(255, 255, 71, 19));
-
+	
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgets = ListPageColumnAttributes.values.map((item) {
       switch (item) {
-        case ListPageColumnAttributes.addToList:
-          return Checkbox(
-            value: SelectedSchools.instance.selectedSchools.contains(widget.school.uid),
-            onChanged: (bool? newValue) {
-              setState(() {
-                if (newValue!) {
-                  SelectedSchools.instance.selectedSchools.add(widget.school.uid);
-                } else {
-                  SelectedSchools.instance.selectedSchools.remove(widget.school.uid);
-                }
-                widget.onUpdateSelected();
-              });
-            },
-          );
         case ListPageColumnAttributes.instName:
           return InkWell(
             child: RichText(
@@ -92,28 +72,16 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
               );
             },
           );
-
-        case ListPageColumnAttributes.leadership:
-        case ListPageColumnAttributes.polnpay:
-        case ListPageColumnAttributes.safety:
-        case ListPageColumnAttributes.diversity:
-          return Text(
-              "${widget.school.subscores[ListPageColumnAttributes.listPageToSchoolScoreMapping[item]]}",
-              textAlign: TextAlign.center,
-              style: subscoreStyle);
-        case ListPageColumnAttributes.ranking:
-          return Text("#${widget.school.rank}",
-              textAlign: TextAlign.center, style: rankingStyle);
-        case ListPageColumnAttributes.total:
-          return Text("${widget.school.score}",
+        case ListPageColumnAttributes.populationTotal:
+          return Text("${DataLoader.instance.allSchoolData[widget.school.uid]!.getInt("ENROLLTOT")}",
               textAlign: TextAlign.center, style: totalScoreStyle);
-        // default:
-        // 	return Text("Unknown item '${item.name}'!"); // Consider this a return nothing
+        default:
+        	return Text("Unknown item '${item.name}'!"); // Consider this a return nothing
       }
     }).toList();
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.fromLTRB(20.0,10.0,20.0,10.0),
       child: Row(
         children: List.generate(SchoolScoreRow.numColumns, (index) {
           return Expanded(

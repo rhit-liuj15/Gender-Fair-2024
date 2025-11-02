@@ -1,3 +1,4 @@
+import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/pages/listPage/listPane/components/school_score_row.dart';
@@ -5,8 +6,8 @@ import 'package:gender_fair_2024/pages/listPage/listPane/components/school_score
 class SortMetric {
   final Map<String, Function()> _sortMetricChangeCallback = {};
 	
-  ListPageColumnAttributes sortMetric = ListPageColumnAttributes.total;
-  bool sortDescending = ListPageColumnAttributes.total.sortDescending;
+  ListPageColumnAttributes sortMetric = ListPageColumnAttributes.instName;
+  bool sortDescending = false;
 
   static final SortMetric instance = SortMetric._privateConstructor();
   SortMetric._privateConstructor();
@@ -49,19 +50,12 @@ class SortMetric {
         comparator = (a, b) => a.schoolName.compareTo(b.schoolName);
         break;
 
-      case ListPageColumnAttributes.ranking:
-      case ListPageColumnAttributes.total:
-        comparator = (a, b) => a.score.compareTo(b.score);
-        break;
-
-      case ListPageColumnAttributes.leadership:
-      case ListPageColumnAttributes.polnpay:
-      case ListPageColumnAttributes.safety:
-      case ListPageColumnAttributes.diversity:
-        comparator = (a, b) => a.subscores[ListPageColumnAttributes
-                .listPageToSchoolScoreMapping[sortMetric]]!
-            .compareTo(b.subscores[ListPageColumnAttributes
-                .listPageToSchoolScoreMapping[sortMetric]]!);
+      case ListPageColumnAttributes.populationTotal:
+        comparator = (a, b) {
+					int popA = DataLoader.instance.allSchoolData[a.uid]!.getInt("ENROLLTOT");
+					int popB = DataLoader.instance.allSchoolData[b.uid]!.getInt("ENROLLTOT");
+					return popA.compareTo(popB);
+				};
         break;
       default:
         if (sortMetric.sortable) {

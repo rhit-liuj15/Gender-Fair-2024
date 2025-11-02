@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/pages/nav_tile.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/pages/aboutUsPage/about_us_page.dart';
 import 'package:gender_fair_2024/pages/listPage/school_list_page.dart';
@@ -47,56 +46,6 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
-          child: AppBar(
-            titleSpacing: 0,
-            toolbarHeight: 80,
-            title: Row(
-              children: [
-                const SizedBox(width: 50),
-                SizedBox(
-                  width: 85,
-                  height: 70,
-                  child: Image.asset(
-                    'assets/logo.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(width: 20),
-                NavTile(
-                  label: "Rankings",
-                  isSelected: currentPageIndex == 0,
-                  onTap: () {
-                    setState(() {
-                      currentPageIndex = 0;
-                    });
-                  },
-                ),
-                const SizedBox(width: 10),
-                NavTile(
-                  label: "About Us",
-                  isSelected: currentPageIndex == 2,
-                  onTap: () {
-                    setState(() {
-                      currentPageIndex = 2;
-                    });
-                  },
-                ),
-                const SizedBox(width: 10),
-                NavTile(
-                  label: "Help",
-                  isSelected: currentPageIndex == 1,
-                  onTap: () {
-                    setState(() {
-                      currentPageIndex = 1;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
         body: Stack(
           children: [
             Container(

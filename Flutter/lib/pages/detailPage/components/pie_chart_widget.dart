@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -176,6 +175,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
 
   List<PieChartSectionData> showingSections(List<String> labels,
       List<num> values, List<Color> colors, num chartSliceCutoff) {
+		num valuesSum = values.fold(0, (a, b) => a + b);
     return List.generate(values.length, (index) {
       final isTouched = index == touchedIndex;
       final fontSize = isTouched ? widget.size * 0.099 : widget.size * 0.09;
@@ -183,7 +183,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       return PieChartSectionData(
         color: colors[index],
         value: values[index].toDouble(),
-        title: "${values[index]}",
+        title: "${values[index]}\n(${(values[index]*100/valuesSum).toStringAsFixed(1)}%)",
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
