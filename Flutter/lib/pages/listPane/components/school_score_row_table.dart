@@ -5,7 +5,7 @@ import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/filter_data.dart';
 import 'package:gender_fair_2024/models/selected_schools.dart';
 import 'package:gender_fair_2024/models/sort_metric.dart';
-import 'package:gender_fair_2024/pages/listPage/listPane/components/school_score_row.dart';
+import 'package:gender_fair_2024/pages/listPane/components/school_score_row.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 
 /// The pane on the list page that has the list of schools as filtered for by the user (or all schools if filters are absent)
@@ -99,7 +99,7 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 10.0),
+          padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
           child: Row(
             children: List.generate(
               SchoolScoreRow.numColumns,
@@ -181,64 +181,68 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
                   ),
                 ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: currentPage > 1
-                  ? () {
-                      onPageChange(1);
-                    }
-                  : null,
-              child: const Text("First"),
-            ),
-            const SizedBox(width: 20),
-            ElevatedButton(
-              onPressed: currentPage > 1
-                  ? () => onPageChange((currentPage - 1).clamp(1, totalPages))
-                  : null,
-              child: const Text("Previous"),
-            ),
-            const SizedBox(width: 20),
-            SizedBox(
-              width: 50,
-              child: TextField(
-                controller: TextEditingController(text: currentPage.toString()),
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-                onSubmitted: (value) {
-                  int? newPage = int.tryParse(value);
-                  if (newPage != null) {
-                    newPage = newPage.clamp(1, totalPages);
-                    onPageChange(newPage);
-                  }
-                },
-              ),
-            ),
-            Text(
-              " of $totalPages",
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 20),
-            ElevatedButton(
-              onPressed: currentPage < totalPages
-                  ? () => onPageChange((currentPage + 1).clamp(1, totalPages))
-                  : null,
-              child: const Text("Next"),
-            ),
-            const SizedBox(width: 20),
-            ElevatedButton(
-              onPressed: currentPage < totalPages
-                  ? () {
-                      onPageChange(totalPages);
-                    }
-                  : null,
-              child: const Text("Last"),
-            ),
-          ],
+				
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+          child: Row(
+						mainAxisAlignment: MainAxisAlignment.center,
+						children: [
+							ElevatedButton(
+								onPressed: currentPage > 1
+										? () {
+												onPageChange(1);
+											}
+										: null,
+								child: const Text("First"),
+							),
+							const SizedBox(width: 20),
+							ElevatedButton(
+								onPressed: currentPage > 1
+										? () => onPageChange((currentPage - 1).clamp(1, totalPages))
+										: null,
+								child: const Text("Previous"),
+							),
+							const SizedBox(width: 20),
+							SizedBox(
+								width: 50,
+								child: TextField(
+									controller: TextEditingController(text: currentPage.toString()),
+									textAlign: TextAlign.center,
+									keyboardType: TextInputType.number,
+									decoration: const InputDecoration(
+										border: OutlineInputBorder(),
+									),
+									onSubmitted: (value) {
+										int? newPage = int.tryParse(value);
+										if (newPage != null) {
+											newPage = newPage.clamp(1, totalPages);
+											onPageChange(newPage);
+										}
+									},
+								),
+							),
+							Text(
+								" of $totalPages",
+								style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+							),
+							const SizedBox(width: 20),
+							ElevatedButton(
+								onPressed: currentPage < totalPages
+										? () => onPageChange((currentPage + 1).clamp(1, totalPages))
+										: null,
+								child: const Text("Next"),
+							),
+							const SizedBox(width: 20),
+							ElevatedButton(
+								onPressed: currentPage < totalPages
+										? () {
+												onPageChange(totalPages);
+											}
+										: null,
+								child: const Text("Last"),
+							),
+						],
+          ),
         ),
       ],
     );

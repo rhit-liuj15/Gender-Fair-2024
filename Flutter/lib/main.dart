@@ -1,35 +1,68 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
-import 'package:gender_fair_2024/pages/aboutUsPage/about_us_page.dart';
-import 'package:gender_fair_2024/pages/listPage/school_list_page.dart';
-import 'package:gender_fair_2024/pages/helpPage/help_page.dart';
+import 'package:gender_fair_2024/pages/detailPage/school_detail_page.dart';
+import 'package:gender_fair_2024/pages/listPane/school_list_panel.dart';
+import 'package:gender_fair_2024/pages/not_found_page.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_strategy/url_strategy.dart';
+
 
 
 Future<void> main() async {
   await DataLoader.instance.loadData();
-  runApp(const MyApp());
+  setPathUrlStrategy();
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
 	/// Creates the app
-  const MyApp({super.key});
+  MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  final Map<int, Widget> pages = {
-    0: const SchoolListPage(),
-    1: const HelpPage(),
-    2: const AboutUsPage(),
-  };
-  int currentPageIndex = 0;
+  final goRouter = GoRouter(
+    redirect: (context, state) {
+      final uri = state.uri;
+      final isRoot = uri.path == '/';
+      final is404 = uri.path == '/404';
+      final isDetails = RegExp(r'^/details/\d+$').hasMatch(uri.path);
+      if (uri.path == '/' && uri.fragment.startsWith('/details/')) {
+        final fragPath = uri.fragment;
+        return Uri(path: fragPath).toString();
+      }
+      final hasExtras = uri.hasQuery || uri.fragment.isNotEmpty;
+      if ((isRoot || isDetails) && hasExtras) {
+        return uri.replace(queryParameters: const {}, fragment: '').toString();
+      }
+      return (isRoot || is404 || isDetails) ? null : '/404';
+    },
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const Scaffold(
+          body: SchoolListPanel.instance,
+        ),
+        routes: [
+          GoRoute(
+            path: 'details/:uid',
+            builder: (context, state) {
+              int uid = int.parse(state.pathParameters['uid']!);
+              return SchoolDetailPage(uid: uid);
+            }
+          ),
+          GoRoute(
+            path: '/404',
+            builder: (context, state) {
+              return NotFoundFage.instance;
+            }
+          )
+        ],
+      )
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+
+    return MaterialApp.router(
       title: 'Gender Fair College Ranking',
       theme: ThemeData(
         colorScheme: const ColorScheme(
@@ -45,38 +78,7 @@ class _MyAppState extends State<MyApp> {
         ),
         useMaterial3: true,
       ),
-      home: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.9),
-                    const Color(0xFFFF4713).withOpacity(0.2),
-                  ],
-                  stops: const [0.1, 1.0],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-            ),
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color:
-                      const Color.fromARGB(255, 160, 50, 50).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            ),
-            SafeArea(
-              child: pages[currentPageIndex]!,
-            ),
-          ],
-        ),
-      ),
+      routerConfig: goRouter,
     );
   }
 }

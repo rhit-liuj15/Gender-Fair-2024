@@ -30,9 +30,9 @@ class PieChartWidget extends StatefulWidget {
     this.showTitle = true,
     this.showLabels = true,
     this.size = 200,
-    this.pieChartShowPercentageSliceSizeCutoff = 0.1,
     this.titleTextAlign = TextAlign.center,
     this.textSizeRatio = 0.10,
+    this.pieChartShowPercentageSliceSizeCutoff = 0.18,
   });
 
   @override
@@ -183,7 +183,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       return PieChartSectionData(
         color: colors[index],
         value: values[index].toDouble(),
-        title: "${values[index]}\n(${(values[index]*100/valuesSum).toStringAsFixed(1)}%)",
+        title: "${(values[index]*100/valuesSum).toStringAsFixed(1)}%\n(${values[index]})",
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,

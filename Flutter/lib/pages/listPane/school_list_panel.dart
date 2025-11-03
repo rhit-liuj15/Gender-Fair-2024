@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/pages/listPage/listPane/components/school_name_filter.dart';
-import 'package:gender_fair_2024/pages/listPage/listPane/components/school_score_row_table.dart';
-import 'package:gender_fair_2024/pages/listPage/listPane/components/sort_metric_tile.dart';
+import 'package:gender_fair_2024/pages/listPane/components/school_name_filter.dart';
+import 'package:gender_fair_2024/pages/listPane/components/school_score_row_table.dart';
+import 'package:gender_fair_2024/pages/listPane/components/sort_metric_tile.dart';
 
 /// The pane on the list page that has the list of schools as filtered for by the user (or all schools if filters are absent)
-class SchoolListPanel extends StatefulWidget {
+class SchoolListPanel extends StatelessWidget {
   static const SchoolListPanel instance = SchoolListPanel._privateConstructor();
   const SchoolListPanel._privateConstructor();
 
-  @override
-  State<SchoolListPanel> createState() => _SchoolListPanelState();
-}
-
-class _SchoolListPanelState extends State<SchoolListPanel> {
   @override
   Widget build(BuildContext context) {
     return Container(

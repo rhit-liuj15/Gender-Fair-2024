@@ -1,7 +1,7 @@
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
-import 'package:gender_fair_2024/pages/listPage/listPane/components/school_score_row.dart';
+import 'package:gender_fair_2024/pages/listPane/components/school_score_row.dart';
 
 class SortMetric {
   final Map<String, Function()> _sortMetricChangeCallback = {};
@@ -57,12 +57,12 @@ class SortMetric {
 					return popA.compareTo(popB);
 				};
         break;
-      default:
-        if (sortMetric.sortable) {
-          comparator = (a, b) => 0; // No sorting needed
-        } else {
-          throw ("Sort column '$sortMetric' is not supported");
-        }
+      // default:
+      //   if (sortMetric.sortable) {
+      //     comparator = (a, b) => 0; // No sorting needed
+      //   } else {
+      //     throw ("Sort column '$sortMetric' is not supported");
+      //   }
     }
     unsortedSchools.sort((a, b) {
       int compareResult = comparator(a, b);

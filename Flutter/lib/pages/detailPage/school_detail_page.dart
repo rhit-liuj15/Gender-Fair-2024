@@ -4,6 +4,7 @@ import 'package:gender_fair_2024/pages/detailPage/components/pie_chart_widget.da
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/pages/detailPage/components/bar_chart_widget.dart';
+import 'package:go_router/go_router.dart';
 
   /// Creates the detail page for a school with UID [uid]
 class SchoolDetailPage extends StatefulWidget {
@@ -60,6 +61,9 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+				leading: BackButton(
+					onPressed: () => context.go(Uri(path:'/').toString()),
+				),
         title: Text(schoolData.getName()),
       ),
       body: schoolData.isInvalid
@@ -148,7 +152,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                     Center(
                       child: PieChartRowWidget(
                           rowTitle:
-                              "nawoeujtnlkuhdfoiauhdw;otihlkjwhaeliuthoiul",
+                              "",
                           chartTitles: academicRankLabels,
                           dataLabels: raceLabels,
                           datasets: [

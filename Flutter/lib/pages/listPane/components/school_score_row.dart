@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
-import 'package:gender_fair_2024/pages/detailPage/school_detail_page.dart';
+import 'package:go_router/go_router.dart';
 
 class SchoolScoreRow extends StatefulWidget {
 	/// A component that makes 1 row for [SchoolListPanel]
@@ -38,59 +38,60 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
     final List<Widget> widgets = ListPageColumnAttributes.values.map((item) {
       switch (item) {
         case ListPageColumnAttributes.instName:
-          return InkWell(
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: widget.school.schoolName,
-                    style: const TextStyle(fontSize: 18, color: Colors.black),
+          return RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: widget.school.schoolName,
+                  style: const TextStyle(fontSize: 18, color: Colors.black),
+                ),
+                const TextSpan(text: "  "),
+                TextSpan(
+                  text: getSchoolTypeShort(widget.school.schoolType),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: getSchoolTypeColor(widget.school.schoolType),
+                    fontStyle: FontStyle.italic,
                   ),
-                  const TextSpan(text: "  "),
-                  TextSpan(
-                    text: getSchoolTypeShort(widget.school.schoolType),
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: getSchoolTypeColor(widget.school.schoolType),
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Dialog(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 1600),
-                      child: SchoolDetailPage(uid: widget.school.uid),
-                    ),
-                  );
-                },
-              );
-            },
           );
         case ListPageColumnAttributes.populationTotal:
           return Text("${DataLoader.instance.allSchoolData[widget.school.uid]!.getInt("ENROLLTOT")}",
               textAlign: TextAlign.center, style: totalScoreStyle);
-        default:
-        	return Text("Unknown item '${item.name}'!"); // Consider this a return nothing
+        // default:
+        // 	return Text("Unknown item '${item.name}'!"); // Consider this a return nothing
       }
     }).toList();
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20.0,10.0,20.0,10.0),
-      child: Row(
-        children: List.generate(SchoolScoreRow.numColumns, (index) {
-          return Expanded(
-            flex: SchoolScoreRow.flexValues[index],
-            child: widgets[index],
-          );
-        }),
-      ),
-    );
+    return InkWell(
+			child: Padding(
+				padding: const EdgeInsets.fromLTRB(20.0,10.0,20.0,10.0),
+				child: Row(
+					children: List.generate(SchoolScoreRow.numColumns, (index) {
+						return Expanded(
+							flex: SchoolScoreRow.flexValues[index],
+							child: widgets[index],
+						);
+					}),
+				),
+			),
+			onTap: () => context.go(Uri(path:'/details/${widget.school.uid}').toString()),
+			// onTap: () {
+			// 	showDialog(
+			// 		context: context,
+			// 		builder: (BuildContext context) {
+			// 			return Dialog(
+			// 				child: ConstrainedBox(
+			// 					constraints: const BoxConstraints(maxWidth: 1600),
+			// 					child: SchoolDetailPage(uid: widget.school.uid),
+			// 				),
+			// 			);
+			// 		},
+			// 	);
+			// },
+		);
   }
 }
 

@@ -30,7 +30,7 @@ class PieChartRowWidget extends StatefulWidget {
     this.size = 200,
     this.showTitle = true,
     this.showTitleOnBottom = false,
-    this.pieChartShowPercentageSliceSizeCutoff = 0.1,
+    this.pieChartShowPercentageSliceSizeCutoff = 0.18,
     this.titleTextAlign = TextAlign.center,
     this.textSizeRatio = 0.10,
   });
