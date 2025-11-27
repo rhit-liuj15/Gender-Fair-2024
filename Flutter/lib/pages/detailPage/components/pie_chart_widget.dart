@@ -183,7 +183,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       return PieChartSectionData(
         color: colors[index],
         value: values[index].toDouble(),
-        title: "${(values[index]*100/valuesSum).toStringAsFixed(1)}%\n(${values[index]})",
+        title: "${(values[index]*100/valuesSum).toStringAsFixed(1)}%",
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,

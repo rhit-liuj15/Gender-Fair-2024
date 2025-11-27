@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gender_fair_2024/models/data_loader.dart';
-import 'package:gender_fair_2024/models/school_score.dart';
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
+import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:go_router/go_router.dart';
 
-class SchoolScoreRow extends StatefulWidget {
+class SchoolDataRow extends StatefulWidget {
 	/// A component that makes 1 row for [SchoolListPanel]
 
-  final void Function() onUpdateSelected;
   static List<int> flexValues = ListPageColumnAttributes.flexValues;
   static List<String> columnNames = ListPageColumnAttributes.colNames;
 
@@ -21,18 +19,15 @@ class SchoolScoreRow extends StatefulWidget {
     return flexValues.length;
   }
 
-  final SchoolScore school;
-  const SchoolScoreRow(
-      {super.key, required this.school, required this.onUpdateSelected});
+  final SchoolData school;
+  const SchoolDataRow(
+      {super.key, required this.school});
 
   @override
-  State<SchoolScoreRow> createState() => _SchoolScoreRowState();
+  State<SchoolDataRow> createState() => _SchoolDataRowState();
 }
 
-class _SchoolScoreRowState extends State<SchoolScoreRow> {
-  static TextStyle totalScoreStyle =
-      const TextStyle(fontSize: 26, fontWeight: FontWeight.bold);
-	
+class _SchoolDataRowState extends State<SchoolDataRow> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgets = ListPageColumnAttributes.values.map((item) {
@@ -42,26 +37,37 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: widget.school.schoolName,
+                  text: widget.school.getName(),
                   style: const TextStyle(fontSize: 18, color: Colors.black),
                 ),
                 const TextSpan(text: "  "),
                 TextSpan(
-                  text: getSchoolTypeShort(widget.school.schoolType),
+                  text: getSchoolTypeShort(widget.school.getString("INSTFUNDINGTYPE")),
                   style: TextStyle(
                     fontSize: 14,
-                    color: getSchoolTypeColor(widget.school.schoolType),
+                    color: getSchoolTypeColor(widget.school.getString("INSTFUNDINGTYPE")),
                     fontStyle: FontStyle.italic,
                   ),
                 ),
               ],
             ),
           );
-        case ListPageColumnAttributes.populationTotal:
-          return Text("${DataLoader.instance.allSchoolData[widget.school.uid]!.getInt("ENROLLTOT")}",
-              textAlign: TextAlign.center, style: totalScoreStyle);
-        // default:
-        // 	return Text("Unknown item '${item.name}'!"); // Consider this a return nothing
+        // case ListPageColumnAttributes.populationTotal:
+				// 	return Text(
+				// 		widget.school.getString("ENROLLTOT"),
+				// 		textAlign: TextAlign.center,
+				// 		style: const TextStyle(
+				// 			fontSize: 18
+				// 		),
+				// 	);
+        // case ListPageColumnAttributes.state:
+				// 	return Text(
+				// 		widget.school.getString("STATE"),
+				// 		textAlign: TextAlign.center,
+				// 		style: const TextStyle(
+				// 			fontSize: 18
+				// 		),
+				// 	);
       }
     }).toList();
 
@@ -69,28 +75,15 @@ class _SchoolScoreRowState extends State<SchoolScoreRow> {
 			child: Padding(
 				padding: const EdgeInsets.fromLTRB(20.0,10.0,20.0,10.0),
 				child: Row(
-					children: List.generate(SchoolScoreRow.numColumns, (index) {
+					children: List.generate(SchoolDataRow.numColumns, (index) {
 						return Expanded(
-							flex: SchoolScoreRow.flexValues[index],
+							flex: SchoolDataRow.flexValues[index],
 							child: widgets[index],
 						);
 					}),
 				),
 			),
-			onTap: () => context.go(Uri(path:'/details/${widget.school.uid}').toString()),
-			// onTap: () {
-			// 	showDialog(
-			// 		context: context,
-			// 		builder: (BuildContext context) {
-			// 			return Dialog(
-			// 				child: ConstrainedBox(
-			// 					constraints: const BoxConstraints(maxWidth: 1600),
-			// 					child: SchoolDetailPage(uid: widget.school.uid),
-			// 				),
-			// 			);
-			// 		},
-			// 	);
-			// },
+			onTap: () => context.go(Uri(path:'/details/${widget.school.getUID()}').toString()),
 		);
   }
 }
@@ -110,9 +103,9 @@ String getSchoolTypeShort(String type) {
     case '1':
       return '• Public';
     case '3':
-      return '• Private W/out rel';
+      return '• Private';
     case '4':
-      return '• Private W/ Rel';
+      return '• Private, Religious';
     default:
       return '';
   }

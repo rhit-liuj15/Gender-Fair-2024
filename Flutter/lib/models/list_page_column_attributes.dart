@@ -6,12 +6,18 @@ enum ListPageColumnAttributes {
       name: "Institution Name",
       sortable: true,
       sortDescending: false),
-  populationTotal(
-    flexWidth: 3,
-    name: "Student Population",
-    sortable: true,
-    sortDescending: true
-  ),
+  // state(
+  //   flexWidth: 2,
+  //   name: "State",
+  //   sortable: true,
+  //   sortDescending: true
+  // ),
+  // populationTotal(
+  //   flexWidth: 2,
+  //   name: "Student Population",
+  //   sortable: true,
+  //   sortDescending: true
+  // ),
   ;
 
   const ListPageColumnAttributes({
