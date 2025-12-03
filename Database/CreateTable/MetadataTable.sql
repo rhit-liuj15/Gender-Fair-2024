@@ -41,13 +41,13 @@ INSERT INTO `PublicFacingData`.`Metadata` (`GROUP`, `ABBR`, `DESC`)
 SELECT 2, Codevalue, LEFT(valueLabel, 100) FROM ipeds_2024_db.valuesets22
 	where varName = "CNTLAFFI" and CodeValue in ("1","3","4");
 
-INSERT INTO `PublicFacingData`.`Metadata` (`GROUP`, `ABBR`, `DESC`) 
-select 3, Codevalue, valueLabel from ipeds_2024_db.valuesets22 where varNumber in (35000) and Codevalue in (
-	select CIPCODE from C2022_A where AWLEVEL in (3, 5, 7, 8, 17, 18, 19) and LENGTH(CIPCODE) = 5 group by CIPCODE, AWLEVEL having sum(CTOTALT) >= 1
-) order by varNumber, Codevalue;
+-- INSERT INTO `PublicFacingData`.`Metadata` (`GROUP`, `ABBR`, `DESC`) 
+-- select 3, Codevalue, valueLabel from ipeds_2024_db.valuesets22 where varNumber in (35000) and Codevalue in (
+-- 	select CIPCODE from C2022_A where AWLEVEL in (3, 5, 7, 8, 17, 18, 19) and LENGTH(CIPCODE) = 5 group by CIPCODE, AWLEVEL having sum(CTOTALT) >= 1
+-- ) order by varNumber, Codevalue;
 
 
-INSERT INTO `PublicFacingData`.`Metadata` (`GROUP`, `ABBR`, `DESC`) 
-select 4, Codevalue, valueLabel from ipeds_2024_db.valuesets22 where varNumber in (35005) and Codevalue in (3, 5, 7, 8, 17, 18, 19);
+-- INSERT INTO `PublicFacingData`.`Metadata` (`GROUP`, `ABBR`, `DESC`) 
+-- select 4, Codevalue, valueLabel from ipeds_2024_db.valuesets22 where varNumber in (35005) and Codevalue in (3, 5, 7, 8, 17, 18, 19);
 
 SELECT * FROM `PublicFacingData`.`Metadata`;
