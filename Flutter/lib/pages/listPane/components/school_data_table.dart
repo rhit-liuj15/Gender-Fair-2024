@@ -3,25 +3,24 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/filter_data.dart';
-import 'package:gender_fair_2024/models/selected_schools.dart';
+import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/models/sort_metric.dart';
-import 'package:gender_fair_2024/pages/listPane/components/school_score_row.dart';
-import 'package:gender_fair_2024/models/school_score.dart';
+import 'package:gender_fair_2024/pages/listPane/components/school_data_row.dart';
 
 /// The pane on the list page that has the list of schools as filtered for by the user (or all schools if filters are absent)
-class SchoolScoreRowTable extends StatefulWidget {
+class SchoolDataTable extends StatefulWidget {
   static const String schoolListListenerName = "List Panel";
   static const String selectedSchoolsListListenerName = "List Panel";
 
-  static const SchoolScoreRowTable instance =
-      SchoolScoreRowTable._privateConstructor();
-  const SchoolScoreRowTable._privateConstructor();
+  static const SchoolDataTable instance =
+      SchoolDataTable._privateConstructor();
+  const SchoolDataTable._privateConstructor();
 
   @override
-  State<SchoolScoreRowTable> createState() => _SchoolScoreRowTableState();
+  State<SchoolDataTable> createState() => _SchoolDataTableState();
 }
 
-class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
+class _SchoolDataTableState extends State<SchoolDataTable> {
   int currentPage = 1;
   int get numSchoolsOnPage => max<int>(
       min<int>(filteredSchools.length - schoolsPerPage * (currentPage - 1),
@@ -29,9 +28,9 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
       0);
   int get totalPages => (filteredSchools.length - 1) ~/ schoolsPerPage + 1;
 
-  static final List<SchoolScore> allSchoolScoresList =
-      List.unmodifiable(DataLoader.instance.allSchoolScores.values.toList());
-  late List<SchoolScore> filteredSchools;
+  static final List<SchoolData> allSchoolDatasList =
+      List.unmodifiable(DataLoader.instance.allSchoolData.values.toList());
+  late List<SchoolData> filteredSchools;
 
   final int schoolsPerPage = 20;
 
@@ -39,13 +38,10 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
   void initState() {
     super.initState();
     FilterData.instance.addSchoolListListener(
-        name: SchoolScoreRowTable.schoolListListenerName,
-        callback: onSchoolListRequiringUpdate);
-    SelectedSchools.instance.addSelectedSchoolsListListener(
-        name: SchoolScoreRowTable.schoolListListenerName,
+        name: SchoolDataTable.schoolListListenerName,
         callback: onSchoolListRequiringUpdate);
     SortMetric.instance.addSortMetricChangeCallback(
-        name: SchoolScoreRowTable.schoolListListenerName,
+        name: SchoolDataTable.schoolListListenerName,
         callback: onSchoolListRequiringUpdate);
     updateFilteredSchools();
   }
@@ -53,11 +49,11 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
   @override
   void dispose() {
     FilterData.instance.removeSchoolListListener(
-        name: SchoolScoreRowTable.schoolListListenerName);
+        name: SchoolDataTable.schoolListListenerName);
     super.dispose();
   }
 
-  List<SchoolScore> get schoolOnCurrentPage {
+  List<SchoolData> get schoolOnCurrentPage {
     if (filteredSchools.isEmpty) {
       return [];
     }
@@ -75,7 +71,7 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
 
   void updateFilteredSchools() {
     filteredSchools = SortMetric.instance.sortSchools(
-        FilterData.instance.filterSchools(List.of(allSchoolScoresList)));
+        FilterData.instance.filterSchools(List.of(allSchoolDatasList)));
   }
 
   void onSchoolListRequiringUpdate() {
@@ -99,18 +95,18 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+          padding: const EdgeInsets.fromLTRB(20.0,10.0,20.0,10.0),
           child: Row(
             children: List.generate(
-              SchoolScoreRow.numColumns,
+              SchoolDataRow.numColumns,
               (index) => Expanded(
-                flex: SchoolScoreRow.flexValues[index],
+                flex: SchoolDataRow.flexValues[index],
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: Container(
                     alignment: Alignment.center,
                     child: Text(
-                      SchoolScoreRow.columnNames[index],
+                      SchoolDataRow.columnNames[index],
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -170,10 +166,8 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: SchoolScoreRow(
+                          child: SchoolDataRow(
                             school: schoolOnCurrentPage[index],
-                            onUpdateSelected: SelectedSchools
-                                .instance.applySelectedSchoolChange,
                           ),
                         ),
                       );
@@ -183,7 +177,7 @@ class _SchoolScoreRowTableState extends State<SchoolScoreRowTable> {
         ),
 				
         Padding(
-          padding: const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+          padding: const EdgeInsets.fromLTRB(20.0,10.0,20.0,10.0),
           child: Row(
 						mainAxisAlignment: MainAxisAlignment.center,
 						children: [

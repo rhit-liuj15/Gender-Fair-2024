@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/pages/listPane/components/school_name_filter.dart';
-import 'package:gender_fair_2024/pages/listPane/components/school_score_row_table.dart';
-import 'package:gender_fair_2024/pages/listPane/components/sort_metric_tile.dart';
-
+import 'package:gender_fair_2024/pages/listPane/components/school_data_table.dart';
 /// The pane on the list page that has the list of schools as filtered for by the user (or all schools if filters are absent)
 class SchoolListPanel extends StatelessWidget {
   static const SchoolListPanel instance = SchoolListPanel._privateConstructor();
@@ -21,7 +19,13 @@ class SchoolListPanel extends StatelessWidget {
             padding: EdgeInsets.all(10.0),
             child: Row(
               children: [
-                SortMetricTile.instance,
+								Text(
+									"Gender Fair College Details Catalog",
+									style: TextStyle(
+										fontSize: 28,
+										fontWeight: FontWeight.bold,
+									),
+								),
                 Expanded(child: SizedBox()),
                 SizedBox(
                   width: 500,
@@ -30,7 +34,7 @@ class SchoolListPanel extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(child: SchoolScoreRowTable.instance),
+          Expanded(child: SchoolDataTable.instance),
         ],
       ),
     );

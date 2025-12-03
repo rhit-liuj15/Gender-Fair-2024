@@ -1,4 +1,3 @@
-
 # Gender Fair College Ratings
 
 This website ranks over 2000 institutions using a wide variety of gender

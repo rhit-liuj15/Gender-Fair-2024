@@ -29,7 +29,9 @@ Flutter/.flutter-plugins
 Flutter/.flutter-plugins-dependencies
 Flutter/.pub-cache/
 Flutter/.pub/
-Flutter/build/
+Flutter/build/*
+!Flutter/build/web
+
 
 # Symbolication related
 Flutter/app.*.symbols
@@ -38,9 +40,9 @@ Flutter/app.*.symbols
 Flutter/app.*.map.json
 
 # Android Studio will place build artifacts here
-Flutter/android/app/debug
-Flutter/android/app/profile
-Flutter/android/app/release
+Flutter/android/*
+Flutter/windows/*
+Flutter/linux/*
 
 # Scoring folder may have CSVs and TXTs in them for the script to use. Ignore any such csv, instead obtain a copy from the database
 Scoring/*.csv

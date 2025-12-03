@@ -1,21 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gender_fair_2024/models/filter_data.dart';
-import 'package:gender_fair_2024/models/school_score.dart';
+import 'package:gender_fair_2024/models/school_data.dart';
 
 class SchoolNameFilter extends StatefulWidget {
   static const filterName = "School Name";
-
-  static List<SchoolScore> Function(List<SchoolScore>) filterLogic =
-      (List<SchoolScore> scores) {
-    if (FilterData.instance.selectedStates.isEmpty) {
-      return scores;
-    } else {
-      return scores
-          .where((school) =>
-              FilterData.instance.selectedStates.contains(school.schoolState))
-          .toList();
-    }
-  };
 
   static const SchoolNameFilter instance = SchoolNameFilter._privateConstructor();
 
@@ -34,12 +22,12 @@ class _SchoolNameFilterState extends State<SchoolNameFilter> {
     super.initState();
     FilterData.instance.registerFilter(
       name: 'School Name',
-      filterFunction: (List<SchoolScore> scores) {
+      filterFunction: (List<SchoolData> scores) {
         if (FilterData.instance.schoolNameInput.isEmpty) {
           return scores;
         } else {
           return scores
-              .where((school) => school.schoolName
+              .where((school) => school.getName()
                   .toLowerCase()
                   .contains(FilterData.instance.schoolNameInput.toLowerCase()))
               .toList();
