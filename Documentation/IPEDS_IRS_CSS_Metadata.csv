@@ -100,7 +100,7 @@ NONACDNRES,number of non-academic staff non-US resident
 NONACDTWOP,number of non-academic staff two or more races
 NONACDUNKN,number of non-academic staff unknown race
 CSSPOPULATION,school population as reported by CSS
-YEARLYHATECRIME,average number of hate crime in CSS current year
-YEARLYHATECRIME1K,number of hate crimes for 1K student population in CSS current year
-YEARLYVAWA,average number of vawa crimes in CSS current year
-YEARLYVAWA1K,number of vawa crimes for 1K student population in CSS current year
+HATECRIME,average number of hate crime in CSS current year
+HATECRIME1K,number of hate crimes for 1K student population in CSS current year
+VAWA,average number of vawa crimes in CSS current year
+VAWA1K,number of vawa crimes for 1K student population in CSS current year

@@ -14,8 +14,8 @@ INSERT INTO Averages
 	UNION ALL
 	SELECT "AveragePayWomen" as "Name", sum(SALARYTOTACDF)/sum(ACDPOPF) as "Value" FROM SchoolData
 	UNION ALL
-	SELECT "AverageHateCrime" as "Name", 1000*sum(YEARLYHATECRIME)/sum(ENROLLTOT) FROM SchoolData
+	SELECT "AverageHateCrime" as "Name", 1000*sum(YEARLYHATECRIME)/sum(CSSPOPULATION) FROM SchoolData
 	UNION ALL
-	SELECT "AverageVAWA" as "Name", 1000*sum(YEARLYVAWA)/sum(ENROLLTOT) FROM SchoolData;
+	SELECT "AverageVAWA" as "Name", 1000*sum(YEARLYVAWA)/sum(CSSPOPULATION) FROM SchoolData;
 
 select Name, Value from Averages;

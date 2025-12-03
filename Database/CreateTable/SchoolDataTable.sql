@@ -2,8 +2,7 @@ DROP TABLE IF EXISTS `PublicFacingData`.`SchoolData`;
 
 -- Create Table w/ Concrete Dtype --
 CREATE TABLE `PublicFacingData`.`SchoolData` (
-	-- UNITID INT PRIMARY KEY,
-	UNITID INT NOT NULL,
+	UNITID INT PRIMARY KEY, 
 	INSTNM varchar(255) NOT NULL,
 	STATE varchar(2) NOT NULL,
 	EIN varchar(10) NOT NULL,
@@ -93,33 +92,13 @@ CREATE TABLE `PublicFacingData`.`SchoolData` (
 	NONACDNRES INT NOT NULL,
 	NONACDTWOP INT NOT NULL,
 	NONACDUNKN INT NOT NULL,
--- 	CSSPOPULATION2020 INT,
--- 	Y2020HATECRIME INT,
--- 	Y2020HATECRIME1K DOUBLE,
--- 	Y2020VAWA INT,
--- 	Y2020VAWA1K DOUBLE,
--- 	CSSPOPULATION2021 INT,
--- 	Y2021HATECRIME INT,
--- 	Y2021HATECRIME1K DOUBLE,
--- 	Y2021VAWA INT,
--- 	Y2021VAWA1K DOUBLE,
-	CSSPOPULATION2022 INT,
-	Y2022HATECRIME INT,
-	Y2022HATECRIME1K DOUBLE,
-	Y2022VAWA INT,
-	Y2022VAWA1K DOUBLE,
-	CSSPOPULATION2023 INT,
-	Y2023HATECRIME INT,
-	Y2023HATECRIME1K DOUBLE,
-	Y2023VAWA INT,
-	Y2023VAWA1K DOUBLE,
-	CSSPOPULATION2024 INT,
-	Y2024HATECRIME INT,
-	Y2024HATECRIME1K DOUBLE,
-	Y2024VAWA INT,
-	Y2024VAWA1K DOUBLE
+	CSSPOPULATION INT,
+	YEARLYHATECRIME INT,
+	YEARLYHATECRIME1K DOUBLE,
+	YEARLYVAWA INT,
+	YEARLYVAWA1K DOUBLE
 );
-CREATE INDEX pk_idx ON `PublicFacingData`.`SchoolData` (UNITID);
+
 -- Dtype Documentation --
 /*
 Metadata          				Original dtype      Aggregated dtype
@@ -214,17 +193,15 @@ NONACDNRES 						INT					INT
 NONACDTWOP						INT					INT
 NONACDUNKN 						INT					INT
 CSSPOPULATION 					INT					INT
-Y2023HATECRIME 					INT					INT
-Y2023HATECRIME1K				N/A					DOUBLE
-Y2023VAWA						INT					INT
-Y2023VAWA1K 					N/A					DOUBLE
+YEARLYHATECRIME 						INT					INT
+YEARLYHATECRIME1K						N/A					DOUBLE
+YEARLYVAWA							INT					INT
+YEARLYVAWA1K 							N/A					DOUBLE
 WHISTLEBLOWER_POLICY 			tinyint(1)			tinyint(1)
 CEO_REVIEWED_COMPENSATION 		tinyint(1)			tinyint(1)
 OTHER_REVIEWED_COMPENSATION		tinyint(1)			tinyint(1)
 
-Note that only Y2023HATECRIME1K and Y2023VAWA1K are new metadata that has no original dtype, and DOUBLE is chosen due to its general suitability.
-
-Every other metadata shares the same aggregated dtype as their original.
+HATECRIME1K and VAWA1K are evaluated entries and have no original dtype. Other entries shares the same aggregated dtype as their original.
 
 Also note that metadata UNITID,EIN,and OPEID should not be null or empty.
 */
