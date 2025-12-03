@@ -1,8 +1,8 @@
 import 'package:gender_fair_2024/models/metadata.dart';
-import 'package:gender_fair_2024/models/school_score.dart';
+import 'package:gender_fair_2024/models/school_data.dart';
 
 class FilterData {
-  final Map<String, List<SchoolScore> Function(List<SchoolScore>)>
+  final Map<String, List<SchoolData> Function(List<SchoolData>)>
       filterFunctions = {};
 
 	// These Maps are separate due to their intended functionality:
@@ -43,7 +43,7 @@ class FilterData {
 
   void registerFilter({
     required String name,
-    required List<SchoolScore> Function(List<SchoolScore>) filterFunction,
+    required List<SchoolData> Function(List<SchoolData>) filterFunction,
   }) {
     filterFunctions[name] = filterFunction;
   }
@@ -98,9 +98,9 @@ class FilterData {
   }
 
 
-  List<SchoolScore> filterSchools(List<SchoolScore> schools) {
-    List<SchoolScore> schoolsFilteredFor = List.from(schools);
-    for (MapEntry<String, List<SchoolScore> Function(List<SchoolScore>)> entry
+  List<SchoolData> filterSchools(List<SchoolData> schools) {
+    List<SchoolData> schoolsFilteredFor = List.from(schools);
+    for (MapEntry<String, List<SchoolData> Function(List<SchoolData>)> entry
         in filterFunctions.entries) {
       schoolsFilteredFor = entry.value(schoolsFilteredFor);
     }

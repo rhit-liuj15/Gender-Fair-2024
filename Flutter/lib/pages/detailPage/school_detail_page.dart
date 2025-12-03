@@ -4,9 +4,10 @@ import 'package:gender_fair_2024/pages/detailPage/components/pie_chart_widget.da
 import 'package:gender_fair_2024/models/data_loader.dart';
 import 'package:gender_fair_2024/models/school_data.dart';
 import 'package:gender_fair_2024/pages/detailPage/components/bar_chart_widget.dart';
+import 'package:go_router/go_router.dart';
 
+  /// Creates the detail page for a school with UID [uid]
 class SchoolDetailPage extends StatefulWidget {
-	/// Creates the detail page for a school with UID [uid]
   final int uid;
   const SchoolDetailPage({super.key, required this.uid});
 
@@ -16,7 +17,6 @@ class SchoolDetailPage extends StatefulWidget {
 
 class _SchoolDetailPageState extends State<SchoolDetailPage> {
   late SchoolData schoolData;
-  bool isLoading = true;
 
   List<String> genderLabels = const ["Women", "Men"];
   List<Color> genderColors = const [Colors.pink, Colors.blue];
@@ -53,12 +53,8 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
   }
 
   Future<void> loadData() async {
-    await DataLoader.instance.requestSchoolData({widget.uid});
-    setState(() {
-      schoolData = DataLoader.instance.allSchoolData[widget.uid] ??
-          SchoolData.unknownUID(widget.uid);
-      isLoading = false;
-    });
+    schoolData = DataLoader.instance.allSchoolData[widget.uid] ??
+        SchoolData.unknownUID(widget.uid);
   }
 
   // Function to check IRS data
@@ -76,14 +72,11 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Scaffold(
-        appBar: AppBar(title: const Text("Loading...")),
-        body: const Center(child: CircularProgressIndicator()),
-      );
-    }
     return Scaffold(
       appBar: AppBar(
+				leading: BackButton(
+					onPressed: () => context.go(Uri(path:'/').toString()),
+				),
         title: Text(schoolData.getName()),
       ),
       body: schoolData.isInvalid
@@ -172,7 +165,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                     Center(
                       child: PieChartRowWidget(
                           rowTitle:
-                              "nawoeujtnlkuhdfoiauhdw;otihlkjwhaeliuthoiul",
+                              "",
                           chartTitles: academicRankLabels,
                           dataLabels: raceLabels,
                           datasets: [
@@ -307,8 +300,7 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                             schoolData.getInt("ACDPOPF"),
                                   },
                                   colors: const [Colors.blue, Colors.pink],
-                                  yAxisDescription:
-                                      "Average Salary (USD)",
+                                  yAxisDescription: "Average Salary (USD)",
                                 ),
                               ),
                             ],
@@ -333,20 +325,19 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                 height: 300,
                                 child: BarChartWidget(
                                   data: {
-                                    "National\nAverage":
-																			DataLoader.instance.allAverages["AverageHateCrime"] ?? -170.0,
+                                    "National\nAverage": DataLoader.instance
+                                            .allAverages["AverageHateCrime"] ??
+                                        -170.0,
                                     "This\nSchool":
-																			schoolData.getNum("YEARLYHATECRIME1K"),
+                                        schoolData.getNum("YEARLYHATECRIME1K"),
                                   },
                                   colors: const [Colors.red],
-                                  yAxisDescription:
-                                      "Cases Per 1000 Students",
+                                  yAxisDescription: "Cases Per 1000 Students",
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        
                         SizedBox(
                           width: 400,
                           child: Column(
@@ -366,13 +357,13 @@ class _SchoolDetailPageState extends State<SchoolDetailPage> {
                                 children: [
                                   SizedBox(
                                     height: 300,
-                                    
                                     child: BarChartWidget(
                                       data: {
-                                        "National\nAverage":
-																					DataLoader.instance.allAverages["AverageVAWA"] ?? -170.0,
+                                        "National\nAverage": DataLoader.instance
+                                                .allAverages["AverageVAWA"] ??
+                                            -170.0,
                                         "This\nSchool":
-																					schoolData.getNum("YEARLYVAWA1K"),  
+                                            schoolData.getNum("YEARLYVAWA1K"),
                                       },
                                       colors: const [Colors.orange],
                                       yAxisDescription:

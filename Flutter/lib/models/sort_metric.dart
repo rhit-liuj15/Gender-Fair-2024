@@ -1,12 +1,12 @@
 import 'package:gender_fair_2024/models/list_page_column_attributes.dart';
-import 'package:gender_fair_2024/models/school_score.dart';
-import 'package:gender_fair_2024/pages/listPage/listPane/components/school_score_row.dart';
+import 'package:gender_fair_2024/models/school_data.dart';
+import 'package:gender_fair_2024/pages/listPane/components/school_data_row.dart';
 
 class SortMetric {
   final Map<String, Function()> _sortMetricChangeCallback = {};
 	
-  ListPageColumnAttributes sortMetric = ListPageColumnAttributes.total;
-  bool sortDescending = ListPageColumnAttributes.total.sortDescending;
+  ListPageColumnAttributes sortMetric = ListPageColumnAttributes.instName;
+  bool sortDescending = false;
 
   static final SortMetric instance = SortMetric._privateConstructor();
   SortMetric._privateConstructor();
@@ -31,7 +31,7 @@ class SortMetric {
   void updateSortMetric(ListPageColumnAttributes column) {
     if (sortMetric != column) {
       sortMetric = column;
-      sortDescending = SchoolScoreRow.defaultSortOrder[column]!;
+      sortDescending = SchoolDataRow.defaultSortOrder[column]!;
 			applySortMetric();
     }
     // Otherwise, the same element has been selected. The website won't need to respond in that case.
@@ -42,43 +42,22 @@ class SortMetric {
 		applySortMetric();
   }
 
-  List<SchoolScore> sortSchools(List<SchoolScore> unsortedSchools) {
-    Comparator<SchoolScore> comparator;
+  List<SchoolData> sortSchools(List<SchoolData> unsortedSchools) {
+    Comparator<SchoolData> comparator;
     switch (sortMetric) {
       case ListPageColumnAttributes.instName:
-        comparator = (a, b) => a.schoolName.compareTo(b.schoolName);
+        comparator = (a, b) => a.getName().compareTo(b.getName());
         break;
-
-      case ListPageColumnAttributes.ranking:
-      case ListPageColumnAttributes.total:
-        comparator = (a, b) => a.score.compareTo(b.score);
-        break;
-
-      case ListPageColumnAttributes.leadership:
-      case ListPageColumnAttributes.polnpay:
-      case ListPageColumnAttributes.safety:
-      case ListPageColumnAttributes.diversity:
-        comparator = (a, b) => a.subscores[ListPageColumnAttributes
-                .listPageToSchoolScoreMapping[sortMetric]]!
-            .compareTo(b.subscores[ListPageColumnAttributes
-                .listPageToSchoolScoreMapping[sortMetric]]!);
-        break;
-      default:
-        if (sortMetric.sortable) {
-          comparator = (a, b) => 0; // No sorting needed
-        } else {
-          throw ("Sort column '$sortMetric' is not supported");
-        }
+			// default:
+      //   comparator = (a, b) => a.getName().compareTo(b.getName());
+			// 	print("Only sorting by school name is supported");
     }
     unsortedSchools.sort((a, b) {
       int compareResult = comparator(a, b);
 			compareResult = sortDescending ? -compareResult : compareResult;
-      if (compareResult == 0) {
-        compareResult = -(a.score.compareTo(b.score));
-				if (compareResult == 0) {
-					compareResult = a.schoolName.compareTo(b.schoolName);
-				}
-      }
+			if (compareResult == 0) {
+				compareResult = a.getUID().compareTo(b.getUID());
+			}
       return compareResult;
     });
 		return unsortedSchools;

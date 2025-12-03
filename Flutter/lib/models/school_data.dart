@@ -2,35 +2,35 @@ class SchoolData {
 	/// The data class that stored data specific to the school with [uid] and [name].
 
   late Map<String, dynamic> _data;
-	int uid = -4826;
-	late String name;
+	late int _uid;
+	late String _name;
 	bool get isInvalid {
 		return _data.isEmpty;
 	}
 
   SchoolData.fromJSON(dynamic json) {
     _data = json;
-		uid = getUID();
-		name = getName();
+		_uid = getInt("UNITID", convert: false);
+		_name = getString("INSTNM");
   }
 
   SchoolData.unknownUID(int uid) {
 		uid = uid;
-		name = "Unknown School $uid!";
+		_name = "Unknown School $uid!";
     _data = {};
   }
 
   @override
   String toString() {
-    return "\n${getName()}}\nUID ${getUID()}\nData: $_data";
+    return "\n$_uid}\nUID $_name\nData: $_data";
   }
 
   String getName() {
-    return getString("INSTNM");
+    return _name;
   }
 
   int getUID() {
-    return getInt("UNITID", convert: false);
+    return _uid;
   }
 
   int getInt(String name, {bool convert = true}) {

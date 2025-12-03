@@ -7,14 +7,14 @@ extension CustomRounded on num {
     if (this == 0) return "0";
 
     if (this < 1) {
-      final log10 = log(this.abs()) / ln10;
+      final log10 = log(abs()) / ln10;
       final factor = pow(10, 2 - 1 - log10.floor());
       final rounded = (this * factor).round() / factor;
       return rounded.toString();
     } else if (this <= 1000) {
-      return this.toStringAsFixed(2);
+      return toStringAsFixed(2);
     } else {
-      return this.toStringAsFixed(0);
+      return toStringAsFixed(0);
     }
   }
 }

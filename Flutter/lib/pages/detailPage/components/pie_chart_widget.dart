@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -31,9 +30,9 @@ class PieChartWidget extends StatefulWidget {
     this.showTitle = true,
     this.showLabels = true,
     this.size = 200,
-    this.pieChartShowPercentageSliceSizeCutoff = 0.1,
     this.titleTextAlign = TextAlign.center,
     this.textSizeRatio = 0.10,
+    this.pieChartShowPercentageSliceSizeCutoff = 0.18,
   });
 
   @override
@@ -176,6 +175,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
 
   List<PieChartSectionData> showingSections(List<String> labels,
       List<num> values, List<Color> colors, num chartSliceCutoff) {
+		num valuesSum = values.fold(0, (a, b) => a + b);
     return List.generate(values.length, (index) {
       final isTouched = index == touchedIndex;
       final fontSize = isTouched ? widget.size * 0.099 : widget.size * 0.09;
@@ -183,7 +183,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
       return PieChartSectionData(
         color: colors[index],
         value: values[index].toDouble(),
-        title: "${values[index]}",
+        title: "${(values[index]*100/valuesSum).toStringAsFixed(1)}%",
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
@@ -280,6 +280,7 @@ class _HoverSlideText extends StatefulWidget {
   const _HoverSlideText({
     required this.text,
     required this.fontSize,
+    // ignore: unused_element
     this.duration = const Duration(seconds: 4),
   });
 
@@ -345,7 +346,7 @@ class _HoverSlideTextState extends State<_HoverSlideText>
           child: ClipRect(
             child: SlideTransition(
               position:
-                  shouldSlide ? animation : AlwaysStoppedAnimation(Offset.zero),
+                  shouldSlide ? animation : const AlwaysStoppedAnimation(Offset.zero),
               child: Text(
                 widget.text,
                 style: textStyle,
