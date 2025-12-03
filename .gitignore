@@ -29,7 +29,7 @@ Flutter/.flutter-plugins
 Flutter/.flutter-plugins-dependencies
 Flutter/.pub-cache/
 Flutter/.pub/
-Flutter/build/(?!web)*
+Flutter/build/(?!web)+
 
 # Symbolication related
 Flutter/app.*.symbols
